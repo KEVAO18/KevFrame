@@ -1,0 +1,33 @@
+{
+    "name": "aromas-angeles/aplicacion",
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "twbs/bootstrap",
+                "version": "5.3.3",
+                "dist": {
+                    "url": "https://github.com/twbs/bootstrap/archive/v5.3.3.zip",
+                    "type": "zip"
+                }
+            }
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.0",
+        "ext-pdo": "*",
+        "vlucas/phpdotenv": "^5.6",
+        "twbs/bootstrap": "^5.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": ["http/", "src/"]
+        }
+    },
+    "extra": {
+        "installer-paths": {
+            "public/assets/bootstrap": ["twbs/bootstrap"]
+        }
+    }
+}
