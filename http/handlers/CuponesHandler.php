@@ -20,15 +20,17 @@ class CuponesHandler
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones` 
-            (`codigo`, `descuento`, `fecha_expiracion`, `usos_maximos`) 
-            VALUES (?, ?, ?, ?)'
+            (`codigo`, `descuento`, `tipo`, `valido_desde`, `valido_hasta`, `limite_uso`) 
+            VALUES (?, ?, ?, ?, ?, ?)'
         );
 
         $stmt->execute([
             $cupon->getCodigo(),
             $cupon->getDescuento(),
-            $cupon->getFechaExpiracion(),
-            $cupon->getUsosMaximos()
+            $cupon->getTipo(),
+            $cupon->getValidoDesde(),
+            $cupon->getValidoHasta(),
+            $cupon->getLimiteUso()
         ]);
 
         return $db->lastInsertId();
@@ -39,15 +41,17 @@ class CuponesHandler
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET
-            `codigo` = ?, `descuento` = ?, `fecha_expiracion` = ?, `usos_maximos` = ?
+            `codigo` = ?, `descuento` = ?, `tipo` = ?, `valido_desde` = ?, `valido_hasta` = ?, `limite_uso` = ?
             WHERE `id` = ?'
         );
 
         return $stmt->execute([
             $cupon->getCodigo(),
             $cupon->getDescuento(),
-            $cupon->getFechaExpiracion(),
-            $cupon->getUsosMaximos(),
+            $cupon->getTipo(),
+            $cupon->getValidoDesde(),
+            $cupon->getValidoHasta(),
+            $cupon->getLimiteUso(),
             $cupon->getId()
         ]);
     }

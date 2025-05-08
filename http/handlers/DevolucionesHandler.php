@@ -20,16 +20,18 @@ class DevolucionesHandler
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `devoluciones` 
-            (`usuario`, `pedido_id`, `motivo`, `estado`, `fecha_solicitud`) 
-            VALUES (?, ?, ?, ?, ?)'
+            (`producto`, `factura`, `motivo`, `reembolso`, `estado`, `fecha_ingreso`, `fecha_final`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
 
         $stmt->execute([
-            $devolucion->getUsuario(),
-            $devolucion->getPedidoId(),
+            $devolucion->getProducto(),
+            $devolucion->getFactura(),
             $devolucion->getMotivo(),
+            $devolucion->getReembolso(),
             $devolucion->getEstado(),
-            $devolucion->getFechaSolicitud()
+            $devolucion->getFechaIngreso(),
+            $devolucion->getFechaFinal()
         ]);
 
         return $db->lastInsertId();
@@ -39,17 +41,19 @@ class DevolucionesHandler
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
-            'UPDATE `devoluciones` SET
-            `usuario` = ?, `pedido_id` = ?, `motivo` = ?, `estado` = ?, `fecha_solicitud` = ?
+            'UPDATE `devoluciones` SET 
+            `producto` = ?, `factura` = ?, `motivo` = ?, `reembolso` = ?, `estado` = ?, `fecha_ingreso` = ?, `fecha_final` = ?
             WHERE `id` = ?'
         );
 
         return $stmt->execute([
-            $devolucion->getUsuario(),
-            $devolucion->getPedidoId(),
+            $devolucion->getProducto(),
+            $devolucion->getFactura(),
             $devolucion->getMotivo(),
+            $devolucion->getReembolso(),
             $devolucion->getEstado(),
-            $devolucion->getFechaSolicitud(),
+            $devolucion->getFechaIngreso(),
+            $devolucion->getFechaFinal(),
             $devolucion->getId()
         ]);
     }

@@ -20,14 +20,13 @@ class CarritoHandler
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `carritos` 
-            (`usuario`, `fecha_creacion`, `estado`) 
-            VALUES (?, ?, ?)'
+            (`usuario`, `fecha_creacion`) 
+            VALUES (?, ?)'
         );
 
         $stmt->execute([
             $carrito->getUsuario(),
-            $carrito->getFechaCreacion(),
-            $carrito->getEstado()
+            $carrito->getFechaCreacion()
         ]);
 
         return $db->lastInsertId();
@@ -38,14 +37,13 @@ class CarritoHandler
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `carritos` SET
-            `usuario` = ?, `fecha_creacion` = ?, `estado` = ?
+            `usuario` = ?, `fecha_creacion` = ?
             WHERE `id` = ?'
         );
 
         return $stmt->execute([
             $carrito->getUsuario(),
             $carrito->getFechaCreacion(),
-            $carrito->getEstado(),
             $carrito->getId()
         ]);
     }
