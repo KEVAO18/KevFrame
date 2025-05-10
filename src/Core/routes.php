@@ -1,14 +1,14 @@
 <?php
 
-use App\Controllers\IndexController;
-use App\Controllers\ProductoController;
-use App\Controllers\CarritoController;
-use App\Controllers\ContactoController;
+namespace App\Core;
 
-// Listado de productos
+use App\Core\Router;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\ContactoController;
 
-// Ruta home
-$app->get('/', function ($request, $response) {
-    $response->getBody()->write("Bienvenido a la página principal");
-    return $response;
-})->setName('home');
+$router = new Router();
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Home', IndexController::class, 'index');
+$router->dispatch();

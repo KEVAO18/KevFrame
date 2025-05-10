@@ -7,13 +7,8 @@
 </head>
 
 <body>
-    <?php require __DIR__ . '/../web/header.php'; ?>
     <main class="container py-4">
-        <div class="row">
-            <?php foreach ($productos as $producto): ?>
-                <?php require __DIR__ . '/../web/product_card.php'; ?>
-            <?php endforeach; ?>
-        </div>
+        Hola mundo desde index
     </main>
     <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>

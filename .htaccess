@@ -1,0 +1,21 @@
+# Add these at the top to match security features
+Options All -Indexes
+FileETag None
+Header set X-Content-Type-Options nosniff
+Header always append X-Frame-Options SAMEORIGIN
+ErrorDocument 404 /serve.php?p=error404
+ErrorDocument 403 /serve.php?p=error403
+
+RewriteEngine On
+RewriteBase /aromas/prueba/
+
+# Modify the existing rewrite rule to use query parameter
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9\-/_]+)$ serve.php?p=$1 [L,QSA,NC]
+
+# Fix DirectoryIndex configuration
+DirectoryIndex serve.php
+
+# Add root redirect to handle the 'menu' parameter
+RewriteRule ^$ serve.php?p=menu [L]
