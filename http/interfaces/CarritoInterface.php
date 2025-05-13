@@ -2,11 +2,13 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface CarritoInterface
 {
     public function getId(): int;
 
     public function getUsuario(): int;
 
-    public function getFechaCreacion(): string; // Assuming DATETIME is represented as string
+    public function getFechaCreacion(): DateTime;
 }

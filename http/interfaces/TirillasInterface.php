@@ -2,6 +2,8 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface TirillasInterface
 {
     public function getId(): int;
@@ -10,5 +12,5 @@ interface TirillasInterface
 
     public function getContenido(): string;
 
-    public function getFechaGeneracion(): string; // O DateTime
+    public function getFechaGeneracion(): DateTime; // O DateTime
 }

@@ -31,7 +31,7 @@ class UsuariosHandler
             $usuario->getEmail(),
             $usuario->getPass(),
             $usuario->getSalt(),
-            $usuario->isUsuarioActivo()
+            $usuario->getIsUsuarioActivo()
         ]);
 
         return $db->lastInsertId();
@@ -51,7 +51,7 @@ class UsuariosHandler
             $usuario->getEmail(),
             $usuario->getPass(),
             $usuario->getSalt(),
-            $usuario->isUsuarioActivo(),
+            $usuario->getIsUsuarioActivo(),
             $usuario->getDni()
         ]);
     }

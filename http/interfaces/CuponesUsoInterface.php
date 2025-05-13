@@ -2,6 +2,8 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface CuponesUsoInterface
 {
     public function getId(): int;
@@ -10,5 +12,6 @@ interface CuponesUsoInterface
 
     public function getUsuario(): int;
 
-    public function getFechaUso(): string; // Assuming DATETIME is represented as string
+    public function getFechaUso(): DateTime; // Assuming DATETIME is represented as string
+
 }

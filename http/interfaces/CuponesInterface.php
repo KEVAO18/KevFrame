@@ -2,6 +2,8 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface CuponesInterface
 {
     public function getId(): int;
@@ -12,9 +14,9 @@ interface CuponesInterface
 
     public function getTipo(): string;
 
-    public function getValidoDesde(): string; // Assuming DATE is represented as string
+    public function getValidoDesde(): DateTime; // Assuming DATE is represented as string
 
-    public function getValidoHasta(): string; // Assuming DATE is represented as string
+    public function getValidoHasta(): DateTime; // Assuming DATE is represented as string
 
     public function getLimiteUso(): int;
 }

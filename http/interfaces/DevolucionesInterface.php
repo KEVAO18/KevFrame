@@ -2,8 +2,9 @@
 
 namespace App\Http\Interfaces;
 
-interface DevolucionesInterface
-{
+use DateTime;
+
+interface DevolucionesInterface{
     public function getId(): int;
 
     public function getProducto(): int;
@@ -16,7 +17,7 @@ interface DevolucionesInterface
 
     public function getEstado(): string;
 
-    public function getFechaIngreso(): string; // Assuming DATETIME is represented as string
+    public function getFechaIngreso(): DateTime;
 
-    public function getFechaFinal(): ?string; // Assuming DATETIME is represented as string, nullable
+    public function getFechaFinal(): ?DateTime;
 }

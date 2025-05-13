@@ -7,9 +7,10 @@
 </head>
 
 <body>
-    <main class="container py-4">
-        Hola mundo desde index
-    </main>
+    <div class="container">
+        
+    </div>
+    <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 

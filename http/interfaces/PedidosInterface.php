@@ -2,13 +2,15 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface PedidosInterface
 {
     public function getId(): int;
 
     public function getUsuario(): int;
 
-    public function getFecha(): string; // Assuming DATETIME is represented as string
+    public function getFecha(): DateTime;
 
     public function getEstado(): string;
 

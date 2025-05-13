@@ -2,6 +2,8 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface HistorialPreciosInterface
 {
     public function getId(): int;
@@ -10,7 +12,7 @@ interface HistorialPreciosInterface
 
     public function getPrecio(): float;
 
-    public function getFechaInicio(): string; // O DateTime
+    public function getFechaInicio(): DateTime;
 
-    public function getFechaFin(): ?string; // O DateTime, puede ser NULL
+    public function getFechaFin(): ?DateTime;
 }

@@ -16,5 +16,5 @@ interface UsuariosInterface
 
     public function getSalt(): string;
 
-    public function isUsuarioActivo(): bool;
+    public function getIsUsuarioActivo(): bool;
 }

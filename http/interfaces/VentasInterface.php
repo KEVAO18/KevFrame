@@ -2,6 +2,8 @@
 
 namespace App\Http\Interfaces;
 
+use DateTime;
+
 interface VentasInterface
 {
     public function getId(): int;
@@ -12,5 +14,5 @@ interface VentasInterface
 
     public function getFactura(): string;
 
-    public function getFecha(): string; // Assuming DATETIME is represented as string
+    public function getFecha(): DateTime; // Assuming DATETIME is represented as string
 }

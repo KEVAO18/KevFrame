@@ -11,4 +11,6 @@ use App\Http\Controllers\ContactoController;
 $router = new Router();
 
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Home', IndexController::class, 'index');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos', ProductoController::class, 'index');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Carrito', CarritoController::class, 'index');
 $router->dispatch();
