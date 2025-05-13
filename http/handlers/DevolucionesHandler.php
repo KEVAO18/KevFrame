@@ -4,6 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\DevolucionesInterface;
 use App\Core\Database;
+use App\Models\Devoluciones;
 use PDO;
 
 class DevolucionesHandler
@@ -65,18 +66,43 @@ class DevolucionesHandler
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?Devoluciones
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `devoluciones` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new Devoluciones(
+            $datos['id'],
+            $datos['producto'],
+            $datos['factura'],
+            $datos['motivo'],
+            $datos['reembolso'],
+            $datos['estado'],
+            $datos['fecha_ingreso'],
+            $datos['fecha_final'] 
+        ) : null;
     }
 
     public function getAll(): array
     {
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `devoluciones`')
+        $result = $db->query('SELECT * FROM `devoluciones`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($datos) => new Devoluciones(
+                $datos['id'],
+                $datos['producto'],
+                $datos['factura'],
+                $datos['motivo'],
+                $datos['reembolso'],
+                $datos['estado'],
+                $datos['fecha_ingreso'],
+                $datos['fecha_final']
+            ),
+            $result
+        );
     }
 }

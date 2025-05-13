@@ -4,6 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\DireccionesEnvioInterface;
 use App\Core\Database;
+use App\Models\DireccionesEnvio;
 use PDO;
 
 class DireccionesEnvioHandler
@@ -63,18 +64,41 @@ class DireccionesEnvioHandler
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?DireccionesEnvio
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `direcciones_envio` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new DireccionesEnvio(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['direccion'],
+            $datos['ciudad'],
+            $datos['departamento'],
+            $datos['pais'],
+            $datos['principal'] 
+        ) : null;
     }
 
     public function getAll(): array
     {
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `direcciones_envio`')
+        $result = $db->query('SELECT * FROM `direcciones_envio`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn ($datos) => new DireccionesEnvio(
+                $datos['id'],
+                $datos['usuario'],
+                $datos['direccion'],
+                $datos['ciudad'],
+                $datos['departamento'],
+                $datos['pais'],
+                $datos['principal']
+            ),
+            $result
+        ) ?? [];
     }
 }

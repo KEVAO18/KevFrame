@@ -4,19 +4,17 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\ProductosInterface;
 use App\Core\Database;
+use App\Models\Producto;
 use PDO;
 
-class ProductosHandler
-{
+class ProductosHandler{
     private $db;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->db = new Database();
     }
     
-    public function create(ProductosInterface $producto): int
-    {
+    public function create(ProductosInterface $producto): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `productos` 
@@ -35,8 +33,7 @@ class ProductosHandler
         return $db->lastInsertId();
     }
 
-    public function update(ProductosInterface $producto): bool
-    {
+    public function update(ProductosInterface $producto): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `productos` SET
@@ -55,24 +52,43 @@ class ProductosHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `productos` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
-    {
+    public function getById(int $id): ?Producto{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `productos` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $datos ? new Producto(
+            $datos['id'],
+            $datos['nombre'],
+            $datos['descripcion'],
+            $datos['unidades'],
+            $datos['precio'],
+            $datos['estado_id']
+        ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array{
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `productos`')->fetchAll(PDO::FETCH_ASSOC);
+        $result = $db->query('SELECT * FROM productos')
+            ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($row) => new Producto(
+                $row['id'],
+                $row['nombre'],
+                $row['descripcion'],
+                $row['unidades'],
+                $row['precio'],
+                $row['estado_id']
+            ),
+            $result
+        ) ?? [];
     }
 }

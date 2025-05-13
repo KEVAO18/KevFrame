@@ -4,6 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\EstadosPagoInterface;
 use App\Core\Database;
+use App\Models\EstadosPago;
 use PDO;
 
 class EstadosPagoHandler
@@ -53,18 +54,31 @@ class EstadosPagoHandler
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?EstadosPago
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `estados_pago` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos ? new EstadosPago(
+            $datos['id'],
+            $datos['nombre']
+        ) : null;
     }
 
     public function getAll(): array
     {
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `estados_pago`')
+        $result =  $db->query('SELECT * FROM `estados_pago`')
             ->fetchAll(PDO::FETCH_ASSOC);
+        
+        return array_map(
+            fn ($datos) => new EstadosPago(
+                $datos['id'],
+                $datos['nombre']
+            ),
+            $result
+        ) ?? [];
     }
 }

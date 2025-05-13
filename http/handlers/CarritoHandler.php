@@ -4,9 +4,10 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CarritoInterface;
 use App\Core\Database;
+use App\Models\Carrito;
 use PDO;
 
-class CarritoHandler implements CarritoInterface {
+class CarritoHandler {
     
     /**
      * @var Database
@@ -16,66 +17,12 @@ class CarritoHandler implements CarritoInterface {
     private $db;
 
     /**
-     * @var int
-     * @access private
-     * 
-     */
-    private int $id;
-
-    /**
-     * @var int
-     * @access private
-     * 
-     */
-    private int $usuario;
-
-    /**
-     * @var string
-     * @access private
-     *
-     */
-    private string $fechaCreacion;
-
-    /**
      * @access public
-     * @param int $id
-     * @param int $usuario
-     * @param string $fechaCreacion
      * @return void
      * 
      */
-    public function __construct(int $id, int $usuario, string $fechaCreacion){
+    public function __construct(){
         $this->db = new Database();
-        $this->id = $id;
-        $this->usuario = $usuario;
-        $this->fechaCreacion = $fechaCreacion;
-    }
-
-    /**
-     * @return int
-     * @access public
-     * 
-     */
-    public function getId(): int{
-        return $this->id;
-    }
-    
-    /**
-     * @return int
-     * @access public
-     * 
-     */
-    public function getUsuario(): int{
-        return $this->usuario;
-    }
-
-    /** 
-     * @return string
-     * @access public
-     *
-    */
-    public function getFechaCreacion(): string{
-        return $this->fechaCreacion;
     }
 
     /**
@@ -136,15 +83,21 @@ class CarritoHandler implements CarritoInterface {
 
     /**
      * @param int $id
-     * @return array|null
+     * @return Carrito|null
      * @access public
      * 
      */
-    public function getById(int $id): ?array{
+    public function getById(int $id): ?Carrito{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `carritos` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new Carrito(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['fecha_creacion'] 
+        ) : null;
     }
 
     /**
@@ -154,7 +107,16 @@ class CarritoHandler implements CarritoInterface {
      */
     public function getAll(): array{
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `carritos`')
+        $result = $db->query('SELECT * FROM `carritos`')
             ->fetchAll(PDO::FETCH_ASSOC);
+        
+        return array_map(
+            fn($datos) => new Carrito(
+                $datos['id'],
+                $datos['usuario'],
+                $datos['fecha_creacion'] 
+            ),
+            $result
+        ) ?? [];
     }
 }

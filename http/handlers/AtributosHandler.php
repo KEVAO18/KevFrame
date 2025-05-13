@@ -93,7 +93,10 @@ class AtributosHandler {
         $stmt->execute([$id]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $datos ? new Atributo($datos['id'], $datos['nombre']): null;
+        return $datos ? new Atributo(
+            $datos['id'], 
+            $datos['nombre']
+        ): null;
     }
 
     /**
@@ -108,7 +111,10 @@ class AtributosHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new Atributo($row['id'], $row['nombre']),
+            fn($row) => new Atributo(
+                $row['id'], 
+                $row['nombre']
+            ),
             $restult
         ) ?? [];
     }

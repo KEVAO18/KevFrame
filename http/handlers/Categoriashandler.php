@@ -4,7 +4,8 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CategoriasInterface;
 use App\Core\Database;
-    use PDO;
+use App\Models\Categoria;
+use PDO;
 
     class Categoriashandler{
 
@@ -58,18 +59,31 @@ use App\Core\Database;
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?Categoria
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `categorias` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new Categoria(
+            $datos['id'],
+            $datos['descripcion'] 
+        ) : null;
     }
 
     public function getAll(): array
     {
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `categorias`')
+        $result = $db->query('SELECT * FROM `categorias`')
             ->fetchAll(PDO::FETCH_ASSOC);
+        
+        return array_map(
+            fn($datos) => new Categoria(
+                $datos['id'],
+                $datos['descripcion']
+            ),
+            $result
+        ) ?? [];
     }
 }

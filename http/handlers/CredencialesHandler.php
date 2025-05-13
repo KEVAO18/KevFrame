@@ -4,7 +4,8 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CredencialesInterface;
 use App\Core\Database;
-    use PDO;
+use App\Models\Credenciales;
+use PDO;
 
     class CredencialesHandler
 {
@@ -55,18 +56,33 @@ use App\Core\Database;
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
+    public function getById(int $id): ?Credenciales
     {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `credenciales` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new Credenciales(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['tipo']
+        ) : null;
     }
 
     public function getAll(): array
     {
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `credenciales`')
+        $result = $db->query('SELECT * FROM `credenciales`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($datos) => new Credenciales(
+                $datos['id'],
+                $datos['usuario'],
+                $datos['tipo']
+            ),
+            $result
+        );
     }
 }

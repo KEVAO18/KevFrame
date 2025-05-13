@@ -4,19 +4,18 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CuponesUsoInterface;
 use App\Core\Database;
+use App\Models\CuponesUso;
 use PDO;
 
 class CuponesUsoHandler
 {
     private $db;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->db = new Database();
     }
 
-    public function create(CuponesUsoInterface $cuponesUso): int
-    {
+    public function create(CuponesUsoInterface $cuponesUso): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones_uso` 
@@ -33,8 +32,7 @@ class CuponesUsoHandler
         return $db->lastInsertId();
     }
 
-    public function update(CuponesUsoInterface $cuponesUso): bool
-    {
+    public function update(CuponesUsoInterface $cuponesUso): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET
@@ -50,25 +48,38 @@ class CuponesUsoHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `cupones` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
-    {
+    public function getById(int $id): ?CuponesUso{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `cupones` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        return $datos? new CuponesUso(
+            $datos['id'],
+            $datos['cupon'],
+            $datos['usuario'],
+            $datos['fecha_uso'] 
+        ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array{
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `cupones`')
+        $result = $db->query('SELECT * FROM `cupones`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($row) => new CuponesUso(
+                $row['id'],
+                $row['cupon'],
+                $row['usuario'],
+                $row['fecha_uso']
+            ), 
+            $result
+        );
     }
 }

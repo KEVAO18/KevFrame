@@ -4,6 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CarritoDetalleInterface;
 use App\Core\Database;
+use App\Models\CarritoDetalle;
 use PDO;
 
 class CarritoDetalleHandler implements CarritoDetalleInterface {
@@ -159,11 +160,18 @@ class CarritoDetalleHandler implements CarritoDetalleInterface {
      * @access public
      * 
      */
-    public function getById(int $id): ?array{
+    public function getById(int $id): ?CarritoDetalle{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `carrito_detalle` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new CarritoDetalle(
+            $datos['id'],
+            $datos['carrito'],
+            $datos['producto'],
+            $datos['cantidad'] 
+        ) : null;
     }
 
     /**
@@ -173,7 +181,17 @@ class CarritoDetalleHandler implements CarritoDetalleInterface {
      */
     public function getAll(): array{
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `carrito_detalle`')
+        $result = $db->query('SELECT * FROM `carrito_detalle`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($datos) => new CarritoDetalle(
+                $datos['id'],
+                $datos['carrito'],
+                $datos['producto'],
+                $datos['cantidad']
+            ),
+            $result
+        );
     }
 }

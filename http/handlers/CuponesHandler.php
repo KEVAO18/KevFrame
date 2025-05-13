@@ -4,19 +4,18 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\CuponesInterface;
 use App\Core\Database;
+use App\Models\Cupones;
 use PDO;
 
 class CuponesHandler
 {
     private $db;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->db = new Database();
     }
 
-    public function create(CuponesInterface $cupon): int
-    {
+    public function create(CuponesInterface $cupon): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones` 
@@ -36,8 +35,7 @@ class CuponesHandler
         return $db->lastInsertId();
     }
 
-    public function update(CuponesInterface $cupon): bool
-    {
+    public function update(CuponesInterface $cupon): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET
@@ -56,25 +54,44 @@ class CuponesHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `cupones` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?array
-    {
+    public function getById(int $id): ?Cupones{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `cupones` WHERE `id` = ?');
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        return $datos? new Cupones(
+            $datos['id'],
+            $datos['codigo'],
+            $datos['descuento'],
+            $datos['tipo'],
+            $datos['valido_desde'],
+            $datos['valido_hasta'],
+            $datos['limite_uso'] 
+        ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array{
         $db = $this->db->getConnection();
-        return $db->query('SELECT * FROM `cupones`')
+        $result = $db->query('SELECT * FROM `cupones`')
             ->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(
+            fn($datos) => new Cupones(
+                $datos['id'],
+                $datos['codigo'],
+                $datos['descuento'],
+                $datos['tipo'],
+                $datos['valido_desde'],
+                $datos['valido_hasta'],
+                $datos['limite_uso'] 
+            ),
+            $result
+        );
     }
 }
