@@ -5,19 +5,28 @@ namespace App\Http\Handlers;
 use App\Http\Interfaces\DevolucionesInterface;
 use App\Core\Database;
 use App\Models\Devoluciones;
+use DateTime;
 use PDO;
 
-class DevolucionesHandler
-{
-    private $db;
+class DevolucionesHandler {
 
-    public function __construct()
-    {
+    /**
+     * @var Database
+     * @access private
+     * 
+     */
+    private Database $db;
+
+    /**
+     * @return void
+     * @access public
+     * 
+     */
+    public function __construct() {
         $this->db = new Database();
     }
 
-    public function create(DevolucionesInterface $devolucion): int
-    {
+    public function create(DevolucionesInterface $devolucion): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `devoluciones` 
@@ -38,8 +47,7 @@ class DevolucionesHandler
         return $db->lastInsertId();
     }
 
-    public function update(DevolucionesInterface $devolucion): bool
-    {
+    public function update(DevolucionesInterface $devolucion): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `devoluciones` SET 
@@ -59,15 +67,13 @@ class DevolucionesHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `devoluciones` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?Devoluciones
-    {
+    public function getById(int $id): ?Devoluciones {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `devoluciones` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -80,13 +86,12 @@ class DevolucionesHandler
             $datos['motivo'],
             $datos['reembolso'],
             $datos['estado'],
-            $datos['fecha_ingreso'],
-            $datos['fecha_final'] 
+            new DateTime($datos['fecha_ingreso']),
+            new DateTime($datos['fecha_final']) 
         ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `devoluciones`')
             ->fetchAll(PDO::FETCH_ASSOC);
@@ -99,8 +104,8 @@ class DevolucionesHandler
                 $datos['motivo'],
                 $datos['reembolso'],
                 $datos['estado'],
-                $datos['fecha_ingreso'],
-                $datos['fecha_final']
+                new DateTime($datos['fecha_ingreso']),
+                new DateTime($datos['fecha_final']) 
             ),
             $result
         );

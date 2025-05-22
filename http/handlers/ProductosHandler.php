@@ -4,7 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Http\Interfaces\ProductosInterface;
 use App\Core\Database;
-use App\Models\Producto;
+use App\Models\Productos;
 use PDO;
 
 class ProductosHandler{
@@ -58,13 +58,13 @@ class ProductosHandler{
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?Producto{
+    public function getById(int $id): ?Productos{
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `productos` WHERE `id` = ?');
         $stmt->execute([$id]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $datos ? new Producto(
+        return $datos ? new Productos(
             $datos['id'],
             $datos['nombre'],
             $datos['descripcion'],
@@ -80,7 +80,7 @@ class ProductosHandler{
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new Producto(
+            fn($row) => new Productos(
                 $row['id'],
                 $row['nombre'],
                 $row['descripcion'],

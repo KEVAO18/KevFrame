@@ -7,17 +7,25 @@ use App\Core\Database;
 use App\Models\Credenciales;
 use PDO;
 
-    class CredencialesHandler
-{
-    private $db;
+class CredencialesHandler {
 
-    public function __construct()
-    {
+    /**
+     * @var Database
+     * @access private
+     * 
+     */
+    private Database $db;
+
+    /**
+     * @return void
+     * @access public
+     * 
+     */
+    public function __construct() {
         $this->db = new Database();
     }
 
-    public function create(CredencialesInterface $credenciales): int
-    {
+    public function create(CredencialesInterface $credenciales): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `credenciales` 
@@ -33,8 +41,7 @@ use PDO;
         return $db->lastInsertId();
     }
 
-    public function update(CredencialesInterface $credenciales): bool
-    {
+    public function update(CredencialesInterface $credenciales): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `credenciales` SET
@@ -49,29 +56,26 @@ use PDO;
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `credenciales` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?Credenciales
-    {
+    public function getById(int $id): ?Credenciales {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `credenciales` WHERE `id` = ?');
         $stmt->execute([$id]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        return $datos? new Credenciales(
+        return $datos ? new Credenciales(
             $datos['id'],
             $datos['usuario'],
             $datos['tipo']
         ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `credenciales`')
             ->fetchAll(PDO::FETCH_ASSOC);

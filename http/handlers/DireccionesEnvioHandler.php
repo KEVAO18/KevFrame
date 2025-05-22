@@ -7,17 +7,25 @@ use App\Core\Database;
 use App\Models\DireccionesEnvio;
 use PDO;
 
-class DireccionesEnvioHandler
-{
-    private $db;
+class DireccionesEnvioHandler {
+    
+    /**
+     * @var Database
+     * @access private
+     * 
+     */
+    private Database $db;
 
-    public function __construct()
-    {
+    /**
+     * @return void
+     * @access public
+     * 
+     */
+    public function __construct() {
         $this->db = new Database();
     }
 
-    public function create(DireccionesEnvioInterface $direccionesEnvio): int
-    {
+    public function create(DireccionesEnvioInterface $direccionesEnvio): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `direcciones_envio` 
@@ -37,8 +45,7 @@ class DireccionesEnvioHandler
         return $db->lastInsertId();
     }
 
-    public function update(DireccionesEnvioInterface $direccionesEnvio): bool
-    {
+    public function update(DireccionesEnvioInterface $direccionesEnvio): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `direcciones_envio` SET 
@@ -57,15 +64,13 @@ class DireccionesEnvioHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `direcciones_envio` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?DireccionesEnvio
-    {
+    public function getById(int $id): ?DireccionesEnvio {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `direcciones_envio` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -82,8 +87,7 @@ class DireccionesEnvioHandler
         ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `direcciones_envio`')
             ->fetchAll(PDO::FETCH_ASSOC);

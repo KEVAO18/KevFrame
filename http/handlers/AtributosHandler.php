@@ -14,14 +14,14 @@ class AtributosHandler {
      * @access private
      * 
      */
-    private $db;
+    private Database $db;
 
     /**
      * @return void
      * @access public
      * 
      */
-    public function __construct(){
+    public function __construct() {
         $this->db = new Database();
     }
 
@@ -31,7 +31,7 @@ class AtributosHandler {
      * @access public
      * 
      */
-    public function create(AtributosInterface $atributos): int{
+    public function create(AtributosInterface $atributos): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `atributos` 
@@ -53,7 +53,7 @@ class AtributosHandler {
      * @access public
      * 
      */
-    public function update(AtributosInterface $atributos): bool{
+    public function update(AtributosInterface $atributos): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `atributos` SET
@@ -74,7 +74,7 @@ class AtributosHandler {
      * @access public
      * 
      */
-    public function delete(int $id): bool{
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `atributos` WHERE `id` = ?');
         return $stmt->execute([$id]);
@@ -87,7 +87,7 @@ class AtributosHandler {
      * @access public
      *
      */
-    public function getById(int $id): ?Atributo{
+    public function getById(int $id): ?Atributo {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `atributos` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -105,7 +105,7 @@ class AtributosHandler {
      * @access public
      * 
      */
-    public function getAll(): array{
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $restult = $db->query('SELECT * FROM `atributos`')
             ->fetchAll(PDO::FETCH_ASSOC);

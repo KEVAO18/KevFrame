@@ -7,17 +7,25 @@ use App\Core\Database;
 use App\Models\EstadosPago;
 use PDO;
 
-class EstadosPagoHandler
-{
-    private $db;
+class EstadosPagoHandler {
+    
+    /**
+     * @var Database
+     * @access private
+     * 
+     */
+    private Database $db;
 
-    public function __construct()
-    {
+    /**
+     * @return void
+     * @access public
+     * 
+     */
+    public function __construct() {
         $this->db = new Database();
     }
 
-    public function create(EstadosPagoInterface $estadosPago): int
-    {
+    public function create(EstadosPagoInterface $estadosPago): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `estados_pago` 
@@ -32,8 +40,7 @@ class EstadosPagoHandler
         return $db->lastInsertId();
     }
 
-    public function update(EstadosPagoInterface $estadosPago): bool
-    {
+    public function update(EstadosPagoInterface $estadosPago): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `estados_pago` SET 
@@ -47,15 +54,13 @@ class EstadosPagoHandler
         ]);
     }
 
-    public function delete(int $id): bool
-    {
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `estados_pago` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?EstadosPago
-    {
+    public function getById(int $id): ?EstadosPago {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `estados_pago` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -67,8 +72,7 @@ class EstadosPagoHandler
         ) : null;
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result =  $db->query('SELECT * FROM `estados_pago`')
             ->fetchAll(PDO::FETCH_ASSOC);

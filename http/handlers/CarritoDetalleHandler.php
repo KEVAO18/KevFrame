@@ -7,7 +7,7 @@ use App\Core\Database;
 use App\Models\CarritoDetalle;
 use PDO;
 
-class CarritoDetalleHandler implements CarritoDetalleInterface {
+class CarritoDetalleHandler {
 
     /**
      * @var Database
@@ -17,84 +17,12 @@ class CarritoDetalleHandler implements CarritoDetalleInterface {
     private Database $db;
 
     /**
-     * @var int
-     * @access private
-     *
-     */
-    private int $id;
-
-    /**
-     * @var int
-     * @access private
-     *
-     */
-    private int $carrito;
-
-    /**
-     * @var int
-     * @access private
-     *
-     */
-    private int $producto;
-
-    /**
-     * @var int
-     * @access private
-     *
-     */
-    private int $cantidad;
-
-    /**
-     * @param int $id
-     * @param int $carrito
-     * @param int $producto
-     * @param int $cantidad
      * @return void
      * @access public
      *
      */
-    public function __construct($id, $carrito, $producto, $cantidad){
+    public function __construct(){
         $this->db = new Database();
-        $this->id = $id;
-        $this->carrito = $carrito;
-        $this->producto = $producto;
-        $this->cantidad = $cantidad;
-    }
-
-    /**
-     * @return int
-     * @access public
-     *
-     */
-    public function getId(): int{
-        return $this->id;
-    }
-
-    /** 
-     * @return int
-     * @access public
-     *
-     */
-    public function getCarrito(): int{
-        return $this->carrito;
-    }
-
-    /**
-     * @return int
-     * @access public
-     *
-     */
-    public function getProducto(): int{
-        return $this->producto;
-    }
-
-    /**
-     * @return int
-     * @access public
-     *
-     */
-    public function getCantidad(): int{
-        return $this->cantidad;
     }
 
     /**

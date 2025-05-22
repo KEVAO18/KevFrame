@@ -5,6 +5,7 @@ namespace App\Http\Handlers;
 use App\Http\Interfaces\CarritoInterface;
 use App\Core\Database;
 use App\Models\Carrito;
+use DateTime;
 use PDO;
 
 class CarritoHandler {
@@ -14,14 +15,14 @@ class CarritoHandler {
      * @access private
      *
      */
-    private $db;
+    private Database $db;
 
     /**
      * @access public
      * @return void
      * 
      */
-    public function __construct(){
+    public function __construct() {
         $this->db = new Database();
     }
 
@@ -30,8 +31,7 @@ class CarritoHandler {
      * @access public
      *
      */
-    public function create(CarritoInterface $carrito): int
-    {
+    public function create(CarritoInterface $carrito): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `carritos` 
@@ -53,8 +53,7 @@ class CarritoHandler {
      * @access public
      *
      */
-    public function update(CarritoInterface $carrito): bool
-    {
+    public function update(CarritoInterface $carrito): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `carritos` SET
@@ -75,7 +74,7 @@ class CarritoHandler {
      * @access public
      * 
      */
-    public function delete(int $id): bool{
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `carritos` WHERE `id` = ?');
         return $stmt->execute([$id]);
@@ -87,7 +86,7 @@ class CarritoHandler {
      * @access public
      * 
      */
-    public function getById(int $id): ?Carrito{
+    public function getById(int $id): ?Carrito {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `carritos` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -96,7 +95,7 @@ class CarritoHandler {
         return $datos? new Carrito(
             $datos['id'],
             $datos['usuario'],
-            $datos['fecha_creacion'] 
+            new DateTime($datos['fecha_creacion'])
         ) : null;
     }
 
@@ -105,7 +104,7 @@ class CarritoHandler {
      * @access public
      *
      */
-    public function getAll(): array{
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `carritos`')
             ->fetchAll(PDO::FETCH_ASSOC);
@@ -114,7 +113,7 @@ class CarritoHandler {
             fn($datos) => new Carrito(
                 $datos['id'],
                 $datos['usuario'],
-                $datos['fecha_creacion'] 
+                new DateTime($datos['fecha_creacion'])
             ),
             $result
         ) ?? [];

@@ -5,17 +5,28 @@ namespace App\Http\Handlers;
 use App\Http\Interfaces\CuponesUsoInterface;
 use App\Core\Database;
 use App\Models\CuponesUso;
+use DateTime;
 use PDO;
 
-class CuponesUsoHandler
-{
-    private $db;
+class CuponesUsoHandler {
 
-    public function __construct(){
+    /**
+     * @var Database
+     * @access private
+     * 
+     */
+    private Database $db;
+
+    /**
+     * @return void
+     * @access public
+     * 
+     */
+    public function __construct() {
         $this->db = new Database();
     }
 
-    public function create(CuponesUsoInterface $cuponesUso): int{
+    public function create(CuponesUsoInterface $cuponesUso): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones_uso` 
@@ -32,7 +43,7 @@ class CuponesUsoHandler
         return $db->lastInsertId();
     }
 
-    public function update(CuponesUsoInterface $cuponesUso): bool{
+    public function update(CuponesUsoInterface $cuponesUso): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET
@@ -48,13 +59,13 @@ class CuponesUsoHandler
         ]);
     }
 
-    public function delete(int $id): bool{
+    public function delete(int $id): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('DELETE FROM `cupones` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?CuponesUso{
+    public function getById(int $id): ?CuponesUso {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `cupones` WHERE `id` = ?');
         $stmt->execute([$id]);
@@ -63,11 +74,11 @@ class CuponesUsoHandler
             $datos['id'],
             $datos['cupon'],
             $datos['usuario'],
-            $datos['fecha_uso'] 
+            new DateTime($datos['fecha_uso'] )
         ) : null;
     }
 
-    public function getAll(): array{
+    public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `cupones`')
             ->fetchAll(PDO::FETCH_ASSOC);
@@ -77,7 +88,7 @@ class CuponesUsoHandler
                 $row['id'],
                 $row['cupon'],
                 $row['usuario'],
-                $row['fecha_uso']
+                new DateTime($row['fecha_uso'])
             ), 
             $result
         );

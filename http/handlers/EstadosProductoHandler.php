@@ -2,12 +2,13 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CategoriasInterface;
+use App\Http\Interfaces\EstadosProductoInterface;
+use App\Models\EstadosProducto;
 use App\Core\Database;
-use App\Models\Categoria;
+use DateTime;
 use PDO;
 
-    class Categoriashandler {
+class EstadosProductoHandler {
 
     /**
      * @var Database
@@ -25,62 +26,66 @@ use PDO;
         $this->db = new Database();
     }
 
-    public function create(CategoriasInterface $categorias): int {
+    public function create(EstadosProductoInterface $estadosProducto): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
-            'INSERT INTO `categorias` 
-            (`descripcion`) 
+            'INSERT INTO `estados_producto` 
+            (`nombre`) 
             VALUES (?)'
         );
 
         $stmt->execute([
-            $categorias->getDescripcion()
+            $estadosProducto->getNombre()
         ]);
 
         return $db->lastInsertId();
     }
 
-    public function update(CategoriasInterface $categorias): bool {
+    public function update(EstadosProductoInterface $estadosProducto): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
-            'UPDATE `categorias` SET
-            `descripcion` = ?
+            'UPDATE `estados_producto` SET 
+            `nombre` = ?
             WHERE `id` = ?'
         );
 
         return $stmt->execute([
-            $categorias->getDescripcion(),
-            $categorias->getId()
+            $estadosProducto->getNombre(),
+            $estadosProducto->getId()
         ]);
     }
 
     public function delete(int $id): bool {
         $db = $this->db->getConnection();
-        $stmt = $db->prepare('DELETE FROM `categorias` WHERE `id` = ?');
+        $stmt = $db->prepare('DELETE FROM `estados_producto` WHERE `id` = ?');
         return $stmt->execute([$id]);
     }
 
-    public function getById(int $id): ?Categoria {
+    public function getById(int $id): ?EstadosProducto {
         $db = $this->db->getConnection();
-        $stmt = $db->prepare('SELECT * FROM `categorias` WHERE `id` = ?');
+        $stmt = $db->prepare('SELECT * FROM `estados_producto` WHERE `id` = ?');
         $stmt->execute([$id]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        return $datos? new Categoria(
+        return $datos ? new EstadosProducto(
             $datos['id'],
-            $datos['descripcion'] 
+            $datos['nombre'],
+            $datos['descripcion'],
+            new DateTime($datos['fecha_creacion'])
         ) : null;
     }
 
     public function getAll(): array {
         $db = $this->db->getConnection();
-        $result = $db->query('SELECT * FROM `categorias`')
+        $result = $db->query('SELECT * FROM `estados_producto`')
             ->fetchAll(PDO::FETCH_ASSOC);
-        
+
         return array_map(
-            fn($datos) => new Categoria(
-                $datos['id'],
-                $datos['descripcion']
+            fn($row) => new EstadosProducto(
+                $row['id'],
+                $row['nombre'],
+                $row['descripcion'],
+                new DateTime($row['fecha_creacion'])
             ),
             $result
         ) ?? [];
