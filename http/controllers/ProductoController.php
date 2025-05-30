@@ -8,8 +8,11 @@ class ProductoController
         echo "Productos";
     }
 
-    public function listar()
-    {
-        // Lógica para listar productos
+    public function show($id){
+        echo "Producto $id";
+    }
+
+    public function filtro($filtro, $valor){
+        echo "Producto $filtro $valor";
     }
 }

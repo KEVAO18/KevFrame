@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\View;
+
 class IndexController{
 
     public function index(){
 
-        // ob_start();
-        // require __DIR__ . '/public/index.php';
-        // $salida = ob_get_clean();
-        // echo $salida;
-
-        // echo __DIR__;
+        View::render("componentes/home");
+        
     }
 }

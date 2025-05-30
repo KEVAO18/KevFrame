@@ -15,7 +15,6 @@ class Router{
      * @param string $path Ruta URL
      * @param string $controller Nombre completo de la clase controladora
      * @param string $action Nombre del método accion
-     * @param array $data Datos opcionales para la ruta
      */
     public function addRoute(string $method, string $path, string $controller, string $action): void
     {
@@ -73,8 +72,7 @@ class Router{
 
         // Verificar el método HTTP
         if (!isset($this->routes[$request_method])) {
-            $controller = new ErrorController();
-            $controller->notFound();
+            $controller = new ErrorController(500);
             return;
         }
 
@@ -100,8 +98,7 @@ class Router{
             }
         }
 
-        $controller = new ErrorController();
-        $controller->notFound();
+        $controller = new ErrorController(404);
     }
 
     /**

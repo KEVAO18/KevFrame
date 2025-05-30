@@ -22,10 +22,13 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/home', IndexController::class,
  * 1. productos
  * 2. producto/{id}
  * 3. productos/{filtro}/{valor}
- * 4. productos/top_comprados
  * 
  */
 // $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos', ProductoController::class, 'index');
+
+// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/{id}', ProductoController::class, 'producto');
+
+// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/{filtro}/{valor}', ProductoController::class, 'filtro');
 
 /**
  * 
@@ -49,16 +52,12 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/home', IndexController::class,
 
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil/{user_id}', UsuarioController::class, 'perfil');
 
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/login', UsuarioController::class, 'perfil');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/configuracion', UsuarioController::class, 'configuracion');
 
-// $router->addRoute('PATH', $_ENV["APP_DIRECTORY"].'/login', UsuarioController::class, 'perfil');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/historial_compras', UsuarioController::class, 'historial_compras');
 
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/login', UsuarioController::class, 'register');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedidos', UsuarioController::class, 'pedidos');
 
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/configuracion', UsuarioController::class, 'config');
-
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/historial_compras', UsuarioController::class, 'historial');
-
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedidos', UsuarioController::class, 'pedidos');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedido/{id}', UsuarioController::class, 'pedido');
 
 $router->dispatch();
