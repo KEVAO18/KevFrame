@@ -6,12 +6,20 @@ class View
 {
     protected static array $sections = [];
     protected static string $layout;
+    protected static array $viewData = []; // Añade una propiedad estática para almacenar los datos
 
-    public static function render(string $viewPath): void
+    public static function render(string $viewPath, $datos): void
     {
         // Reiniciar
         self::$sections = [];
         self::$layout = '';
+
+        // Almacena los datos extraídos en una propiedad estática accesible por la clase
+        if (is_array($datos)) {
+            self::$viewData = $datos; // Almacena el array de datos
+        } else {
+            self::$viewData = []; // Asegura que sea un array si no se pasan datos
+        }
 
         // Cargar vista 
         ob_start();
@@ -47,7 +55,7 @@ class View
     public static function section(string $name, callable $contentCallback): void
     {
         ob_start();
-        $contentCallback();
+        $contentCallback(self::$viewData);
         self::$sections[$name] = ob_get_clean();
     }
 

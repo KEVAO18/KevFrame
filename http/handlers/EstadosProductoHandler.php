@@ -23,7 +23,7 @@ class EstadosProductoHandler {
      * 
      */
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function create(EstadosProductoInterface $estadosProducto): int {

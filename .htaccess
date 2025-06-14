@@ -18,4 +18,4 @@ RewriteRule ^([a-z0-9\-/_]+)$ serve.php?p=$1 [L,QSA,NC]
 DirectoryIndex serve.php
 
 # Add root redirect to handle the 'menu' parameter
-RewriteRule ^$ serve.php?p=menu [L]
+RewriteRule ^$ serve.php?p=home [L]

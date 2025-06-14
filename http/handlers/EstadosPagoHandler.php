@@ -22,7 +22,7 @@ class EstadosPagoHandler {
      * 
      */
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function create(EstadosPagoInterface $estadosPago): int {

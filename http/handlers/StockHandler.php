@@ -12,7 +12,7 @@ class StockHandler {
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function create(StockInterface $stock): int {

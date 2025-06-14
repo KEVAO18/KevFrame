@@ -22,7 +22,7 @@ class CarritoDetalleHandler {
      *
      */
     public function __construct(){
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     /**

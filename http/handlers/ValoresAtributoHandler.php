@@ -12,7 +12,7 @@ class ValoresAtributoHandler  {
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function create(ValoresAtributoInterface $valores_atributo): int {

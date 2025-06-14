@@ -22,7 +22,7 @@ class CredencialesHandler {
      * 
      */
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function create(CredencialesInterface $credenciales): int {

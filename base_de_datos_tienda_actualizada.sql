@@ -388,3 +388,18 @@ CREATE INDEX IF NOT EXISTS index_cupones_uso_usuario ON aromas2.cupones_uso (usu
 CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON aromas2.cupones_uso (cupon);
 CREATE INDEX IF NOT EXISTS index_metodos_pago ON aromas2.metodos_pago (nombre);
 CREATE INDEX IF NOT EXISTS index_pagos ON aromas2.pagos (pedido, metodo_pago);
+
+CREATE PROCEDURE `productos mas vendidos`(IN `num` INT)
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+SELECT
+    producto,
+    SUM(cantidad) AS cantidad
+FROM
+    ventas
+GROUP BY
+    producto
+ORDER BY
+    cantidad DESC
+LIMIT 0, num;
