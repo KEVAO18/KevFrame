@@ -389,17 +389,139 @@ CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON aromas2.cupones_uso (cupo
 CREATE INDEX IF NOT EXISTS index_metodos_pago ON aromas2.metodos_pago (nombre);
 CREATE INDEX IF NOT EXISTS index_pagos ON aromas2.pagos (pedido, metodo_pago);
 
-CREATE PROCEDURE `productos mas vendidos`(IN `num` INT)
-NOT DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
+-- Procedimientos almacenados
+
+-- Procedimiento para obtener el total de productos por categoría
+CREATE PROCEDURE `cantidad_de_productos_por_categoria`()
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+select 
+    c.descripcion as "categoria",
+    COUNT(pc.categoria_id) as "cantidad" 
+from 
+    categorias as c 
+INNER join 
+    producto_categoria as pc 
+on 
+    c.id = pc.categoria_id 
+GROUP by 
+    c.descripcion;
+
+-- Procedimiento para obtener solo un numero limitado de productos para la paginacion
+CREATE PROCEDURE `paginacion_productos`(
+    IN `f` INT, 
+    IN `l` INT
+)
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+SELECT 
+    * 
+FROM 
+    productos 
+WHERE 
+    id BETWEEN f AND l;
+
+-- Procedimiento para obtener los productos mas vendidos
+CREATE PROCEDURE `productos_mas_vendidos`(IN `num` INT(1))
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+SELECT 
+    * 
+FROM 
+    productos 
+WHERE id IN (
+    SELECT
+        producto
+    FROM ( 
+        SELECT 
+            producto, 
+            SUM(
+                cantidad
+            ) AS cantidad 
+        FROM 
+            ventas 
+        GROUP BY 
+            producto 
+        ORDER BY 
+            cantidad DESC 
+        LIMIT 
+            num 
+    ) AS top_productos_subquery 
+)
+
+-- Procedimiento para obtener los productos mas vendidos con su cantidad total vendida
+CREATE PROCEDURE `productos_mas_vendidos_detallado`(IN `num` INT)
+    READS SQL DATA
 SELECT
-    producto,
-    SUM(cantidad) AS cantidad
+    p.*,
+    tp.cantidad_total_vendida
 FROM
-    ventas
-GROUP BY
-    producto
-ORDER BY
-    cantidad DESC
-LIMIT 0, num;
+    productos p
+JOIN (
+    SELECT
+        producto,
+        SUM(cantidad) AS cantidad_total_vendida
+    FROM
+        ventas
+    GROUP BY
+        producto
+    ORDER BY
+        cantidad_total_vendida DESC
+    LIMIT num
+) AS tp ON p.id = tp.producto;
+
+-- Procedimiento para obtener los atributos de un producto en especifico
+CREATE PROCEDURE `atributos_producto`(IN `prod` INT)
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+SELECT
+    a.nombre, 
+    va.valor 
+FROM 
+	`producto_atributo_valor` as pav 
+inner join 
+	valores_atributo as va 
+on 
+	pav.valor_atributo_id = va.id 
+inner join 
+	productos as p 
+on 
+	p.id = pav.producto_id 
+inner join 
+	atributos as a 
+on 
+	a.id = va.atributo_id 
+WHERE 
+	pav.producto_id = prod;
+
+-- Procedimiento para obtener los productos de una categoria en especifico
+CREATE PROCEDURE filtro_categoria(IN num INT) 
+    NOT DETERMINISTIC 
+    CONTAINS SQL 
+SQL SECURITY DEFINER 
+SELECT 
+    p.* 
+FROM 
+    productos AS p 
+INNER JOIN 
+    producto_categoria AS pc 
+ON 
+    pc.producto_id = p.id 
+INNER JOIN 
+    categorias AS c 
+ON 
+    c.id = pc.categoria_id 
+WHERE 
+    c.id = num;
+
+CREATE PROCEDURE `nuevos`(IN `lim` INT) 
+NOT DETERMINISTIC 
+CONTAINS SQL 
+SQL SECURITY DEFINER 
+SELECT * FROM `productos` 
+order by id DESC 
+limit lim;

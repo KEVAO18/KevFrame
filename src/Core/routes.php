@@ -25,11 +25,15 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/home', IndexController::class,
  * 3. productos/{filtro}/{valor}
  * 
  */
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos', ProductoController::class, 'index');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos', ProductoController::class, 'index');
 
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/{id}', ProductoController::class, 'producto');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Producto/{id}', ProductoController::class, 'show');
 
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/{filtro}/{valor}', ProductoController::class, 'filtro');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/{campo}/{valor}', ProductoController::class, 'filtro');
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/nuevos', ProductoController::class, 'nuevos');
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/top-ventas', ProductoController::class, 'topVentas');
 
 /**
  * 

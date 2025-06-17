@@ -1,0 +1,46 @@
+:root {
+    --prim: #eb6e12;
+    --seco: #b35f23e3;
+}
+
+
+/****************************/
+/*       backgrounds        */
+/****************************/
+
+
+.bg-prim {
+    background: var(--prim) !important;
+}
+
+.bg-seco {
+    background: var(--seco) !important;
+}
+
+
+/****************************/
+/*          color           */
+/****************************/
+
+
+.color-prim {
+    color: var(--prim) !important;
+}
+
+.color-seco {
+    color: var(--seco) !important;
+}
+
+
+/****************************/
+/*          border          */
+/****************************/
+
+
+.border-prim{
+    border-color: var(--prim);
+}
+
+.border-seco{
+    border-color: var(--seco);
+}

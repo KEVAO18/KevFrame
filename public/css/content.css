@@ -1,0 +1,22 @@
+.container{
+    padding-left: 5rem;
+    padding-right: 5em;
+}
+
+.container-fluid{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.nav{
+    flex-wrap: wrap;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    display: flex;
+    align-items: center;
+}
+
+.nav > ul{
+    display: inline-flex;
+    flex-wrap: wrap;
+}

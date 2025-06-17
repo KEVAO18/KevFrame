@@ -1,0 +1,272 @@
+
+/****************************/
+/*      tamaños : ancho     */
+/*      tipo : pixeles      */
+/****************************/
+
+
+
+.w-100-px{
+  width: 100px;
+}
+
+.w-200-px{
+  width: 200px;
+}
+
+.w-300-px{
+  width: 300px;
+}
+
+.w-400-px{
+  width: 400px;
+}
+
+.w-500-px{
+  width: 500px;
+}
+
+.w-600-px{
+  width: 600px;
+}
+
+.w-700-px{
+  width: 700px;
+}
+
+.w-800-px{
+  width: 800px;
+}
+
+
+
+/****************************/
+/*      tamaños : ancho     */
+/*     tipo : porcentage    */
+/****************************/
+
+
+.w-100-p{
+  width: 100%;
+}
+
+.w-90-p{
+  width: 90%;
+}
+
+.w-80-p{
+  width: 80%;
+}
+
+.w-70-p{
+  width: 70%;
+}
+
+.w-60-p{
+  width: 60%;
+}
+
+.w-50-p{
+  width: 50%;
+}
+
+.w-40-p{
+  width: 40%;
+}
+
+.w-30-p{
+  width: 30%;
+}
+
+.w-20-p{
+  width: 20%;
+}
+
+.w-10-p{
+  width: 10%;
+}
+
+
+
+/****************************/
+/*      tamaños : ancho     */
+/*     tipo : view width    */
+/****************************/
+
+
+.w-100-v{
+  width: 100vw;
+}
+
+.w-90-v{
+  width: 90vw;
+}
+
+.w-80-v{
+  width: 80vw;
+}
+
+.w-70-v{
+  width: 70vw;
+}
+
+.w-60-v{
+  width: 60vw;
+}
+
+.w-50-v{
+  width: 50vw;
+}
+
+.w-40-v{
+  width: 40vw;
+}
+
+.w-30-v{
+  width: 30vw;
+}
+
+.w-20-v{
+  width: 20vw;
+}
+
+.w-10-v{
+  width: 10vw;
+}
+
+
+
+/****************************/
+/*      tamaños : ancho     */
+/*      tipo : pixeles      */
+/****************************/
+
+
+
+.h-100-px{
+  height: 100px;
+}
+
+.h-200-px{
+  height: 200px;
+}
+
+.h-300-px{
+  height: 300px;
+}
+
+.h-400-px{
+  height: 400px;
+}
+
+.h-500-px{
+  height: 500px;
+}
+
+.h-600-px{
+  height: 600px;
+}
+
+.h-700-px{
+  height: 700px;
+}
+
+.h-800-px{
+  height: 800px;
+}
+
+
+
+/****************************/
+/*      tamaños : ancho     */
+/*     tipo : porcentage    */
+/****************************/
+
+
+.h-100-p{
+  height: 100%;
+}
+
+.h-90-p{
+  height: 90%;
+}
+
+.h-80-p{
+  height: 80%;
+}
+
+.h-70-p{
+  height: 70%;
+}
+
+.h-60-p{
+  height: 60%;
+}
+
+.h-50-p{
+  height: 50%;
+}
+
+.h-40-p{
+  height: 40%;
+}
+
+.h-30-p{
+  height: 30%;
+}
+
+.h-20-p{
+  height: 20%;
+}
+
+.h-10-p{
+  height: 10%;
+}
+
+
+
+/****************************/
+/*      tamaños : ancho     */
+/*     tipo : view width    */
+/****************************/
+
+
+.h-100-v{
+  height: 100vh;
+}
+
+.h-90-v{
+  height: 90vh;
+}
+
+.h-80-v{
+  height: 80vh;
+}
+
+.h-70-v{
+  height: 70vh;
+}
+
+.h-60-v{
+  height: 60vh;
+}
+
+.h-50-v{
+  height: 50vh;
+}
+
+.h-40-v{
+  height: 40vh;
+}
+
+.h-30-v{
+  height: 30vh;
+}
+
+.h-20-v{
+  height: 20vh;
+}
+
+.h-10-v{
+  height: 10vh;
+}

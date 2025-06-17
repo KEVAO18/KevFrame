@@ -1,0 +1,128 @@
+/**********************/
+/*      font size     */
+/*      tipo: rem     */
+/**********************/
+
+
+
+.fs-r-1{
+    font-size: 1rem;
+}
+
+.fs-2-r{
+    font-size: 2rem;
+}
+
+.fs-3-r{
+    font-size: 3rem;
+}
+
+.fs-4-r{
+    font-size: 4rem;
+}
+
+.fs-5-r{
+    font-size: 5rem;
+}
+
+.fs-6-r{
+    font-size: 6rem;
+}
+
+.fs-7-r{
+    font-size: 7rem;
+}
+
+.fs-8-r{
+    font-size: 8rem;
+}
+
+.fs-9-r{
+    font-size: 9rem;
+}
+
+
+/**********************/
+/*      font size     */
+/*  tipo: porcentage  */
+/**********************/
+
+
+.fs-1-p{
+    font-size: 10%;
+}
+
+.fs-2-p{
+    font-size: 20%;
+}
+
+.fs-3-p{
+    font-size: 30%;
+}
+
+.fs-4-p{
+    font-size: 40%;
+}
+
+.fs-5-p{
+    font-size: 50%;
+}
+
+.fs-6-p{
+    font-size: 60%;
+}
+
+.fs-7-p{
+    font-size: 70%;
+}
+
+.fs-8-p{
+    font-size: 80%;
+}
+
+.fs-9-p{
+    font-size: 90%;
+}
+
+
+/**********************/
+/*      font size     */
+/*     tipo: pixel    */
+/**********************/
+
+
+.fs-1{
+    font-size: 10px;
+}
+
+.fs-2{
+    font-size: 20px;
+}
+
+.fs-3{
+    font-size: 30px;
+}
+
+.fs-4{
+    font-size: 40px;
+}
+
+.fs-5{
+    font-size: 50px;
+}
+
+.fs-6{
+    font-size: 60px;
+}
+
+.fs-7{
+    font-size: 70px;
+}
+
+.fs-8{
+    font-size: 80px;
+}
+
+.fs-9{
+    font-size: 90px;
+}

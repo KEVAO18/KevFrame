@@ -44,25 +44,27 @@ View::section('content', function ($datos) {
         </div>
     </header>
 
-    <main class="container">
-        <h2 class="text-center">Mas Vendidos</h2>
+    <main class="container py-2">
+        <h2 class="text-center display-5">Mas Vendidos</h2>
+        <hr>
         <div class="row">
             <?php foreach ($datos as $producto) : ?>
-                <div class="col-sm-3">
-                    <div class="card w-100 h-100 shadow">
-                        <img src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title"><?=$producto->getNombre()?></h5>
-                            <p class="card-text"><?=$producto->getDescripcion()?></p>
+                <div class="col-md-3 col-sm-6 mt-4">
+                    <a href="<?= $_ENV['APP_BASE_URL'] ?>Producto/<?= $producto->getId() ?>" class="text-decoration-none">
+                        <div class="card w-100 h-100 shadow card-producto">
+                            <img src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png" class="card-img-top" alt="...">
+                            <div class="card-body bg-seco text-light">
+                                <h5 class="card-title"><?=$producto->getNombre()?></h5>
+                                <p class="card-text"><?=$producto->getDescripcion()?></p>
+                            </div>
                         </div>
-                        <div class="d-grid garp-2">
-                            <a href="#" style="border-radius: 0;" class="btn btn-outline-dark">Ver</a>
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
             <?php endforeach; ?>
         </div>
+
+
     </main>
 
 
