@@ -9,7 +9,6 @@
     <link href="<?= $_ENV['APP_BASE_URL'] ?>vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>principal.css">
     <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>color.css">
-    <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>hw.css">
     <link rel="icon" type="image/x-icon" href="<?= $_ENV['APP_ICON'] ?>">
 </head>
 
@@ -36,12 +35,6 @@
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Productos/filtro/nuevos">Nuevos</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Productos/filtro/top-ventas">Mas Vendidos</a></li>
                         </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="<?= $_ENV['APP_BASE_URL'] ?>iniciar">Iniciar sesión</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="<?= $_ENV['APP_BASE_URL'] ?>registro">Registrarse</a>
                     </li>
                 </ul>
             </div>

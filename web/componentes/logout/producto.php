@@ -16,10 +16,10 @@ View::section('content', function ($datos) {
         </h2>
 
         <div class="row mt-5">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-md-6 col-sm-12 text-center mb-4">
                 <img src="<?= $_ENV['IMG_FOLDER'] ?>productos/<?= $datos['producto'][0]['id'] ?>.png" class="img-fluid rounded img-prod" alt="<?= $datos['producto'][0]['nombre'] ?>">
             </div>
-            <div class="col-md-6 col-sm-12 d-flex align-items-center">
+            <div class="card col-md-6 col-sm-12 d-flex align-items-center text-center py-4">
                 <div class="">
                     <h3 class="fw-normal">Acerca de</h3>
                     <p class="text-dark fs-4 fw-light"><?= $datos['producto'][0]['descripcion'] ?></p>
@@ -46,7 +46,12 @@ View::section('content', function ($datos) {
                     <div class="col-md-3 col-sm-6 mt-4">
                         <a href="<?= $_ENV['APP_BASE_URL'] ?>Producto/<?= $producto->getId() ?>" class="text-decoration-none">
                             <div class="card w-100 h-100 shadow card-producto">
-                                <img src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png" class="card-img-top" alt="...">
+                                <img
+                                    src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png"
+                                    class="card-img-top img-card"
+                                    title="<?= $producto->getNombre() ?>"
+                                    alt="<?= $producto->getNombre() ?>"
+                                >
                                 <div class="card-body bg-seco text-light">
                                     <h5 class="card-title"><?= $producto->getNombre() ?></h5>
                                     <p class="card-text"><?= $producto->getDescripcion() ?></p>

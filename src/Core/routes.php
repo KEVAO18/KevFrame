@@ -52,6 +52,10 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/top-ventas', 
  * 3. historial_compras
  * 4. pedidos
  * 5. pedido/{id}
+ * 6. registro
+ * 7. iniciar
+ * 8. cerrar
+ * 
  * 
  */
 
@@ -64,5 +68,11 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/historial_compras', UsuarioCon
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedidos', UsuarioController::class, 'pedidos');
 
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedido/{id}', UsuarioController::class, 'pedido');
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/registro', UsuarioController::class, 'registro');
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/iniciar', UsuarioController::class, 'iniciar');
+
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/cerrar', UsuarioController::class, 'cerrar');
 
 $router->dispatch();

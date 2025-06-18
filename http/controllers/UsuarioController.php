@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Core\Request;
+use App\Core\View;
 
 class UsuarioController {
     public function index(){
         echo "Usuarios";
+    }
+
+    public function iniciar(){
+        View::render('componentes/usuarios/login');
+    }
+    
+    public function registro(){
+        View::render('componentes/usuarios/register');
+    }
+
+    public function cerrar(){
+        
     }
 
     public function perfil(Request $request){

@@ -30,6 +30,29 @@
     left: 10px;
 }
 
+.img-card{
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
 .img-prod{
     height: 30rem;
+    width: 70%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.banner-login{
+    background-image: url("../img/banners/loginBanner1.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.banner-login-2{
+    background-image: url("../img/banners/loginBanner2.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }

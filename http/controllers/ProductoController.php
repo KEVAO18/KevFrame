@@ -18,7 +18,7 @@ class ProductoController
         $categorias = new ProcesosAlmacenadosHandler;
         $categorias = $categorias->getProductosxCategoria();
 
-        View::render("componentes/productos", compact('productos', 'categorias'));
+        View::render("componentes/logout/productos", compact('productos', 'categorias'));
     }
 
     public function show(Request $request){
@@ -28,7 +28,7 @@ class ProductoController
         $atributos = $producto->getAtributos($request->get('id'));
         $producto = $producto->getProductoParaMostrar($request->get('id'));
 
-        View::render("componentes/producto", compact('producto', 'atributos', 'productos_mas_vendidos'));
+        View::render("componentes/logout/producto", compact('producto', 'atributos', 'productos_mas_vendidos'));
     }
 
     public function filtro(Request $request){
@@ -37,7 +37,7 @@ class ProductoController
         $productos = $categorias->getFiltroCategoria($request->get('valor'));
         $categorias = $categorias->getProductosxCategoria();
 
-        View::render("componentes/productos", compact('productos', 'categorias'));
+        View::render("componentes/logout/productos", compact('productos', 'categorias'));
     }
 
     public function nuevos(){
@@ -46,7 +46,7 @@ class ProductoController
         $productos = $categorias->nuevos(16);
         $categorias = $categorias->getProductosxCategoria();
 
-        View::render("componentes/productos", compact('productos', 'categorias'));
+        View::render("componentes/logout/productos", compact('productos', 'categorias'));
     }
     
     public function topVentas(){
@@ -55,6 +55,6 @@ class ProductoController
         $productos = $categorias->getTop(16);
         $categorias = $categorias->getProductosxCategoria();
 
-        View::render("componentes/productos", compact('productos', 'categorias'));
+        View::render("componentes/logout/productos", compact('productos', 'categorias'));
     }
 }

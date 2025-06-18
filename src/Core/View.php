@@ -8,7 +8,7 @@ class View
     protected static string $layout;
     protected static array $viewData = []; // Añade una propiedad estática para almacenar los datos
 
-    public static function render(string $viewPath, $datos): void
+    public static function render(string $viewPath, $datos = []): void
     {
         // Reiniciar
         self::$sections = [];
