@@ -1,3 +1,7 @@
+<?php
+
+use App\Core\SessionManager;
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -34,6 +38,17 @@
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Productos">Todos</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Productos/filtro/nuevos">Nuevos</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Productos/filtro/top-ventas">Mas Vendidos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?=(new SessionManager())->get('user_username')?>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Perfil">Perfil</a></li>
+                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>facturas">Mis Facturas</a></li>
+                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>configuraciones">Configuraciones</a></li>
+                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>cerrar">Cerrar sesión</a></li>
                         </ul>
                     </li>
                 </ul>

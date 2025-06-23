@@ -1,8 +1,16 @@
 <?php
 
+use App\Core\SessionManager;
 use App\Core\View;
 
-View::import('plantillas/principal');
+$sm = new SessionManager();
+$sm->start();
+
+if ($sm->get('user_id') == null) {
+    View::import('plantillas/principal');
+}else{
+    View::import('plantillas/logged');   
+}
 
 
 View::section('content', function ($datos) {

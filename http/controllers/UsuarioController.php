@@ -3,42 +3,169 @@
 namespace App\Http\Controllers;
 
 use App\Core\Request;
+use App\Core\SessionManager;
 use App\Core\View;
+use App\Http\Handlers\CredencialesHandler;
+use App\Http\Handlers\LogUsuariosHandler;
+use App\Http\Handlers\ProcesosAlmacenadosHandler;
+use App\Http\Handlers\UsuariosHandler;
+use App\Models\Credenciales;
+use App\Models\LogUsuarios;
+use App\Models\Usuario;
+use DateTime;
 
-class UsuarioController {
-    public function index(){
+class UsuarioController
+{
+
+    public function index()
+    {
         echo "Usuarios";
     }
 
-    public function iniciar(){
+    public function iniciar()
+    {
         View::render('componentes/usuarios/login');
     }
-    
-    public function registro(){
+
+    public function iniciar_post()
+    {
+
+        // instanciacion del handler procesos almacenados
+        $proc_almacenados = new ProcesosAlmacenadosHandler();
+
+        // instancia del modelo de usuarios
+        $usuario = $proc_almacenados->login($_POST['email']);
+
+        if (
+            $usuario == null ||
+            !password_verify($_POST['password'] . $usuario->getSalt(), $usuario->getPass())
+        ) {
+            header('Location: ' . $_ENV['APP_BASE_URL'] . 'iniciar');
+        }
+
+        $credenciales  = new CredencialesHandler();
+        $credenciales  = $credenciales->getByUser($usuario->getDni());
+
+        $coockies = new SessionManager();
+        $coockies->start();
+        $coockies->set('user_id', $usuario->getDni());
+        $coockies->set('user_name', $usuario->getFullname());
+        $coockies->set('user_username', $usuario->getUserName());
+        $coockies->set('user_email', $usuario->getEmail());
+        $coockies->set('user_rol', $credenciales->getId());
+
+        header('Location: '. $_ENV['APP_BASE_URL']);
+
+    }
+
+    public function registro()
+    {
         View::render('componentes/usuarios/register');
     }
 
-    public function cerrar(){
-        
+    public function registro_post()
+    {
+
+        // validacion de clausulas
+        if (
+            !isset($_POST['tyc']) ||
+            !isset($_POST['privPoli']) ||
+            !isset($_POST['dni']) ||
+            !isset($_POST['fullname']) ||
+            !isset($_POST['userName']) ||
+            !isset($_POST['email']) ||
+            !isset($_POST['repeat_email']) ||
+            !isset($_POST['password']) ||
+            !isset($_POST['repeat_pass'])
+        ) header('Location: ' . $_ENV['APP_BASE_URL'] . 'registro');
+
+        // instanciacion del handler de usuarios
+        $user_handler = new UsuariosHandler();
+
+        // instancia del handler de logs
+        $log_handler = new LogUsuariosHandler();
+
+        // instancia del handler de credenciales
+        $cred_handler = new CredencialesHandler();
+
+        // generacion del salt
+        $salt = bin2hex(random_bytes(16));
+
+        // generacion del hash
+        $hash = password_hash($_POST['password'] . $salt, PASSWORD_BCRYPT, ['cost' => 10]);
+
+        // instanciacion del modelo de usuarios
+        $usuario = new Usuario(
+            $_POST['dni'],
+            $_POST['fullname'],
+            $_POST['userName'],
+            $_POST['email'],
+            $hash,
+            $salt,
+            true
+        );
+
+        // instancia del modelo de logs
+        $log = new LogUsuarios(
+            0,
+            $_POST['dni'],
+            'Registro',
+            'Registro de usuario',
+            new DateTime()
+        );
+
+        // instancia del modelo de credenciales
+        $cred = new Credenciales(
+            0,
+            $_POST['dni'],
+            2
+        );
+
+        // guardado del usuario
+        $user_handler->create($usuario);
+
+        // guardado del log
+        $log_handler->create($log);
+
+        // guardado de las credenciales
+        $cred_handler->create($cred);
+
+        // redireccion al login
+        header('Location: ' . $_ENV['APP_BASE_URL'] . 'iniciar');
     }
 
-    public function perfil(Request $request){
+    public function cerrar() {
+
+        $coockies = new SessionManager();
+        $coockies->start();
+        $coockies->destroy();
+
+        header('Location: '. $_ENV['APP_BASE_URL']);
+
+    }
+
+    public function perfil(Request $request)
+    {
         echo "Perfil de usuario: " . $request->get('user_id');
     }
 
-    public function configuracion(){
+    public function configuracion()
+    {
         echo "Configuracion de usuario";
     }
 
-    public function historial_compras(){
+    public function historial_compras()
+    {
         echo "Historial de compras de usuario";
     }
 
-    public function pedidos(){
+    public function pedidos()
+    {
         echo "Pedidos de usuario";
     }
 
-    public function pedido($id){
-        echo "Pedido de usuario: ". $id;
+    public function pedido($id)
+    {
+        echo "Pedido de usuario: " . $id;
     }
 }

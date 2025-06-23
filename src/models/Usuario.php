@@ -14,7 +14,15 @@ class Usuario implements UsuariosInterface
     private string $salt;
     private bool $usuario_activo;
 
-    public function __construct() {}
+    public function __construct(int $dni, string $fullname, string $userName, string $email, string $pass, string $salt, bool $usuario_activo) {
+        $this->dni = $dni;
+        $this->fullname = $fullname;
+        $this->userName = $userName;
+        $this->email = $email;
+        $this->pass = $pass;
+        $this->salt = $salt;
+        $this->usuario_activo = $usuario_activo;
+    }
 
     public function getDni(): int {
         return $this->dni;

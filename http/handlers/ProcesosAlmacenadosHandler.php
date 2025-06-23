@@ -4,6 +4,7 @@ namespace App\Http\Handlers;
 
 use App\Core\Database;
 use App\Models\Productos;
+use App\Models\Usuario;
 use PDO;
 
 class ProcesosAlmacenadosHandler {
@@ -176,5 +177,23 @@ class ProcesosAlmacenadosHandler {
             ), 
             $datos
         );
+    }
+
+    public function login(string $email): ?Usuario{
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare("CALL `login`(?)");
+
+        $stmt->execute([$email]);
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC)[0] ?? [];
+
+        return $datos ? new Usuario(
+            $datos['dni'],
+            $datos['fullname'],
+            $datos['userName'],
+            $datos['email'],
+            $datos['pass'],
+            $datos['salt'],
+            $datos['usuario_activo']
+        ) : null;
     }
 }

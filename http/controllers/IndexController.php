@@ -14,7 +14,8 @@ class IndexController{
 
         $productos_mas_vendidos = $productos_mas_vendidos->getTop(4);
 
-        View::render("componentes/logout/home", $productos_mas_vendidos);
+        View::render("componentes/main/home", $productos_mas_vendidos);
         
     }
+
 }

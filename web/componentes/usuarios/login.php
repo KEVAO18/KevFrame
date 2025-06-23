@@ -1,8 +1,16 @@
 <?php
 
+use App\Core\SessionManager;
 use App\Core\View;
 
-View::import('plantillas/principal');
+$sm = new SessionManager();
+$sm->start();
+
+if ($sm->get('user_id') == null) {
+    View::import('plantillas/principal');
+}else{
+    header('Location: '. $_ENV['APP_BASE_URL']); 
+}
 
 
 View::section('content', function ($datos) {
@@ -19,7 +27,7 @@ View::section('content', function ($datos) {
                         <div class="col-md-8 col-sm-12 align-content-center h-60-v border">
                             <div class="text-center px-4">
                                 <h3 class="color-seco">Iniciar Sesión</h3>
-                                <form action="<?= $_ENV['APP_BASE_URL'] ?>login" method="POST">
+                                <form action="<?= $_ENV['APP_BASE_URL'] ?>iniciar" method="POST">
                                     <div class="input-group my-4">
                                         <label for="email" class="input-group-text">Email</label>
                                         <input type="email" class="form-control" id="email" name="email" required>
@@ -32,7 +40,10 @@ View::section('content', function ($datos) {
                                         <button type="submit" class="btn btn-outline-dark">Iniciar Sesión</button>
                                     </div>
                                 </form>
-                                <p class="text-center">
+                                <p class="text-center my-3">
+                                    <small class=""><a class="color-seco text-decoration-none" href="<?= $_ENV['APP_BASE_URL'] ?>pass_recovery">Olvide mi contraseña</a></small>
+                                </p>
+                                <p class="text-center my-2">
                                     <small class="">Aun no estas registrado? puedes <a class="color-seco text-decoration-none" href="<?= $_ENV['APP_BASE_URL'] ?>registro">Registrarte</a></small>
                                 </p>
                             </div>

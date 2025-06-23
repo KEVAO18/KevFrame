@@ -1,8 +1,16 @@
 <?php
 
+use App\Core\SessionManager;
 use App\Core\View;
 
-View::import('plantillas/principal');
+$sm = new SessionManager();
+$sm->start();
+
+if ($sm->get('user_id') == null) {
+    View::import('plantillas/principal');
+}else{
+    header('Location: '. $_ENV['APP_BASE_URL']); 
+}
 
 
 View::section('content', function ($datos) {
@@ -43,13 +51,13 @@ View::section('content', function ($datos) {
                                         <input type="password" class="form-control" id="repeat_pass" name="repeat_pass" required placeholder="repetir contraseña">
                                     </div>
                                     <div class="form-check form-switch my-2 align-items-lg-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="tyc" switch name="tyc" required>
+                                        <input class="form-check-input" type="checkbox" value="acepto" id="tyc" switch name="tyc" required>
                                         <label class="form-check-label" for="tyc">
                                             Acepto los <a class="color-seco text-decoration-none" href="">terminos y condiciones</a>
                                         </label>
                                     </div>
                                     <div class="form-check form-switch my-2 align-items-lg-center">
-                                        <input class="form-check-input" type="checkbox" value="" id="privPoli" switch name="tyc" required>
+                                        <input class="form-check-input" type="checkbox" value="acepto" id="privPoli" switch name="privPoli" required>
                                         <label class="form-check-label" for="privPoli">
                                             Acepto las <a class="color-seco text-decoration-none" href="">politica de privacidad</a>
                                         </label>

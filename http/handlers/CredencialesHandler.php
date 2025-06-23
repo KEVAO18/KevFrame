@@ -75,6 +75,32 @@ class CredencialesHandler {
         ) : null;
     }
 
+    public function getByUser(int $id): ?Credenciales {
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare('SELECT * FROM `credenciales` WHERE `usuario` = ?');
+        $stmt->execute([$id]);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos ? new Credenciales(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['tipo']
+        ) : null;
+    }
+
+    public function getByType(int $id): ?Credenciales {
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare('SELECT * FROM `credenciales` WHERE `tipo` = ?');
+        $stmt->execute([$id]);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos ? new Credenciales(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['tipo']
+        ) : null;
+    }
+
     public function getAll(): array {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `credenciales`')

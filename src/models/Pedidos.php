@@ -13,6 +13,14 @@ class Pedidos implements PedidosInterface
     private string $estado;
     private float $total;
 
+    public function __construct(int $id, int $usuario, DateTime $fecha, string $estado, float $total) {
+        $this->id = $id;
+        $this->usuario = $usuario;
+        $this->fecha = $fecha;
+        $this->estado = $estado;
+        $this->total = $total;
+    }
+
     public function getId(): int {
         return $this->id;
     }

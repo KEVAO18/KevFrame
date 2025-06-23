@@ -1,8 +1,17 @@
 <?php
 
+use App\Core\SessionManager;
 use App\Core\View;
 
-View::import('plantillas/principal');
+$sm = new SessionManager();
+$sm->start();
+
+if ($sm->get('user_id') == null) {
+    View::import('plantillas/principal');
+}else{
+    View::import('plantillas/logged');   
+}
+
 
 
 View::section('content', function ($datos) {
@@ -10,13 +19,31 @@ View::section('content', function ($datos) {
 
     <header class="container">
         <div id="mainCarousel" class="carousel slide">
-            <div class="carousel-inner" id="car_items">
-
+            <div class="carousel-indicators">
                 <?php
 
                 $banners = file_get_contents($_ENV['DOCS_FOLDER'] . 'banners.json');
                 $banners = json_decode($banners, true);
 
+                foreach ($banners['homepage'] as $key) {
+
+                    if ($key['id'] == 0) {
+                        $clase = 'class="active"';
+                    } else {
+                        $clase = '';
+                    }
+
+                ?>
+                    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="<?= $key['id'] ?>" aria-current="true" aria-label="<?= $key['id'] ?>" <?= $clase ?>></button>
+                <?php
+
+                }
+
+                ?>
+            </div>
+            <div class="carousel-inner" id="car_items">
+
+                <?php
                 $is_active = true;
                 foreach ($banners['homepage'] as $key) {
 
@@ -52,20 +79,18 @@ View::section('content', function ($datos) {
                 <div class="col-md-3 col-sm-6 mt-4">
                     <a href="<?= $_ENV['APP_BASE_URL'] ?>Producto/<?= $producto->getId() ?>" class="text-decoration-none">
                         <div class="card w-100 h-100 shadow card-producto">
-                            <img 
-                                src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png" 
-                                class="card-img-top img-card" 
-                                title="<?=$producto->getNombre()?>" 
-                                alt="<?=$producto->getNombre()?>"
-                            >
+                            <img
+                                src="<?= $_ENV['IMG_FOLDER'] . "productos/" . $producto->getId() ?>.png"
+                                class="card-img-top img-card"
+                                title="<?= $producto->getNombre() ?>"
+                                alt="<?= $producto->getNombre() ?>">
                             <div class="card-body bg-seco text-light">
-                                <h5 class="card-title"><?=$producto->getNombre()?></h5>
-                                <p class="card-text"><?=$producto->getDescripcion()?></p>
+                                <h5 class="card-title"><?= $producto->getNombre() ?></h5>
+                                <p class="card-text"><?= $producto->getDescripcion() ?></p>
                             </div>
                         </div>
                     </a>
                 </div>
-
             <?php endforeach; ?>
         </div>
 
