@@ -2,33 +2,48 @@
 
 namespace App\Http\Controllers;
 
+// clases core
 use App\Core\Request;
 use App\Core\SessionManager;
 use App\Core\View;
+
+// clases handlers
 use App\Http\Handlers\CredencialesHandler;
+use App\Http\Handlers\DireccionesEnvioHandler;
 use App\Http\Handlers\LogUsuariosHandler;
 use App\Http\Handlers\ProcesosAlmacenadosHandler;
 use App\Http\Handlers\UsuariosHandler;
+
+// clases modelos
 use App\Models\Credenciales;
 use App\Models\LogUsuarios;
 use App\Models\Usuario;
+
+// clases utilitarias
 use DateTime;
 
-class UsuarioController
-{
+class UsuarioController {
 
-    public function index()
-    {
-        echo "Usuarios";
+    public function index() {
+
+        $sm = new SessionManager();
+        $sm->start();
+
+        $uh = new UsuariosHandler();
+        $usuario = $uh->getById($sm->get('user_id'));
+
+        $direcciones = new DireccionesEnvioHandler();
+        $direcciones = $direcciones->getByUser($usuario->getDni());
+
+        View::render('componentes/usuarios/perfil', compact('usuario', 'direcciones'));
+
     }
 
-    public function iniciar()
-    {
+    public function iniciar() {
         View::render('componentes/usuarios/login');
     }
 
-    public function iniciar_post()
-    {
+    public function iniciar_post(){
 
         // instanciacion del handler procesos almacenados
         $proc_almacenados = new ProcesosAlmacenadosHandler();
@@ -50,7 +65,6 @@ class UsuarioController
         $coockies->start();
         $coockies->set('user_id', $usuario->getDni());
         $coockies->set('user_name', $usuario->getFullname());
-        $coockies->set('user_username', $usuario->getUserName());
         $coockies->set('user_email', $usuario->getEmail());
         $coockies->set('user_rol', $credenciales->getId());
 
@@ -58,13 +72,11 @@ class UsuarioController
 
     }
 
-    public function registro()
-    {
+    public function registro(){
         View::render('componentes/usuarios/register');
     }
 
-    public function registro_post()
-    {
+    public function registro_post(){
 
         // validacion de clausulas
         if (
@@ -72,7 +84,6 @@ class UsuarioController
             !isset($_POST['privPoli']) ||
             !isset($_POST['dni']) ||
             !isset($_POST['fullname']) ||
-            !isset($_POST['userName']) ||
             !isset($_POST['email']) ||
             !isset($_POST['repeat_email']) ||
             !isset($_POST['password']) ||
@@ -98,7 +109,6 @@ class UsuarioController
         $usuario = new Usuario(
             $_POST['dni'],
             $_POST['fullname'],
-            $_POST['userName'],
             $_POST['email'],
             $hash,
             $salt,
@@ -144,28 +154,23 @@ class UsuarioController
 
     }
 
-    public function perfil(Request $request)
-    {
+    public function perfil(Request $request){
         echo "Perfil de usuario: " . $request->get('user_id');
     }
 
-    public function configuracion()
-    {
+    public function configuracion(){
         echo "Configuracion de usuario";
     }
 
-    public function historial_compras()
-    {
+    public function historial_compras(){
         echo "Historial de compras de usuario";
     }
 
-    public function pedidos()
-    {
+    public function pedidos(){
         echo "Pedidos de usuario";
     }
 
-    public function pedido($id)
-    {
+    public function pedido($id){
         echo "Pedido de usuario: " . $id;
     }
 }

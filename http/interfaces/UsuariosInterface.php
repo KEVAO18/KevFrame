@@ -8,8 +8,6 @@ interface UsuariosInterface
 
     public function getFullname(): string;
 
-    public function getUserName(): string;
-
     public function getEmail(): string;
 
     public function getPass(): string;

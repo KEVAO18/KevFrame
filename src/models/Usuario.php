@@ -8,16 +8,14 @@ class Usuario implements UsuariosInterface
 {
     private int $dni;
     private string $fullname;
-    private string $userName;
     private string $email;
     private string $pass;
     private string $salt;
     private bool $usuario_activo;
 
-    public function __construct(int $dni, string $fullname, string $userName, string $email, string $pass, string $salt, bool $usuario_activo) {
+    public function __construct(int $dni, string $fullname, string $email, string $pass, string $salt, bool $usuario_activo) {
         $this->dni = $dni;
         $this->fullname = $fullname;
-        $this->userName = $userName;
         $this->email = $email;
         $this->pass = $pass;
         $this->salt = $salt;
@@ -30,10 +28,6 @@ class Usuario implements UsuariosInterface
 
     public function getFullname(): string {
         return $this->fullname;
-    }
-
-    public function getUserName(): string {
-        return $this->userName;
     }
 
     public function getEmail(): string {

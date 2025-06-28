@@ -100,17 +100,6 @@ class ProcesosAlmacenadosHandler {
         
     }
 
-    public function getProductosxCategoria(): array{
-
-        $db = $this->db->getConnection();
-        $stmt = $db->prepare("CALL `cantidad_de_productos_por_categoria`()");
-
-        $stmt->execute();
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $datos ?? [];
-    }
-
     public function getProductoParaMostrar(int $id): array{
 
         $db = $this->db->getConnection();
@@ -189,7 +178,6 @@ class ProcesosAlmacenadosHandler {
         return $datos ? new Usuario(
             $datos['dni'],
             $datos['fullname'],
-            $datos['userName'],
             $datos['email'],
             $datos['pass'],
             $datos['salt'],

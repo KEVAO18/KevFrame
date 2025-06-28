@@ -8,6 +8,7 @@ use App\Http\Handlers\Categoriashandler;
 use App\Http\Handlers\ProcesosAlmacenadosHandler;
 use App\Http\Handlers\ProductoCategoriaHandler;
 use App\Http\Handlers\ProductosHandler;
+use App\Http\Handlers\VistasHandler;
 
 class ProductoController
 {
@@ -15,8 +16,8 @@ class ProductoController
         $productos = new ProductosHandler();
         $productos = $productos->getAll();
 
-        $categorias = new ProcesosAlmacenadosHandler;
-        $categorias = $categorias->getProductosxCategoria();
+        $vistas = new VistasHandler;
+        $categorias = $vistas->getProductosxCategoria();
 
         View::render("componentes/main/productos", compact('productos', 'categorias'));
     }
@@ -33,27 +34,30 @@ class ProductoController
 
     public function filtro(Request $request){
         
-        $categorias = new ProcesosAlmacenadosHandler;
-        $productos = $categorias->getFiltroCategoria($request->get('valor'));
-        $categorias = $categorias->getProductosxCategoria();
+        $procesos = new ProcesosAlmacenadosHandler;
+        $vistas = new VistasHandler;
+        $productos = $procesos->getFiltroCategoria($request->get('valor'));
+        $categorias = $vistas->getProductosxCategoria();
 
         View::render("componentes/main/productos", compact('productos', 'categorias'));
     }
 
     public function nuevos(){
 
-        $categorias = new ProcesosAlmacenadosHandler;
-        $productos = $categorias->nuevos(16);
-        $categorias = $categorias->getProductosxCategoria();
+        $procesos = new ProcesosAlmacenadosHandler;
+        $vistas = new VistasHandler;
+        $productos = $procesos->nuevos(16);
+        $categorias = $vistas->getProductosxCategoria();
 
         View::render("componentes/main/productos", compact('productos', 'categorias'));
     }
     
     public function topVentas(){
         
-        $categorias = new ProcesosAlmacenadosHandler;
-        $productos = $categorias->getTop(16);
-        $categorias = $categorias->getProductosxCategoria();
+        $procesos = new ProcesosAlmacenadosHandler;
+        $vistas = new VistasHandler;
+        $productos = $procesos->getTop(16);
+        $categorias = $vistas->getProductosxCategoria();
 
         View::render("componentes/main/productos", compact('productos', 'categorias'));
     }

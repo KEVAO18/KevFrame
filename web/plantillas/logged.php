@@ -42,10 +42,10 @@ use App\Core\SessionManager;
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?=(new SessionManager())->get('user_username')?>
+                            <?=(new SessionManager())->get('user_name')?>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>Perfil">Perfil</a></li>
+                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>perfil">Perfil</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>facturas">Mis Facturas</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>configuraciones">Configuraciones</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>cerrar">Cerrar sesión</a></li>

@@ -57,6 +57,8 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/top-ventas', 
  * 
  */
 
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil', UsuarioController::class, 'index');
+
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil/{user_id}', UsuarioController::class, 'perfil');
 
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/configuracion', UsuarioController::class, 'configuracion');

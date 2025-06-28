@@ -37,10 +37,6 @@ View::section('content', function ($datos) {
                                         <input type="text" class="form-control" id="fullname" name="fullname" required>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <label for="userName" class="input-group-text">usuario</label>
-                                        <input type="text" class="form-control" id="userName" name="userName" required>
-                                    </div>
-                                    <div class="input-group mb-3">
                                         <label for="email" class="input-group-text">Email</label>
                                         <input type="email" class="form-control" id="email" name="email" required>
                                         <input type="email" class="form-control" id="repeat_email" name="repeat_email" required placeholder="repetir Email">

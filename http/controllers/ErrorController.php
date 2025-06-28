@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\View;
+
 class ErrorController
 {
 
@@ -72,7 +74,12 @@ class ErrorController
      */
     public function notFound(){
         http_response_code(404);
-        echo 'Página no encontrada';
+
+        $error = [
+            'ErrorCode' => '404',
+            'msg' => 'Página no encontrada'
+        ];
+        View::render("componentes/errors/404", $error);
     }
     
     /**

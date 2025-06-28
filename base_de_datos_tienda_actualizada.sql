@@ -1,14 +1,14 @@
-CREATE DATABASE IF NOT EXISTS aromas2;
+CREATE DATABASE IF NOT EXISTS db_tienda;
 
 -- tabla para los estados de los productos
-CREATE TABLE IF NOT EXISTS aromas2.estados_producto (
+CREATE TABLE IF NOT EXISTS db_tienda.estados_producto (
 
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
 -- tabla para los productos
-CREATE TABLE IF NOT EXISTS aromas2.productos (
+CREATE TABLE IF NOT EXISTS db_tienda.productos (
 
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre varchar(30) NOT NULL,
@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS aromas2.productos (
 );
 
 -- tabla para los tipos de productos
-CREATE TABLE IF NOT EXISTS aromas2.categorias (
+CREATE TABLE IF NOT EXISTS db_tienda.categorias (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(99) NOT NULL
 );
 
 -- Tabla de relación para productos y categoría
-CREATE TABLE IF NOT EXISTS aromas2.producto_categoria (
+CREATE TABLE IF NOT EXISTS db_tienda.producto_categoria (
 
     producto_id INT NOT NULL,
     categoria_id INT NOT NULL,
@@ -47,14 +47,14 @@ CREATE TABLE IF NOT EXISTS aromas2.producto_categoria (
 );
 
 -- tabla para los atributos
-CREATE TABLE IF NOT EXISTS aromas2.atributos (
+CREATE TABLE IF NOT EXISTS db_tienda.atributos (
 
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
 -- tabla para los valores de los atributos
-CREATE TABLE IF NOT EXISTS aromas2.valores_atributo (
+CREATE TABLE IF NOT EXISTS db_tienda.valores_atributo (
 
     id INT AUTO_INCREMENT PRIMARY KEY,
     atributo_id INT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS aromas2.valores_atributo (
 );
 
 -- tabla para la relación entre productos y valores de atributos
-CREATE TABLE IF NOT EXISTS aromas2.producto_atributo_valor (
+CREATE TABLE IF NOT EXISTS db_tienda.producto_atributo_valor (
 
     producto_id INT NOT NULL,
     valor_atributo_id INT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS aromas2.producto_atributo_valor (
 );
 
 -- tabla para los usuarios
-CREATE TABLE IF NOT EXISTS aromas2.usuarios (
+CREATE TABLE IF NOT EXISTS db_tienda.usuarios (
 
     dni int NOT NULL PRIMARY KEY,
     fullname varchar(255) NOT NULL,
@@ -95,14 +95,14 @@ CREATE TABLE IF NOT EXISTS aromas2.usuarios (
 );
 
 -- tabla para los tipos de credenciales
-CREATE TABLE IF NOT EXISTS aromas2.tipoCredencial (
+CREATE TABLE IF NOT EXISTS db_tienda.tipoCredencial (
 
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     descripcion varchar(255) NOT NULL
 );
 
 -- tabla para las credenciales
-CREATE TABLE IF NOT EXISTS aromas2.credenciales (
+CREATE TABLE IF NOT EXISTS db_tienda.credenciales (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     usuario int NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS aromas2.credenciales (
 );
 
 -- tabla para las facturas
-CREATE TABLE IF NOT EXISTS aromas2.factura (
+CREATE TABLE IF NOT EXISTS db_tienda.factura (
 
     id varchar(10) NOT NULL PRIMARY KEY,
     usuario int NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS aromas2.factura (
 );
 
 -- tabla para las ventas
-CREATE TABLE IF NOT EXISTS aromas2.ventas (
+CREATE TABLE IF NOT EXISTS db_tienda.ventas (
 
     id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     producto int NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS aromas2.ventas (
 );
 
 -- tabla para los carritos
-CREATE TABLE IF NOT EXISTS aromas2.carrito (
+CREATE TABLE IF NOT EXISTS db_tienda.carrito (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     usuario INT NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS aromas2.carrito (
 );
 
 -- tabla para los detalles de los carritos
-CREATE TABLE IF NOT EXISTS aromas2.carrito_detalle (
+CREATE TABLE IF NOT EXISTS db_tienda.carrito_detalle (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     carrito INT NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS aromas2.carrito_detalle (
 );
 
 -- tabla para los pedidos
-CREATE TABLE IF NOT EXISTS aromas2.pedidos (
+CREATE TABLE IF NOT EXISTS db_tienda.pedidos (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     usuario INT NOT NULL,
@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS aromas2.pedidos (
 );
 
 -- tabla para los detalles de los pedidos
-CREATE TABLE IF NOT EXISTS aromas2.pedido_detalle (
+CREATE TABLE IF NOT EXISTS db_tienda.pedido_detalle (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     pedido INT NOT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS aromas2.pedido_detalle (
 );
 
 -- tabla para las devoluciones
-CREATE TABLE IF NOT EXISTS aromas2.devoluciones (
+CREATE TABLE IF NOT EXISTS db_tienda.devoluciones (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     producto INT NOT NULL,
@@ -242,7 +242,7 @@ CREATE TABLE IF NOT EXISTS aromas2.devoluciones (
 );
 
 -- tabla para los cupones
-CREATE TABLE IF NOT EXISTS aromas2.cupones (
+CREATE TABLE IF NOT EXISTS db_tienda.cupones (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(20) NOT NULL UNIQUE,
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS aromas2.cupones (
 );
 
 -- tabla para los cupones usados
-CREATE TABLE IF NOT EXISTS aromas2.cupones_uso (
+CREATE TABLE IF NOT EXISTS db_tienda.cupones_uso (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     cupon INT NOT NULL,
@@ -273,21 +273,21 @@ CREATE TABLE IF NOT EXISTS aromas2.cupones_uso (
 );
 
 -- tabla para los metodos de pago
-CREATE TABLE IF NOT EXISTS aromas2.metodos_pago (
+CREATE TABLE IF NOT EXISTS db_tienda.metodos_pago (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     descripcion VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS aromas2.estados_pago (
+CREATE TABLE IF NOT EXISTS db_tienda.estados_pago (
     
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
 -- tabla para los pagos
-CREATE TABLE IF NOT EXISTS aromas2.pagos (
+CREATE TABLE IF NOT EXISTS db_tienda.pagos (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     pedido INT NOT NULL,
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS aromas2.pagos (
 );
 
 -- tabla para el stock
-CREATE TABLE IF NOT EXISTS aromas2.stock (
+CREATE TABLE IF NOT EXISTS db_tienda.stock (
 
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     producto int,
@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS aromas2.stock (
 );
 
 -- tabla para almacenar las tirillas de los pagos
-CREATE TABLE IF NOT EXISTS aromas2.tirillas (
+CREATE TABLE IF NOT EXISTS db_tienda.tirillas (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     pago_id INT NOT NULL,
     contenido TEXT NOT NULL,
@@ -338,7 +338,7 @@ CREATE TABLE IF NOT EXISTS aromas2.tirillas (
 );
 
 -- tabla para almacenar las direcciones de envío
-CREATE TABLE IF NOT EXISTS aromas2.direcciones_envio (
+CREATE TABLE IF NOT EXISTS db_tienda.direcciones_envio (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario INT NOT NULL,
     direccion TEXT NOT NULL,
@@ -353,7 +353,7 @@ CREATE TABLE IF NOT EXISTS aromas2.direcciones_envio (
 );
 
 -- tabla para auditoría de acciones de usuario
-CREATE TABLE IF NOT EXISTS aromas2.log_usuarios (
+CREATE TABLE IF NOT EXISTS db_tienda.log_usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario INT,
     accion VARCHAR(255),
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS aromas2.log_usuarios (
 );
 
 -- tabla para mantener trazabilidad si cambias el precio
-CREATE TABLE IF NOT EXISTS aromas2.historial_precios (
+CREATE TABLE IF NOT EXISTS db_tienda.historial_precios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     producto_id INT NOT NULL,
     precio FLOAT NOT NULL,
@@ -374,42 +374,42 @@ CREATE TABLE IF NOT EXISTS aromas2.historial_precios (
     FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
 
-CREATE INDEX IF NOT EXISTS index_usuarios ON aromas2.usuarios (userName, email);
-CREATE INDEX IF NOT EXISTS index_factura ON aromas2.factura (usuario, fecha);
-CREATE INDEX IF NOT EXISTS index_ventas ON aromas2.ventas (factura, producto, fecha);
-CREATE INDEX IF NOT EXISTS index_carrito ON aromas2.carrito (usuario);
-CREATE INDEX IF NOT EXISTS index_carrito_detalle ON aromas2.carrito_detalle (producto, carrito);
-CREATE INDEX IF NOT EXISTS index_pedidos ON aromas2.pedidos (usuario);
-CREATE INDEX IF NOT EXISTS index_pedido_detalle ON aromas2.pedido_detalle (pedido);
-CREATE INDEX IF NOT EXISTS index_devoluciones ON aromas2.devoluciones (producto, factura, estado);
-CREATE INDEX IF NOT EXISTS index_cupones_codigo ON aromas2.cupones (codigo);
-CREATE INDEX IF NOT EXISTS index_cupones_tipo ON aromas2.cupones (tipo);
-CREATE INDEX IF NOT EXISTS index_cupones_uso_usuario ON aromas2.cupones_uso (usuario);
-CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON aromas2.cupones_uso (cupon);
-CREATE INDEX IF NOT EXISTS index_metodos_pago ON aromas2.metodos_pago (nombre);
-CREATE INDEX IF NOT EXISTS index_pagos ON aromas2.pagos (pedido, metodo_pago);
+CREATE INDEX IF NOT EXISTS index_usuarios ON db_tienda.usuarios (userName, email);
+CREATE INDEX IF NOT EXISTS index_factura ON db_tienda.factura (usuario, fecha);
+CREATE INDEX IF NOT EXISTS index_ventas ON db_tienda.ventas (factura, producto, fecha);
+CREATE INDEX IF NOT EXISTS index_carrito ON db_tienda.carrito (usuario);
+CREATE INDEX IF NOT EXISTS index_carrito_detalle ON db_tienda.carrito_detalle (producto, carrito);
+CREATE INDEX IF NOT EXISTS index_pedidos ON db_tienda.pedidos (usuario);
+CREATE INDEX IF NOT EXISTS index_pedido_detalle ON db_tienda.pedido_detalle (pedido);
+CREATE INDEX IF NOT EXISTS index_devoluciones ON db_tienda.devoluciones (producto, factura, estado);
+CREATE INDEX IF NOT EXISTS index_cupones_codigo ON db_tienda.cupones (codigo);
+CREATE INDEX IF NOT EXISTS index_cupones_tipo ON db_tienda.cupones (tipo);
+CREATE INDEX IF NOT EXISTS index_cupones_uso_usuario ON db_tienda.cupones_uso (usuario);
+CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON db_tienda.cupones_uso (cupon);
+CREATE INDEX IF NOT EXISTS index_metodos_pago ON db_tienda.metodos_pago (nombre);
+CREATE INDEX IF NOT EXISTS index_pagos ON db_tienda.pagos (pedido, metodo_pago);
 
--- Procedimientos almacenados
 
--- Procedimiento para obtener el total de productos por categoría
-CREATE PROCEDURE `cantidad_de_productos_por_categoria`()
-    NOT DETERMINISTIC
-    CONTAINS SQL
-    SQL SECURITY DEFINER
+-- vistas
+-- vista para obtener las categorias con la cantidad de productos que tienen
+create view productos_por_categoria as
 select 
-    c.descripcion as "categoria",
+    c.id, 
+    c.descripcion as "categoria", 
     COUNT(pc.categoria_id) as "cantidad" 
 from 
     categorias as c 
-INNER join 
+inner join 
     producto_categoria as pc 
 on 
     c.id = pc.categoria_id 
-GROUP by 
+group by 
     c.descripcion;
 
+
+-- Procedimientos almacenados
 -- Procedimiento para obtener solo un numero limitado de productos para la paginacion
-CREATE PROCEDURE `paginacion_productos`(
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`paginacion_productos`(
     IN `f` INT, 
     IN `l` INT
 )
@@ -424,7 +424,7 @@ WHERE
     id BETWEEN f AND l;
 
 -- Procedimiento para obtener los productos mas vendidos
-CREATE PROCEDURE `productos_mas_vendidos`(IN `num` INT(1))
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`productos_mas_vendidos`(IN `num` INT(1))
     NOT DETERMINISTIC
     CONTAINS SQL
     SQL SECURITY DEFINER
@@ -450,10 +450,10 @@ WHERE id IN (
         LIMIT 
             num 
     ) AS top_productos_subquery 
-)
+);
 
 -- Procedimiento para obtener los productos mas vendidos con su cantidad total vendida
-CREATE PROCEDURE `productos_mas_vendidos_detallado`(IN `num` INT)
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`productos_mas_vendidos_detallado`(IN `num` INT)
     READS SQL DATA
 SELECT
     p.*,
@@ -474,7 +474,7 @@ JOIN (
 ) AS tp ON p.id = tp.producto;
 
 -- Procedimiento para obtener los atributos de un producto en especifico
-CREATE PROCEDURE `atributos_producto`(IN `prod` INT)
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`atributos_producto`(IN `prod` INT)
     NOT DETERMINISTIC
     CONTAINS SQL
     SQL SECURITY DEFINER
@@ -499,10 +499,10 @@ WHERE
 	pav.producto_id = prod;
 
 -- Procedimiento para obtener los productos de una categoria en especifico
-CREATE PROCEDURE filtro_categoria(IN num INT) 
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`filtro_categoria`(IN num INT) 
     NOT DETERMINISTIC 
     CONTAINS SQL 
-SQL SECURITY DEFINER 
+    SQL SECURITY DEFINER 
 SELECT 
     p.* 
 FROM 
@@ -518,10 +518,30 @@ ON
 WHERE 
     c.id = num;
 
-CREATE PROCEDURE `nuevos`(IN `lim` INT) 
-NOT DETERMINISTIC 
-CONTAINS SQL 
-SQL SECURITY DEFINER 
-SELECT * FROM `productos` 
-order by id DESC 
-limit lim;
+-- Procedimiento para obtener los productos mas recientes
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`nuevos`(IN `lim` INT) 
+    NOT DETERMINISTIC 
+    CONTAINS SQL 
+    SQL SECURITY DEFINER 
+SELECT 
+    * 
+FROM 
+    `productos` 
+order by
+    id DESC 
+limit 
+    lim;
+
+-- procedimiento para logear un usuario por email
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`login`(IN `mail` VARCHAR(50))
+    NOT DETERMINISTIC 
+    CONTAINS SQL 
+    SQL SECURITY DEFINER 
+SELECT 
+    * 
+FROM 
+    usuarios AS u 
+WHERE 
+    u.email = mail 
+limit 
+    1;

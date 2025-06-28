@@ -3,8 +3,8 @@
 namespace App\Http\Handlers;
 
 use App\Http\Interfaces\DireccionesEnvioInterface;
-use App\Core\Database;
 use App\Models\DireccionesEnvio;
+use App\Core\Database;
 use PDO;
 
 class DireccionesEnvioHandler {
@@ -74,6 +74,23 @@ class DireccionesEnvioHandler {
         $db = $this->db->getConnection();
         $stmt = $db->prepare('SELECT * FROM `direcciones_envio` WHERE `id` = ?');
         $stmt->execute([$id]);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new DireccionesEnvio(
+            $datos['id'],
+            $datos['usuario'],
+            $datos['direccion'],
+            $datos['ciudad'],
+            $datos['departamento'],
+            $datos['pais'],
+            $datos['principal'] 
+        ) : null;
+    }
+
+    public function getByUser(int $user): ?DireccionesEnvio {
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare('SELECT * FROM `direcciones_envio` WHERE `usuario` = ?');
+        $stmt->execute([$user]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
         return $datos? new DireccionesEnvio(

@@ -19,14 +19,13 @@ class UsuariosHandler{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `usuarios` 
-            (`dni`, `fullname`, `userName`, `email`, `pass`, `salt`, `usuario_activo`) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)'
+            (`dni`, `fullname`, `email`, `pass`, `salt`, `usuario_activo`) 
+            VALUES (?, ?, ?, ?, ?, ?)'
         );
 
         $stmt->execute([
             $usuario->getDni(),
             $usuario->getFullname(),
-            $usuario->getUserName(),
             $usuario->getEmail(),
             $usuario->getPass(),
             $usuario->getSalt(),
@@ -40,12 +39,11 @@ class UsuariosHandler{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `usuarios` SET
-            `fullname` = ?, `userName` = ?, `email` = ?, `pass` = ?, `salt` = ?, `usuario_activo` = ? WHERE `dni` = ?'
+            `fullname` = ?, `email` = ?, `pass` = ?, `salt` = ?, `usuario_activo` = ? WHERE `dni` = ?'
         );
 
         return $stmt->execute([
             $usuario->getFullname(),
-            $usuario->getUserName(),
             $usuario->getEmail(),
             $usuario->getPass(),
             $usuario->getSalt(),
@@ -62,14 +60,13 @@ class UsuariosHandler{
 
     public function getById(int $dni): ?Usuario{
         $db = $this->db->getConnection();
-        $stmt = $db->prepare('SELECT `dni`, `fullname`, `userName`, `email`, `usuario_activo` FROM `usuarios` WHERE `dni` = ?');
+        $stmt = $db->prepare('SELECT `dni`, `fullname`, `email`, `usuario_activo` FROM `usuarios` WHERE `dni` = ?');
         $stmt->execute([$dni]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
         return $datos ? new Usuario(
             $datos['dni'],
             $datos['fullname'],
-            $datos['userName'],
             $datos['email'],
             "",
             "",
@@ -79,14 +76,13 @@ class UsuariosHandler{
 
     public function getAll(): array{
         $db = $this->db->getConnection();
-        $result = $db->query('SELECT `dni`, `fullname`, `userName`, `email`, `usuario_activo` FROM `usuarios`')
+        $result = $db->query('SELECT `dni`, `fullname`, `email`, `usuario_activo` FROM `usuarios`')
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
             fn($row) => new Usuario(
                 $row['dni'],
                 $row['fullname'],
-                $row['userName'],
                 $row['email'],
                 "",
                 "",
