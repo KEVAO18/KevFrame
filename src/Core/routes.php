@@ -44,7 +44,7 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/top-ventas', 
  * 1. carrito
  * 
  */
-// $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Carrito', CarritoController::class, 'index');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Carrito', CarritoController::class, 'mostrar');
 
 /**
  * Usuario
@@ -57,13 +57,9 @@ $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/Productos/filtro/top-ventas', 
  * 
  */
 
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil', UsuarioController::class, 'index');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil', UsuarioController::class, 'perfil');
 
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/perfil/{user_id}', UsuarioController::class, 'perfil');
-
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/configuracion', UsuarioController::class, 'configuracion');
-
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/historial_compras', UsuarioController::class, 'historial_compras');
+$router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/facturas', UsuarioController::class, 'facturas');
 
 $router->addRoute('GET', $_ENV["APP_DIRECTORY"].'/pedidos', UsuarioController::class, 'pedidos');
 

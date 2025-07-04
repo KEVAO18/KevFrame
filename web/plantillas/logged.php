@@ -47,7 +47,6 @@ use App\Core\SessionManager;
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>perfil">Perfil</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>facturas">Mis Facturas</a></li>
-                            <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>configuraciones">Configuraciones</a></li>
                             <li><a class="dropdown-item" href="<?= $_ENV['APP_BASE_URL'] ?>cerrar">Cerrar sesión</a></li>
                         </ul>
                     </li>

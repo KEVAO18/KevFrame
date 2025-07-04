@@ -2,8 +2,7 @@
 
 namespace App\Core;
 
-class SessionManager
-{
+class SessionManager{
     private bool $sessionStarted = false;
     private const SESSION_INITIATED_KEY = '__session_initiated'; // Clave para detectar si la sesión fue iniciada correctamente
 
@@ -15,8 +14,7 @@ class SessionManager
      * Inicia la sesión y aplica las configuraciones de seguridad recomendadas.
      * Debe llamarse al principio de cada script que necesite la sesión.
      */
-    public function start(): void
-    {
+    public function start(): void{
         if ($this->sessionStarted) {
             return; // La sesión ya está iniciada
         }
@@ -60,8 +58,7 @@ class SessionManager
      * @param string $key La clave del dato.
      * @param mixed $value El valor a almacenar.
      */
-    public function set(string $key, $value): void
-    {
+    public function set(string $key, $value): void{
         $_SESSION[$key] = $value;
     }
 
@@ -71,8 +68,7 @@ class SessionManager
      * @param mixed $default El valor por defecto si la clave no existe.
      * @return mixed
      */
-    public function get(string $key, $default = null)
-    {
+    public function get(string $key, $default = null){
         return $_SESSION[$key] ?? $default;
     }
 
@@ -81,8 +77,7 @@ class SessionManager
      * @param string $key La clave a verificar.
      * @return bool
      */
-    public function has(string $key): bool
-    {
+    public function has(string $key): bool{
         return isset($_SESSION[$key]);
     }
 
@@ -90,16 +85,14 @@ class SessionManager
      * Elimina una clave de la sesión.
      * @param string $key La clave a eliminar.
      */
-    public function remove(string $key): void
-    {
+    public function remove(string $key): void{
         unset($_SESSION[$key]);
     }
 
     /**
      * Cierra la sesión actual (destruye los datos y el ID de sesión).
      */
-    public function destroy(): void
-    {
+    public function destroy(): void{
         if ($this->sessionStarted) {
             session_unset();     // Vacía todas las variables de sesión
             session_destroy();   // Destruye la sesión en el servidor
@@ -121,8 +114,7 @@ class SessionManager
     /**
      * Regenera el ID de sesión, útil después de un inicio de sesión exitoso o cambio de privilegios.
      */
-    public function regenerateId(): void
-    {
+    public function regenerateId(): void{
         if ($this->sessionStarted) {
             session_regenerate_id(true); // 'true' elimina el archivo de sesión antiguo en el servidor
             $_SESSION[self::SESSION_INITIATED_KEY] = true; // Restablecer la marca de inicio
@@ -132,15 +124,13 @@ class SessionManager
     /**
      * Comprueba si la conexión actual es HTTPS.
      */
-    private function isHttps(): bool
-    {
+    private function isHttps(): bool{
         return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ||
             isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443;
     }
 
     // Métodos para manejar tiempos de inactividad o sesiones caducadas
-    public function isExpired(int $timeoutMinutes = 30): bool
-    {
+    public function isExpired(int $timeoutMinutes = 30): bool{
         $lastActivity = $this->get('last_activity', 0);
         return (time() - $lastActivity) > ($timeoutMinutes * 60);
     }

@@ -87,7 +87,6 @@ CREATE TABLE IF NOT EXISTS db_tienda.usuarios (
 
     dni int NOT NULL PRIMARY KEY,
     fullname varchar(255) NOT NULL,
-    userName varchar(40) NOT NULL,
     email varchar(50) NOT NULL,
     pass varchar(100) NOT NULL,
     salt varchar(100) NOT NULL,
@@ -312,19 +311,6 @@ CREATE TABLE IF NOT EXISTS db_tienda.pagos (
     ON DELETE CASCADE
 );
 
--- tabla para el stock
-CREATE TABLE IF NOT EXISTS db_tienda.stock (
-
-    id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    producto int,
-    agotado tinyint,
-
-    CONSTRAINT stock_producto_fk 
-    FOREIGN KEY (producto) 
-    REFERENCES productos (id)
-    ON DELETE CASCADE    
-);
-
 -- tabla para almacenar las tirillas de los pagos
 CREATE TABLE IF NOT EXISTS db_tienda.tirillas (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -374,7 +360,7 @@ CREATE TABLE IF NOT EXISTS db_tienda.historial_precios (
     FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
 
-CREATE INDEX IF NOT EXISTS index_usuarios ON db_tienda.usuarios (userName, email);
+CREATE INDEX IF NOT EXISTS index_usuarios ON db_tienda.usuarios (fullname, email);
 CREATE INDEX IF NOT EXISTS index_factura ON db_tienda.factura (usuario, fecha);
 CREATE INDEX IF NOT EXISTS index_ventas ON db_tienda.ventas (factura, producto, fecha);
 CREATE INDEX IF NOT EXISTS index_carrito ON db_tienda.carrito (usuario);
@@ -389,10 +375,27 @@ CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON db_tienda.cupones_uso (cu
 CREATE INDEX IF NOT EXISTS index_metodos_pago ON db_tienda.metodos_pago (nombre);
 CREATE INDEX IF NOT EXISTS index_pagos ON db_tienda.pagos (pedido, metodo_pago);
 
+use db_tienda;
+
+-- funciones
+-- funcion para obtener la disponibilidad de un producto
+DELIMITER $$
+
+CREATE FUNCTION IF NOT EXISTS db_tienda.`fn_stock`(unidades INT) 
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    RETURN CASE 
+        WHEN unidades > 0 THEN 'Disponible'
+        ELSE 'Agotado'
+    END;
+END$$
+
+DELIMITER ;
 
 -- vistas
 -- vista para obtener las categorias con la cantidad de productos que tienen
-create view productos_por_categoria as
+CREATE VIEW IF NOT EXISTS  db_tienda.`productos_por_categoria` as
 select 
     c.id, 
     c.descripcion as "categoria", 
@@ -406,6 +409,15 @@ on
 group by 
     c.descripcion;
 
+
+-- vista para obtener la disponibilidad de los productos de la tienda
+CREATE VIEW IF NOT EXISTS db_tienda.stock as 
+select 
+    p.id, 
+    p.nombre, 
+    fn_stock(p.unidades) as disponibilidad 
+from 
+    productos as p;
 
 -- Procedimientos almacenados
 -- Procedimiento para obtener solo un numero limitado de productos para la paginacion
@@ -545,3 +557,37 @@ WHERE
     u.email = mail 
 limit 
     1;
+
+-- triggers
+-- PD recuerda que debes cambiar el delimitador a $$ para que funcione ya que el delimitador por defecto es ; 
+-- y al tener mas de una sentencia en un trigger no funciona
+
+-- trigger para insertar un log de registro al crear un usuario
+DELIMITER $$
+CREATE TRIGGER after_usuario_insert 
+AFTER INSERT ON db_tienda.usuarios
+FOR EACH ROW
+BEGIN
+    -- 1. insertar la credencial de usuario
+    INSERT INTO db_tienda.credenciales (usuario, tipo)
+    VALUES (NEW.dni, 2);
+    
+    -- 2. insertar el log de registro
+    INSERT INTO db_tienda.log_usuarios (
+        usuario,
+        accion,
+        detalle
+    ) VALUES (
+        NEW.dni,
+        'Registro',
+        CONCAT('Usuario registrado: ', NEW.fullname, ' (DNI: ', NEW.dni, ')')
+    );
+
+    -- 3. crear el carrito del usuario
+    INSERT INTO db_tienda.carrito (
+        usuario
+    ) VALUES (
+        NEW.dni
+    );
+END$$
+DELIMITER ;
