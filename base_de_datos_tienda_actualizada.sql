@@ -367,13 +367,12 @@ CREATE INDEX IF NOT EXISTS index_carrito ON db_tienda.carrito (usuario);
 CREATE INDEX IF NOT EXISTS index_carrito_detalle ON db_tienda.carrito_detalle (producto, carrito);
 CREATE INDEX IF NOT EXISTS index_pedidos ON db_tienda.pedidos (usuario);
 CREATE INDEX IF NOT EXISTS index_pedido_detalle ON db_tienda.pedido_detalle (pedido);
-CREATE INDEX IF NOT EXISTS index_devoluciones ON db_tienda.devoluciones (producto, factura, estado);
 CREATE INDEX IF NOT EXISTS index_cupones_codigo ON db_tienda.cupones (codigo);
-CREATE INDEX IF NOT EXISTS index_cupones_tipo ON db_tienda.cupones (tipo);
-CREATE INDEX IF NOT EXISTS index_cupones_uso_usuario ON db_tienda.cupones_uso (usuario);
-CREATE INDEX IF NOT EXISTS index__cupones_uso_cupon ON db_tienda.cupones_uso (cupon);
-CREATE INDEX IF NOT EXISTS index_metodos_pago ON db_tienda.metodos_pago (nombre);
-CREATE INDEX IF NOT EXISTS index_pagos ON db_tienda.pagos (pedido, metodo_pago);
+CREATE INDEX IF NOT EXISTS idx_productos_nombre ON db_tienda.productos(nombre);
+CREATE INDEX IF NOT EXISTS idx_productos_unidades ON db_tienda.productos(unidades);
+CREATE INDEX IF NOT EXISTS idx_log_accion ON db_tienda.log_usuarios(accion);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_email ON db_tienda.usuarios(email);
 
 use db_tienda;
 
