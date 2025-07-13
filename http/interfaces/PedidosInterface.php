@@ -8,7 +8,7 @@ interface PedidosInterface
 {
     public function getId(): int;
 
-    public function getUsuario(): int;
+    public function getUsuario(): UsuariosInterface;
 
     public function getFecha(): DateTime;
 

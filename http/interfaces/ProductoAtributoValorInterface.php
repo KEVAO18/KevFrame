@@ -4,7 +4,7 @@ namespace App\Http\Interfaces;
 
 interface ProductoAtributoValorInterface
 {
-    public function getProductoId(): int;
+    public function getProductoId(): ProductosInterface;
 
-    public function getValorAtributoId(): int;
+    public function getValorAtributoId(): ValoresAtributoInterface;
 }

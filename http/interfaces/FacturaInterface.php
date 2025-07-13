@@ -8,7 +8,7 @@ interface FacturaInterface
 {
     public function getId(): string;
 
-    public function getUsuario(): int;
+    public function getUsuario(): UsuariosInterface;
 
     public function getFecha(): DateTime; // Assuming datetime is represented as string
 

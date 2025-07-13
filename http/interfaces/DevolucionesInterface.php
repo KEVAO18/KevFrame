@@ -7,9 +7,9 @@ use DateTime;
 interface DevolucionesInterface{
     public function getId(): int;
 
-    public function getProducto(): int;
+    public function getProducto(): ProductosInterface;
 
-    public function getFactura(): string;
+    public function getFactura(): FacturaInterface;
 
     public function getMotivo(): string;
 

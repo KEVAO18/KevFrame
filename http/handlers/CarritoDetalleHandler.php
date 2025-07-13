@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CarritoDetalleInterface;
 use App\Core\Database;
 use App\Models\CarritoDetalle;
 use PDO;
@@ -26,12 +25,12 @@ class CarritoDetalleHandler {
     }
 
     /**
-     * @param CarritoDetalleInterface $carritoDetalle
+     * @param CarritoDetalle $carritoDetalle
      * @return int
      * @access public
      *  
      */
-    public function create(CarritoDetalleInterface $carritoDetalle): int{
+    public function create(CarritoDetalle $carritoDetalle): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `carrito_detalle` 
@@ -40,8 +39,8 @@ class CarritoDetalleHandler {
         );
 
         $stmt->execute([
-            $carritoDetalle->getCarrito(),
-            $carritoDetalle->getProducto(),
+            $carritoDetalle->getCarrito()->getId(),
+            $carritoDetalle->getProducto()->getId(),
             $carritoDetalle->getCantidad()
         ]);
 
@@ -49,12 +48,12 @@ class CarritoDetalleHandler {
     }
 
     /**
-     * @param CarritoDetalleInterface $carritoDetalle
+     * @param CarritoDetalle $carritoDetalle
      * @return bool
      * @access public
      * 
      */
-    public function update(CarritoDetalleInterface $carritoDetalle): bool{
+    public function update(CarritoDetalle $carritoDetalle): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `carrito_detalle` SET
@@ -63,8 +62,8 @@ class CarritoDetalleHandler {
         );
 
         return $stmt->execute([
-            $carritoDetalle->getCarrito(),
-            $carritoDetalle->getProducto(),
+            $carritoDetalle->getCarrito()->getId(),
+            $carritoDetalle->getProducto()->getId(),
             $carritoDetalle->getCantidad(),
             $carritoDetalle->getId()
         ]);
@@ -96,10 +95,33 @@ class CarritoDetalleHandler {
 
         return $datos? new CarritoDetalle(
             $datos['id'],
-            $datos['carrito'],
-            $datos['producto'],
+            (new CarritoHandler)->getById($datos['carrito']),
+            (new ProductosHandler)->getById($datos['producto']),
             $datos['cantidad'] 
         ) : null;
+    }
+
+    /**
+     * @param int $id
+     * @return array|null
+     * @access public
+     * 
+     */
+    public function getByuser(int $user): array{
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare('CALL `get_carrito_usuario`(?)');
+        $stmt->execute([$user]);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return array_map(
+            fn($row) => new CarritoDetalle(
+                $row['id'],
+                (new CarritoHandler)->getById($row['carrito']),
+                (new ProductosHandler)->getById($row['producto']),
+                $row['cantidad']
+            ),
+            $datos
+        );
     }
 
     /**
@@ -113,11 +135,11 @@ class CarritoDetalleHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($datos) => new CarritoDetalle(
-                $datos['id'],
-                $datos['carrito'],
-                $datos['producto'],
-                $datos['cantidad']
+            fn($row) => new CarritoDetalle(
+                $row['id'],
+                (new CarritoHandler)->getById($row['carrito']),
+                (new ProductosHandler)->getById($row['producto']),
+                $row['cantidad']
             ),
             $result
         );

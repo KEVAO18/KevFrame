@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CategoriasInterface;
 use App\Core\Database;
 use App\Models\Categoria;
 use PDO;
@@ -25,7 +24,7 @@ use PDO;
         $this->db = Database::getInstance();
     }
 
-    public function create(CategoriasInterface $categorias): int {
+    public function create(Categoria $categorias): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `categorias` 
@@ -40,7 +39,7 @@ use PDO;
         return $db->lastInsertId();
     }
 
-    public function update(CategoriasInterface $categorias): bool {
+    public function update(Categoria $categorias): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `categorias` SET

@@ -6,10 +6,10 @@ use App\Http\Interfaces\CredencialesInterface;
 
 class Credenciales implements CredencialesInterface{
     private int $id;
-    private int $usuario;
-    private int $tipo;
+    private Usuario $usuario;
+    private TipoCredencial $tipo;
 
-    public function __construct(int $id, int $usuario, int $tipo) {
+    public function __construct(int $id, Usuario $usuario, TipoCredencial $tipo) {
         $this->id = $id;
         $this->usuario = $usuario;
         $this->tipo = $tipo;
@@ -19,11 +19,11 @@ class Credenciales implements CredencialesInterface{
         return $this->id;
     }
 
-    public function getUsuario(): int {
+    public function getUsuario(): Usuario {
         return $this->usuario;
     }
 
-    public function getTipo(): int {
+    public function getTipo(): TipoCredencial {
         return $this->tipo;
     }
 }

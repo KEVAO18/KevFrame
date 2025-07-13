@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CuponesUsoInterface;
 use App\Core\Database;
 use App\Models\CuponesUso;
 use DateTime;
@@ -26,7 +25,7 @@ class CuponesUsoHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(CuponesUsoInterface $cuponesUso): int {
+    public function create(CuponesUso $cuponesUso): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones_uso` 
@@ -35,15 +34,15 @@ class CuponesUsoHandler {
         );
 
         $stmt->execute([
-            $cuponesUso->getCupon(),
-            $cuponesUso->getUsuario(),
+            $cuponesUso->getCupon()->getId(),
+            $cuponesUso->getUsuario()->getDni(),
             $cuponesUso->getFechaUso()
         ]);
 
         return $db->lastInsertId();
     }
 
-    public function update(CuponesUsoInterface $cuponesUso): bool {
+    public function update(CuponesUso $cuponesUso): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET
@@ -52,8 +51,8 @@ class CuponesUsoHandler {
         );
 
         return $stmt->execute([
-            $cuponesUso->getCupon(),
-            $cuponesUso->getUsuario(),
+            $cuponesUso->getCupon()->getId(),
+            $cuponesUso->getUsuario()->getDni(),
             $cuponesUso->getFechaUso(),
             $cuponesUso->getId()
         ]);
@@ -72,8 +71,8 @@ class CuponesUsoHandler {
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
         return $datos? new CuponesUso(
             $datos['id'],
-            $datos['cupon'],
-            $datos['usuario'],
+            (new CuponesHandler())->getById($datos['cupon']),
+            (new UsuariosHandler())->getById($datos['usuario']),
             new DateTime($datos['fecha_uso'] )
         ) : null;
     }
@@ -84,11 +83,11 @@ class CuponesUsoHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new CuponesUso(
-                $row['id'],
-                $row['cupon'],
-                $row['usuario'],
-                new DateTime($row['fecha_uso'])
+            fn($datos) => new CuponesUso(
+                $datos['id'],
+                (new CuponesHandler())->getById($datos['cupon']),
+                (new UsuariosHandler())->getById($datos['usuario']),
+                new DateTime($datos['fecha_uso'])
             ), 
             $result
         );

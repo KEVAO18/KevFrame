@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\PedidoDetalleInterface;
 use App\Core\Database;
 use PDO;
 use App\Models\PedidoDetalle;
@@ -15,7 +14,7 @@ class PedidoDetalleHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(PedidoDetalleInterface $pedido_detalle): int {
+    public function create(PedidoDetalle $pedido_detalle): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `pedido_detalle` 
@@ -24,15 +23,15 @@ class PedidoDetalleHandler {
         );
 
         $stmt->execute([
-            $pedido_detalle->getPedido(),
-            $pedido_detalle->getProducto(),
+            $pedido_detalle->getPedido()->getId(),
+            $pedido_detalle->getProducto()->getId(),
             $pedido_detalle->getCantidad()
         ]);
 
         return $db->lastInsertId();
     }
 
-    public function update(PedidoDetalleInterface $pedido_detalle): bool {
+    public function update(PedidoDetalle $pedido_detalle): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `pedido_detalle` SET
@@ -43,9 +42,10 @@ class PedidoDetalleHandler {
         );
 
         return $stmt->execute([
-            $pedido_detalle->getPedido(),
-            $pedido_detalle->getProducto(),
-            $pedido_detalle->getCantidad()
+            $pedido_detalle->getPedido()->getId(),
+            $pedido_detalle->getProducto()->getId(),
+            $pedido_detalle->getCantidad(),
+            $pedido_detalle->getId()
         ]);
     }
 
@@ -63,8 +63,8 @@ class PedidoDetalleHandler {
 
         return $datos ? new PedidoDetalle(
             $datos['id'],
-            $datos['pedido'],
-            $datos['producto'],
+            (new PedidosHandler())->getById($datos['pedido']),
+            (new ProductosHandler())->getById($datos['producto']),
             $datos['cantidad']
         ) : null;
     }
@@ -75,11 +75,11 @@ class PedidoDetalleHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new PedidoDetalle(
-                $row['id'],
-                $row['pedido'],
-                $row['producto'],
-                $row['cantidad']
+            fn($datos) => new PedidoDetalle(
+                $datos['id'],
+                (new PedidosHandler())->getById($datos['pedido']),
+                (new ProductosHandler())->getById($datos['producto']),
+                $datos['cantidad']
             ),
             $result
         ) ?? [];

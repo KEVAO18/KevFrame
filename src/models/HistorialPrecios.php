@@ -7,12 +7,12 @@ use DateTime;
 
 class HistorialPrecios implements HistorialPreciosInterface {
     private int $id;
-    private int $producto;
+    private Productos $producto;
     private float $precio;
     private DateTime $fechaInicio;
     private DateTime $fechaFin;
 
-    public function __construct(int $id, int $producto, float $precio, DateTime $fechaInicio, DateTime $fechaFin) {
+    public function __construct(int $id, Productos $producto, float $precio, DateTime $fechaInicio, DateTime $fechaFin) {
         $this->id = $id;
         $this->producto = $producto;
         $this->precio = $precio;
@@ -24,7 +24,7 @@ class HistorialPrecios implements HistorialPreciosInterface {
         return $this->id; 
     }
 
-    public function getProductoId(): int {
+    public function getProductoId(): Productos {
         return $this->producto; 
     }
 

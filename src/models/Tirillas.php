@@ -7,11 +7,11 @@ use DateTime;
 
 class Tirillas implements TirillasInterface{
     private int $id;
-    private int $pagoId;
+    private Pagos $pagoId;
     private string $contenido;
     private DateTime $fechaGeneracion;
 
-    public function __construct(int $id, int $pagoId, string $contenido, DateTime $fechaGeneracion) {
+    public function __construct(int $id, Pagos $pagoId, string $contenido, DateTime $fechaGeneracion) {
         $this->id = $id;
         $this->pagoId = $pagoId;
         $this->contenido = $contenido;
@@ -22,7 +22,7 @@ class Tirillas implements TirillasInterface{
         return $this->id; 
     }
 
-    public function getPagoId(): int{
+    public function getPagoId(): Pagos{
         return $this->pagoId; 
     }
 

@@ -6,7 +6,7 @@ interface CredencialesInterface
 {
     public function getId(): int;
 
-    public function getUsuario(): int;
+    public function getUsuario(): UsuariosInterface;
 
-    public function getTipo(): int;
+    public function getTipo(): TipoCredencialInterface;
 }

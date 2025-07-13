@@ -7,15 +7,15 @@ use DateTime;
 
 class Devoluciones implements DevolucionesInterface {
     private int $id;
-    private int $producto;
-    private string $factura;
+    private Productos $producto;
+    private Factura $factura;
     private string $motivo;
     private float $reembolso;
     private string $estado;
     private DateTime $fechaIngreso;
     private DateTime $fechaFinal;
 
-    public function __construct(int $id, int $producto, string $factura, string $motivo, float $reembolso, string $estado, DateTime $fechaIngreso, DateTime $fechaFinal) {
+    public function __construct(int $id, Productos $producto, Factura $factura, string $motivo, float $reembolso, string $estado, DateTime $fechaIngreso, DateTime $fechaFinal) {
         $this->id = $id;
         $this->producto = $producto;
         $this->factura = $factura;
@@ -30,11 +30,11 @@ class Devoluciones implements DevolucionesInterface {
         return $this->id; 
     }
 
-    public function getProducto(): int {
+    public function getProducto(): Productos {
         return $this->producto;
     }
 
-    public function getFactura(): string {
+    public function getFactura(): Factura {
         return $this->factura;
     }
 

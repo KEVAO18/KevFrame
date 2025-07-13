@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\ProductosInterface;
 use App\Core\Database;
 use App\Models\Productos;
 use PDO;
@@ -14,7 +13,7 @@ class ProductosHandler{
         $this->db = Database::getInstance();
     }
     
-    public function create(ProductosInterface $producto): int{
+    public function create(Productos $producto): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `productos` 
@@ -27,13 +26,13 @@ class ProductosHandler{
             $producto->getDescripcion(),
             $producto->getUnidades(),
             $producto->getPrecio(),
-            $producto->getEstadoId()
+            $producto->getEstadoId()->getId()
         ]);
 
         return $db->lastInsertId();
     }
 
-    public function update(ProductosInterface $producto): bool{
+    public function update(Productos $producto): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `productos` SET
@@ -47,7 +46,7 @@ class ProductosHandler{
             $producto->getDescripcion(),
             $producto->getUnidades(),
             $producto->getPrecio(),
-            $producto->getEstadoId(),
+            $producto->getEstadoId()->getId(),
             $producto->getId()
         ]);
     }
@@ -70,7 +69,7 @@ class ProductosHandler{
             $datos['descripcion'],
             $datos['unidades'],
             $datos['precio'],
-            $datos['estado_id']
+            (new EstadosProductoHandler())->getById($datos['estado_id'])
         ) : null;
     }
 
@@ -80,13 +79,13 @@ class ProductosHandler{
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new Productos(
-                $row['id'],
-                $row['nombre'],
-                $row['descripcion'],
-                $row['unidades'],
-                $row['precio'],
-                $row['estado_id']
+            fn($datos) => new Productos(
+                $datos['id'],
+                $datos['nombre'],
+                $datos['descripcion'],
+                $datos['unidades'],
+                $datos['precio'],
+                (new EstadosProductoHandler())->getById($datos['estado_id'])
             ),
             $result
         ) ?? [];

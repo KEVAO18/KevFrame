@@ -6,9 +6,9 @@ interface PedidoDetalleInterface
 {
     public function getId(): int;
 
-    public function getPedido(): int;
+    public function getPedido(): PedidosInterface;
 
-    public function getProducto(): int;
+    public function getProducto(): ProductosInterface;
 
     public function getCantidad(): int;
 }

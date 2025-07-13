@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\PedidosInterface;
 use App\Core\Database;
 use App\Models\Pedidos;
 use PDO;
@@ -15,7 +14,7 @@ class PedidosHandler
         $this->db = Database::getInstance();
     }
 
-    public function create(PedidosInterface $pedido): int{
+    public function create(Pedidos $pedido): int{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `pedidos` 
@@ -24,7 +23,7 @@ class PedidosHandler
         );
 
         $stmt->execute([
-            $pedido->getUsuario(),
+            $pedido->getUsuario()->getDni(),
             $pedido->getFecha(),
             $pedido->getEstado(),
             $pedido->getTotal()
@@ -33,7 +32,7 @@ class PedidosHandler
         return $db->lastInsertId();
     }
 
-    public function update(PedidosInterface $pedido): bool{
+    public function update(Pedidos $pedido): bool{
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `pedidos` SET
@@ -42,7 +41,7 @@ class PedidosHandler
         );
 
         return $stmt->execute([
-            $pedido->getUsuario(),
+            $pedido->getUsuario()->getDni(),
             $pedido->getFecha(),
             $pedido->getEstado(),
             $pedido->getTotal(),
@@ -64,7 +63,7 @@ class PedidosHandler
 
         return $datos ? new Pedidos(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler())->getById($datos['usuario']),
             $datos['fecha'],
             $datos['estado'],
             $datos['total'] 
@@ -79,7 +78,7 @@ class PedidosHandler
         return array_map(function($datos){
             return new Pedidos(
                 $datos['id'],
-                $datos['usuario'],
+                (new UsuariosHandler())->getById($datos['usuario']),
                 $datos['fecha'],
                 $datos['estado'],
                 $datos['total']

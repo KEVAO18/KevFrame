@@ -8,11 +8,11 @@ use DateTime;
 class Factura implements FacturaInterface
 {
     private string $id;
-    private int $usuario;
+    private Usuario $usuario;
     private DateTime $fecha;
     private float $total;
 
-    public function __construct(string $id, int $usuario, DateTime $fecha, float $total)
+    public function __construct(string $id, Usuario $usuario, DateTime $fecha, float $total)
     {
         $this->id = $id;
         $this->usuario = $usuario;
@@ -24,7 +24,7 @@ class Factura implements FacturaInterface
         return $this->id;
     }
 
-    public function getUsuario(): int{
+    public function getUsuario(): Usuario{
         return $this->usuario; 
     }
 

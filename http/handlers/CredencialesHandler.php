@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CredencialesInterface;
 use App\Core\Database;
 use App\Models\Credenciales;
 use PDO;
@@ -25,7 +24,7 @@ class CredencialesHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(CredencialesInterface $credenciales): int {
+    public function create(Credenciales $credenciales): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `credenciales` 
@@ -34,14 +33,14 @@ class CredencialesHandler {
         );
 
         $stmt->execute([
-            $credenciales->getUsuario(),
-            $credenciales->getTipo()
+            $credenciales->getUsuario()->getDni(),
+            $credenciales->getTipo()->getId()
         ]);
 
         return $db->lastInsertId();
     }
 
-    public function update(CredencialesInterface $credenciales): bool {
+    public function update(Credenciales $credenciales): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `credenciales` SET
@@ -50,8 +49,8 @@ class CredencialesHandler {
         );
 
         return $stmt->execute([
-            $credenciales->getUsuario(),
-            $credenciales->getTipo(),
+            $credenciales->getUsuario()->getDni(),
+            $credenciales->getTipo()->getId(),
             $credenciales->getId()
         ]);
     }
@@ -70,8 +69,8 @@ class CredencialesHandler {
 
         return $datos ? new Credenciales(
             $datos['id'],
-            $datos['usuario'],
-            $datos['tipo']
+            (new UsuariosHandler)->getById($datos['usuario']),
+            (new TipoCredencialHandler)->getById($datos['tipo'])
         ) : null;
     }
 
@@ -83,8 +82,8 @@ class CredencialesHandler {
 
         return $datos ? new Credenciales(
             $datos['id'],
-            $datos['usuario'],
-            $datos['tipo']
+            (new UsuariosHandler)->getById($datos['usuario']),
+            (new TipoCredencialHandler)->getById($datos['tipo'])
         ) : null;
     }
 
@@ -96,8 +95,8 @@ class CredencialesHandler {
 
         return $datos ? new Credenciales(
             $datos['id'],
-            $datos['usuario'],
-            $datos['tipo']
+            (new UsuariosHandler)->getById($datos['usuario']),
+            (new TipoCredencialHandler)->getById($datos['tipo'])
         ) : null;
     }
 
@@ -109,8 +108,8 @@ class CredencialesHandler {
         return array_map(
             fn($datos) => new Credenciales(
                 $datos['id'],
-                $datos['usuario'],
-                $datos['tipo']
+                (new UsuariosHandler)->getById($datos['usuario']),
+                (new TipoCredencialHandler)->getById($datos['tipo'])
             ),
             $result
         );

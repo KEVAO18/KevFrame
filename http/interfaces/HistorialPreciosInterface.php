@@ -8,7 +8,7 @@ interface HistorialPreciosInterface
 {
     public function getId(): int;
 
-    public function getProductoId(): int;
+    public function getProductoId(): ProductosInterface;
 
     public function getPrecio(): float;
 

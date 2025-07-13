@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\LogUsuariosInterface;
 use App\Core\Database;
 use PDO;
 use App\Models\LogUsuarios;
@@ -15,7 +14,7 @@ class LogUsuariosHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(LogUsuariosInterface $log): int {
+    public function create(LogUsuarios $log): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `log_usuarios` 
@@ -24,7 +23,7 @@ class LogUsuariosHandler {
         );
 
         $stmt->execute([
-            $log->getUsuario(),
+            $log->getUsuario()->getDni(),
             $log->getAccion(),
             $log->getDetalle()
         ]);
@@ -32,7 +31,7 @@ class LogUsuariosHandler {
         return $db->lastInsertId();
     }
 
-    public function update(LogUsuariosInterface $log): bool {
+    public function update(LogUsuarios $log): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `log_usuarios`
@@ -41,7 +40,7 @@ class LogUsuariosHandler {
         );
 
         return $stmt->execute([
-            $log->getUsuario(),
+            $log->getUsuario()->getDni(),
             $log->getAccion(),
             $log->getDetalle(),
             $log->getId()
@@ -62,7 +61,7 @@ class LogUsuariosHandler {
 
         return $datos ? new LogUsuarios(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler())->getById($datos['usuario']),
             $datos['accion'],
             $datos['detalle'],
             $datos['fecha']
@@ -75,12 +74,12 @@ class LogUsuariosHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new LogUsuarios(
-                $row['id'],
-                $row['usuario'],
-                $row['accion'],
-                $row['detalle'],
-                $row['fecha']
+            fn($datos) => new LogUsuarios(
+                $datos['id'],
+                (new UsuariosHandler())->getById($datos['usuario']),
+                $datos['accion'],
+                $datos['detalle'],
+                $datos['fecha']
             ),
             $result
         ) ?? [];

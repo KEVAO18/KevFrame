@@ -10,9 +10,9 @@ class Productos implements ProductosInterface{
     private ?string $descripcion;
     private int $unidades;
     private float $precio;
-    private int $estadoId;
+    private EstadosProducto $estadoId;
 
-    public function __construct(int $id, string $nombre, ?string $descripcion, int $unidades, float $precio, int $estadoId) {
+    public function __construct(int $id, string $nombre, ?string $descripcion, int $unidades, float $precio, EstadosProducto $estadoId) {
         $this->id = $id;
         $this->nombre = $nombre;
         $this->descripcion = $descripcion;
@@ -41,7 +41,7 @@ class Productos implements ProductosInterface{
         return $this->precio;
     }
 
-    public function getEstadoId(): int{
+    public function getEstadoId(): EstadosProducto{
         return $this->estadoId;
     }
 }

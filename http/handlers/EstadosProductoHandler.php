@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\EstadosProductoInterface;
 use App\Models\EstadosProducto;
 use App\Core\Database;
 use DateTime;
@@ -26,7 +25,7 @@ class EstadosProductoHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(EstadosProductoInterface $estadosProducto): int {
+    public function create(EstadosProducto $estadosProducto): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `estados_producto` 
@@ -41,7 +40,7 @@ class EstadosProductoHandler {
         return $db->lastInsertId();
     }
 
-    public function update(EstadosProductoInterface $estadosProducto): bool {
+    public function update(EstadosProducto $estadosProducto): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `estados_producto` SET 
@@ -66,12 +65,11 @@ class EstadosProductoHandler {
         $stmt = $db->prepare('SELECT * FROM `estados_producto` WHERE `id` = ?');
         $stmt->execute([$id]);
         $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $stmt->closeCursor();
 
         return $datos ? new EstadosProducto(
             $datos['id'],
-            $datos['nombre'],
-            $datos['descripcion'],
-            new DateTime($datos['fecha_creacion'])
+            $datos['nombre']
         ) : null;
     }
 
@@ -79,13 +77,12 @@ class EstadosProductoHandler {
         $db = $this->db->getConnection();
         $result = $db->query('SELECT * FROM `estados_producto`')
             ->fetchAll(PDO::FETCH_ASSOC);
+            
 
         return array_map(
             fn($row) => new EstadosProducto(
                 $row['id'],
-                $row['nombre'],
-                $row['descripcion'],
-                new DateTime($row['fecha_creacion'])
+                $row['nombre']
             ),
             $result
         ) ?? [];

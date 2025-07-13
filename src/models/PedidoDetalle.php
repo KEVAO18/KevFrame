@@ -6,11 +6,11 @@ use App\Http\Interfaces\PedidoDetalleInterface;
 
 class PedidoDetalle implements PedidoDetalleInterface{
     private int $id;
-    private int $pedido;
-    private int $producto;
+    private Pedidos $pedido;
+    private Productos $producto;
     private int $cantidad;
 
-    public function __construct(int $id, int $pedido, int $producto, int $cantidad) {
+    public function __construct(int $id, Pedidos $pedido, Productos $producto, int $cantidad) {
         $this->id = $id;
         $this->pedido = $pedido;
         $this->producto = $producto;
@@ -21,11 +21,11 @@ class PedidoDetalle implements PedidoDetalleInterface{
         return $this->id; 
     }
 
-    public function getPedido(): int{
+    public function getPedido(): Pedidos{
         return $this->pedido; 
     }
 
-    public function getProducto(): int{
+    public function getProducto(): Productos{
         return $this->producto; 
     }
 

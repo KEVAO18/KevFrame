@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\SessionManager;
 use App\Core\View;
+use App\Http\Handlers\CarritoDetalleHandler;
 use App\Http\Handlers\CarritoHandler;
 
 class CarritoController
@@ -24,6 +25,14 @@ class CarritoController
 
         // si el usuario está logueado, mostrar carrito
         
+        $carritoHandler = new CarritoHandler();
+        $carrito = $carritoHandler->getByuserId($sm->get('user_id'));
+
+        $carritoDetalleHandler = new CarritoDetalleHandler();
+        
+        // $carritoDetalles = $carritoDetalleHandler->getByCarritoId($carrito->getId());
+
+        $sm->set('carrito', $carrito);
 
         View::render('componentes/cartera/carrito');
 

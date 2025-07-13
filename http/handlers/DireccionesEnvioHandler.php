@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Handlers;
-
-use App\Http\Interfaces\DireccionesEnvioInterface;
+;
 use App\Models\DireccionesEnvio;
 use App\Core\Database;
 use PDO;
@@ -25,7 +24,7 @@ class DireccionesEnvioHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(DireccionesEnvioInterface $direccionesEnvio): int {
+    public function create(DireccionesEnvio $direccionesEnvio): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `direcciones_envio` 
@@ -34,7 +33,7 @@ class DireccionesEnvioHandler {
         );
 
         $stmt->execute([
-            $direccionesEnvio->getUsuario(),
+            $direccionesEnvio->getUsuario()->getDni(),
             $direccionesEnvio->getDireccion(),
             $direccionesEnvio->getCiudad(),
             $direccionesEnvio->getDepartamento(),
@@ -45,7 +44,7 @@ class DireccionesEnvioHandler {
         return $db->lastInsertId();
     }
 
-    public function update(DireccionesEnvioInterface $direccionesEnvio): bool {
+    public function update(DireccionesEnvio $direccionesEnvio): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `direcciones_envio` SET 
@@ -54,7 +53,7 @@ class DireccionesEnvioHandler {
         );
 
         return $stmt->execute([
-            $direccionesEnvio->getUsuario(),
+            $direccionesEnvio->getUsuario()->getDni(),
             $direccionesEnvio->getDireccion(),
             $direccionesEnvio->getCiudad(),
             $direccionesEnvio->getDepartamento(),
@@ -78,7 +77,7 @@ class DireccionesEnvioHandler {
 
         return $datos? new DireccionesEnvio(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler())->getById($datos['usuario']),
             $datos['direccion'],
             $datos['ciudad'],
             $datos['departamento'],
@@ -95,7 +94,7 @@ class DireccionesEnvioHandler {
 
         return $datos? new DireccionesEnvio(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler())->getById($datos['usuario']),
             $datos['direccion'],
             $datos['ciudad'],
             $datos['departamento'],
@@ -112,7 +111,7 @@ class DireccionesEnvioHandler {
         return array_map(
             fn ($datos) => new DireccionesEnvio(
                 $datos['id'],
-                $datos['usuario'],
+                (new UsuariosHandler())->getById($datos['usuario']),
                 $datos['direccion'],
                 $datos['ciudad'],
                 $datos['departamento'],

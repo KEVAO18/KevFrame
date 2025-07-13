@@ -7,12 +7,12 @@ use DateTime;
 
 class LogUsuarios implements LogUsuariosInterface{
     private int $id;
-    private int $usuario;
+    private Usuario $usuario;
     private string $accion;
     private string $detalle;
     private DateTime $fecha;
 
-    public function __construct(int $id, int $usuario, string $accion, string $detalle, DateTime $fecha) {
+    public function __construct(int $id, Usuario $usuario, string $accion, string $detalle, DateTime $fecha) {
         $this->id = $id;
         $this->usuario = $usuario;
         $this->accion = $accion;
@@ -24,7 +24,7 @@ class LogUsuarios implements LogUsuariosInterface{
         return $this->id; 
     }
 
-    public function getUsuario(): int {
+    public function getUsuario(): Usuario {
         return $this->usuario; 
     }
 

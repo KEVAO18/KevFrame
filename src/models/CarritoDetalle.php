@@ -6,11 +6,11 @@ use App\Http\Interfaces\CarritoDetalleInterface;
 
 class CarritoDetalle implements CarritoDetalleInterface {
     private int $id;
-    private int $carrito;
-    private int $producto;
+    private Carrito $carrito;
+    private Productos $producto;
     private int $cantidad;
 
-    public function __construct(int $id, int $carrito, int $producto, int $cantidad){
+    public function __construct(int $id, Carrito $carrito, Productos $producto, int $cantidad){
         $this->id = $id;
         $this->carrito = $carrito;
         $this->producto = $producto;
@@ -21,11 +21,11 @@ class CarritoDetalle implements CarritoDetalleInterface {
         return $this->id; 
     }
 
-    public function getCarrito(): int{
+    public function getCarrito(): Carrito{
         return $this->carrito;
     }
 
-    public function getProducto(): int{
+    public function getProducto(): Productos{
         return $this->producto; 
     }
 

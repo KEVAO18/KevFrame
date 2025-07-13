@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CarritoInterface;
 use App\Core\Database;
 use App\Models\Carrito;
 use DateTime;
@@ -31,7 +30,7 @@ class CarritoHandler {
      * @access public
      *
      */
-    public function create(CarritoInterface $carrito): int {
+    public function create(Carrito $carrito): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `carritos` 
@@ -40,7 +39,7 @@ class CarritoHandler {
         );
 
         $stmt->execute([
-            $carrito->getUsuario(),
+            $carrito->getUsuario()->getDni(),
             $carrito->getFechaCreacion()
         ]);
 
@@ -48,12 +47,12 @@ class CarritoHandler {
     }
 
     /**
-     * @param CarritoInterface $carrito
+     * @param Carrito $carrito
      * @return bool
      * @access public
      *
      */
-    public function update(CarritoInterface $carrito): bool {
+    public function update(Carrito $carrito): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `carritos` SET
@@ -62,7 +61,7 @@ class CarritoHandler {
         );
 
         return $stmt->execute([
-            $carrito->getUsuario(),
+            $carrito->getUsuario()->getDni(),
             $carrito->getFechaCreacion(),
             $carrito->getId()
         ]);
@@ -94,10 +93,31 @@ class CarritoHandler {
 
         return $datos? new Carrito(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler)->getById($datos['usuario']),
             new DateTime($datos['fecha_creacion'])
         ) : null;
     }
+
+    /**
+     * @param int $user
+     * @return Carrito|null
+     * @access public
+     * 
+     */
+    public function getByUserId(int $user): ?Carrito {
+        $db = $this->db->getConnection();
+        $stmt = $db->prepare('SELECT * FROM `carritos` WHERE `usuario` = ?');
+        $stmt->execute([$user]);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        return $datos? new Carrito(
+            $datos['id'],
+            (new UsuariosHandler)->getById($datos['usuario']),
+            new DateTime($datos['fecha_creacion'])
+        ) : null;
+    }
+
+
 
     /**
      * @return array
@@ -112,7 +132,7 @@ class CarritoHandler {
         return array_map(
             fn($datos) => new Carrito(
                 $datos['id'],
-                $datos['usuario'],
+                (new UsuariosHandler)->getById($datos['usuario']),
                 new DateTime($datos['fecha_creacion'])
             ),
             $result

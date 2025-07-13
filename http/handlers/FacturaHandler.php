@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\FacturaInterface;
 use App\Models\Factura;
 use App\Core\Database;
 use DateTime;
@@ -16,7 +15,7 @@ class FacturaHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(FacturaInterface $factura): int {
+    public function create(Factura $factura): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `facturas` 
@@ -25,7 +24,7 @@ class FacturaHandler {
         );
 
         $stmt->execute([
-            $factura->getUsuario(),
+            $factura->getUsuario()->getDni(),
             $factura->getFecha(),
             $factura->getTotal()
         ]);
@@ -33,7 +32,7 @@ class FacturaHandler {
         return $db->lastInsertId();
     }
 
-    public function update(FacturaInterface $factura): bool {
+    public function update(Factura $factura): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `facturas`
@@ -41,7 +40,7 @@ class FacturaHandler {
             WHERE `id` = ?'
         ); 
         return $stmt->execute([
-            $factura->getUsuario(),
+            $factura->getUsuario()->getDni(),
             $factura->getTotal(),
             $factura->getFecha(),
             $factura->getId() 
@@ -62,7 +61,7 @@ class FacturaHandler {
 
         return $datos ? new Factura(
             $datos['id'],
-            $datos['usuario'],
+            (new UsuariosHandler())->getById($datos['usuario']),
             new DateTime($datos['fecha']),
             $datos['total']
         ) : null;
@@ -76,7 +75,7 @@ class FacturaHandler {
         return array_map(
             fn($datos) => new Factura(
                 $datos['id'],
-                $datos['usuario'],
+                (new UsuariosHandler())->getById($datos['usuario']),
                 new DateTime($datos['fecha']),
                 $datos['total']
             ),

@@ -7,13 +7,13 @@ use DateTime;
 
 class Pagos implements PagosInterface{
     private int $id;
-    private int $pedido;
-    private int $metodoPago;
+    private Pedidos $pedido;
+    private MetodosPago $metodoPago;
     private float $monto;
     private DateTime $fecha;
-    private int $estado;
+    private EstadosPago $estado;
 
-    public function __construct(int $id, int $pedido, int $metodoPago, float $monto, DateTime $fecha, int $estado) {
+    public function __construct(int $id, Pedidos $pedido, MetodosPago $metodoPago, float $monto, DateTime $fecha, EstadosPago $estado) {
         $this->id = $id;
         $this->pedido = $pedido;
         $this->metodoPago = $metodoPago;
@@ -26,11 +26,11 @@ class Pagos implements PagosInterface{
         return $this->id; 
     }
 
-    public function getPedido(): int {
+    public function getPedido(): Pedidos {
         return $this->pedido; 
     }
 
-    public function getMetodoPago(): int {
+    public function getMetodoPago(): MetodosPago {
         return $this->metodoPago;
     }
 
@@ -42,7 +42,7 @@ class Pagos implements PagosInterface{
         return $this->fecha;
     }
 
-    public function getEstado(): int {
+    public function getEstado(): EstadosPago {
         return $this->estado;  
     }
 }

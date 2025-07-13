@@ -14,5 +14,5 @@ interface ProductosInterface
 
     public function getPrecio(): float;
 
-    public function getEstadoId(): int;
+    public function getEstadoId(): EstadosProductoInterface;
 }

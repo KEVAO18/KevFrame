@@ -8,11 +8,11 @@ use DateTime;
 class CuponesUso implements CuponesUsoInterface{
 
     private int $id;
-    private int $cupon;
-    private int $usuario;
+    private Cupones $cupon;
+    private Usuario $usuario;
     private DateTime $fechaUso;
 
-    public function __construct(int $id, int $cupon, int $usuario, DateTime $fechaUso) {
+    public function __construct(int $id, Cupones $cupon, Usuario $usuario, DateTime $fechaUso) {
         $this->id = $id;
         $this->cupon = $cupon;
         $this->usuario = $usuario;
@@ -23,11 +23,11 @@ class CuponesUso implements CuponesUsoInterface{
         return $this->id; 
     }
 
-    public function getCupon(): int {
+    public function getCupon(): Cupones {
         return $this->cupon; 
     }
 
-    public function getUsuario(): int {
+    public function getUsuario(): Usuario {
         return $this->usuario;
     }
 

@@ -238,6 +238,11 @@ CREATE TABLE IF NOT EXISTS db_tienda.devoluciones (
     FOREIGN KEY (producto) 
     REFERENCES productos(id)
 	ON DELETE CASCADE
+
+    CONSTRAINT devoluciones_factura_fk
+    FOREIGN KEY (factura)
+    REFERENCES factura(id)
+    ON DELETE CASCADE
 );
 
 -- tabla para los cupones
@@ -374,9 +379,7 @@ CREATE INDEX IF NOT EXISTS idx_log_accion ON db_tienda.log_usuarios(accion);
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_email ON db_tienda.usuarios(email);
 
-use db_tienda;
-
--- funciones
+-- funciones -----------------------------------------------------------------------------------------------------
 -- funcion para obtener la disponibilidad de un producto
 DELIMITER $$
 
@@ -392,7 +395,7 @@ END$$
 
 DELIMITER ;
 
--- vistas
+-- vistas -----------------------------------------------------------------------------------------------------
 -- vista para obtener las categorias con la cantidad de productos que tienen
 CREATE VIEW IF NOT EXISTS  db_tienda.`productos_por_categoria` as
 select 
@@ -408,7 +411,6 @@ on
 group by 
     c.descripcion;
 
-
 -- vista para obtener la disponibilidad de los productos de la tienda
 CREATE VIEW IF NOT EXISTS db_tienda.stock as 
 select 
@@ -418,7 +420,7 @@ select
 from 
     productos as p;
 
--- Procedimientos almacenados
+-- Procedimientos almacenados ---------------------------------------------------------------------------------
 -- Procedimiento para obtener solo un numero limitado de productos para la paginacion
 CREATE PROCEDURE IF NOT EXISTS db_tienda.`paginacion_productos`(
     IN `f` INT, 
@@ -557,7 +559,76 @@ WHERE
 limit 
     1;
 
--- triggers
+-- procedimiento para obtener los productos del carrito de un usuario
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`get_carrito_usuario`(IN `userId` INT)
+    NOT DETERMINISTIC 
+    CONTAINS SQL 
+    SQL SECURITY DEFINER 
+select 
+    cd.* 
+from 
+    carrito as c 
+INNER join 
+    carrito_detalle as cd 
+on 
+    cd.carrito = c.id 
+where 
+    c.usuario = userId;
+
+-- procedimiento para obtener los productos de un pedido
+CREATE PROCEDURE IF NOT EXISTS db_tienda.`producto_para_mostrar`(IN `productoId` INT)
+    NOT DETERMINISTIC 
+    CONTAINS SQL 
+    SQL SECURITY DEFINER 
+select 
+    p.id,
+    p.nombre,
+    p.descripcion,
+    p.unidades,
+    p.precio,
+    e.nombre as activo, 
+    c.id as categoria_id, 
+    c.descripcion as categoria
+from 
+    productos as p 
+inner join 
+    producto_categoria as pc 
+on 
+    p.id = pc.producto_id 
+inner join 
+    categorias as c 
+on 
+    c.id = pc.categoria_id 
+inner join 
+    estados_producto as e 
+on 
+    e.id = p.estado_id 
+where 
+    p.id = productoId;
+
+DELIMITER $$
+CREATE PROCEDURE registrar_auditoria(
+    IN dni_usuario INT,
+    IN nombre_usuario VARCHAR(255),
+    IN accion_realizada VARCHAR(50),
+    IN tabla_afectada VARCHAR(64)
+)
+BEGIN
+    DECLARE mensaje TEXT;
+    
+    SET mensaje = CONCAT(
+        "La tabla '", tabla_afectada, 
+        "' ha sido actualizada por '", nombre_usuario,
+        "' con DNI '", dni_usuario, 
+        "' a las ", NOW()
+    );
+    
+    INSERT INTO log_usuarios (usuario, accion, detalle)
+    VALUES (dni_usuario, accion_realizada, mensaje);
+END$$
+DELIMITER ;
+
+-- triggers ---------------------------------------------------------------------------------------------------
 -- PD recuerda que debes cambiar el delimitador a $$ para que funcione ya que el delimitador por defecto es ; 
 -- y al tener mas de una sentencia en un trigger no funciona
 

@@ -8,7 +8,7 @@ interface TirillasInterface
 {
     public function getId(): int;
 
-    public function getPagoId(): int;
+    public function getPagoId(): PagosInterface;
 
     public function getContenido(): string;
 

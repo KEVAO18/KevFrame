@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Handlers;
-
-use App\Http\Interfaces\DevolucionesInterface;
+;
 use App\Core\Database;
 use App\Models\Devoluciones;
 use DateTime;
@@ -26,7 +25,7 @@ class DevolucionesHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(DevolucionesInterface $devolucion): int {
+    public function create(Devoluciones $devolucion): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `devoluciones` 
@@ -35,8 +34,8 @@ class DevolucionesHandler {
         );
 
         $stmt->execute([
-            $devolucion->getProducto(),
-            $devolucion->getFactura(),
+            $devolucion->getProducto()->getId(),
+            $devolucion->getFactura()->getId(),
             $devolucion->getMotivo(),
             $devolucion->getReembolso(),
             $devolucion->getEstado(),
@@ -47,7 +46,7 @@ class DevolucionesHandler {
         return $db->lastInsertId();
     }
 
-    public function update(DevolucionesInterface $devolucion): bool {
+    public function update(Devoluciones $devolucion): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `devoluciones` SET 
@@ -56,8 +55,8 @@ class DevolucionesHandler {
         );
 
         return $stmt->execute([
-            $devolucion->getProducto(),
-            $devolucion->getFactura(),
+            $devolucion->getProducto()->getId(),
+            $devolucion->getFactura()->getId(),
             $devolucion->getMotivo(),
             $devolucion->getReembolso(),
             $devolucion->getEstado(),
@@ -81,8 +80,8 @@ class DevolucionesHandler {
 
         return $datos? new Devoluciones(
             $datos['id'],
-            $datos['producto'],
-            $datos['factura'],
+            (new ProductosHandler())->getById($datos['producto']),
+            (new FacturaHandler())->getById($datos['factura']),
             $datos['motivo'],
             $datos['reembolso'],
             $datos['estado'],
@@ -99,8 +98,8 @@ class DevolucionesHandler {
         return array_map(
             fn($datos) => new Devoluciones(
                 $datos['id'],
-                $datos['producto'],
-                $datos['factura'],
+                (new ProductosHandler())->getById($datos['producto']),
+                (new FacturaHandler())->getById($datos['factura']),
                 $datos['motivo'],
                 $datos['reembolso'],
                 $datos['estado'],

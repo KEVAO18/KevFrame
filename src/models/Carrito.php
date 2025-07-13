@@ -7,10 +7,10 @@ use DateTime;
 
 class Carrito implements CarritoInterface {
     private int $id;
-    private int $usuario;
+    private Usuario $usuario;
     private DateTime $fechaCreacion;
 
-    public function __construct(int $id, int $usuario, DateTime $fechaCreacion) {
+    public function __construct(int $id, Usuario $usuario, DateTime $fechaCreacion) {
         $this->id = $id;
         $this->usuario = $usuario;
         $this->fechaCreacion = $fechaCreacion; 
@@ -20,7 +20,7 @@ class Carrito implements CarritoInterface {
         return $this->id;
     }
 
-    public function getUsuario(): int{
+    public function getUsuario(): Usuario{
         return $this->usuario;
     }
 

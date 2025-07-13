@@ -8,10 +8,10 @@ class ValoresAtributo implements ValoresAtributoInterface
 {
     
         private int $id;
-        private int $atributo_id;
+        private Atributo $atributo_id;
         private string $valor;
 
-    public function __construct(int $id, int $atributo_id, string $valor){
+    public function __construct(int $id, Atributo $atributo_id, string $valor){
         $this->id = $id;
         $this->atributo_id = $atributo_id;
         $this->valor = $valor;
@@ -21,7 +21,7 @@ class ValoresAtributo implements ValoresAtributoInterface
         return $this->id;
     }
 
-    public function getAtributoId(): int {
+    public function getAtributoId(): Atributo {
         return $this->atributo_id;
     }
 

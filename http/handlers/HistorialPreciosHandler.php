@@ -24,7 +24,7 @@ class HistorialPreciosHandler {
         );
 
         $stmt->execute([
-            $historial->getProductoId(),
+            $historial->getProductoId()->getId(),
             $historial->getPrecio(),
             $historial->getFechaInicio(),
             $historial->getFechaFin()
@@ -42,7 +42,7 @@ class HistorialPreciosHandler {
         );
 
         return $stmt->execute([
-            $historial->getProductoId(),
+            $historial->getProductoId()->getId(),
             $historial->getPrecio(),
             $historial->getFechaInicio(),
             $historial->getFechaFin(),
@@ -64,7 +64,7 @@ class HistorialPreciosHandler {
 
         return $datos ? new HistorialPrecios(
             $datos['id'],
-            $datos['producto_id'],
+            (new ProductosHandler())->getById($datos['producto_id']),
             $datos['precio'],
             $datos['fecha_inicio'],
             $datos['fecha_fin']
@@ -77,12 +77,12 @@ class HistorialPreciosHandler {
             ->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(
-            fn($row) => new HistorialPrecios(
-                $row['id'],
-                $row['producto_id'],
-                $row['precio'],
-                $row['fecha_inicio'],
-                $row['fecha_fin']
+            fn($datos) => new HistorialPrecios(
+                $datos['id'],
+                (new ProductosHandler())->getById($datos['producto_id']),
+                $datos['precio'],
+                $datos['fecha_inicio'],
+                $datos['fecha_fin']
             ),
             $result
         ) ?? [];

@@ -6,9 +6,9 @@ interface CarritoDetalleInterface
 {
     public function getId(): int;
 
-    public function getCarrito(): int;
+    public function getCarrito(): CarritoInterface;
 
-    public function getProducto(): int;
+    public function getProducto(): ProductosInterface;
 
     public function getCantidad(): int;
 }

@@ -36,6 +36,7 @@ class ProcesosAlmacenadosHandler {
         $stmt = $db->prepare("CALL `productos_mas_vendidos`(?)");
         $stmt->execute([$number]);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
 
         return array_map(
             fn($row) => new Productos(
@@ -44,7 +45,7 @@ class ProcesosAlmacenadosHandler {
                 $row['descripcion'],
                 $row['unidades'],
                 $row['precio'],
-                $row['estado_id']
+                (new EstadosProductoHandler())->getById($row['estado_id'])
             ),
             $datos
         ) ?? [];
@@ -62,6 +63,7 @@ class ProcesosAlmacenadosHandler {
         $stmt = $db->prepare("CALL `nuevos`(?)");
         $stmt->execute([$number]);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
 
         return array_map(
             fn($row) => new Productos(
@@ -70,7 +72,7 @@ class ProcesosAlmacenadosHandler {
                 $row['descripcion'],
                 $row['unidades'],
                 $row['precio'],
-                $row['estado_id']
+                (new EstadosProductoHandler())->getById($row['estado_id'])
             ),
             $datos
         ) ?? [];
@@ -103,33 +105,7 @@ class ProcesosAlmacenadosHandler {
     public function getProductoParaMostrar(int $id): array{
 
         $db = $this->db->getConnection();
-        $stmt = $db->prepare(
-            "select 
-                p.id,
-                p.nombre,
-                p.descripcion,
-                p.unidades,
-                p.precio,
-                e.nombre as activo, 
-                c.id as categoria_id, 
-                c.descripcion as categoria
-            from 
-                productos as p 
-            inner join 
-                producto_categoria as pc 
-            on 
-                p.id = pc.producto_id 
-            inner join 
-                categorias as c 
-            on 
-                c.id = pc.categoria_id 
-            inner join 
-                estados_producto as e 
-            on 
-                e.id = p.estado_id 
-            where 
-                p.id = ?"
-        );
+        $stmt = $db->prepare("CALL `producto_para_mostrar`(?)");
 
         $stmt->execute([$id]);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -154,6 +130,7 @@ class ProcesosAlmacenadosHandler {
 
         $stmt->execute([$id]);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
 
         return array_map(
             fn($row) => new Productos(
@@ -162,7 +139,7 @@ class ProcesosAlmacenadosHandler {
                 $row['descripcion'],
                 $row['unidades'],
                 $row['precio'],
-                $row['estado_id']
+                (new EstadosProductoHandler())->getById($row['estado_id'])
             ), 
             $datos
         );

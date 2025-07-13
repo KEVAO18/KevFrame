@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\EstadosPagoInterface;
 use App\Core\Database;
 use App\Models\EstadosPago;
 use PDO;
@@ -25,7 +24,7 @@ class EstadosPagoHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(EstadosPagoInterface $estadosPago): int {
+    public function create(EstadosPago $estadosPago): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `estados_pago` 
@@ -40,7 +39,7 @@ class EstadosPagoHandler {
         return $db->lastInsertId();
     }
 
-    public function update(EstadosPagoInterface $estadosPago): bool {
+    public function update(EstadosPago $estadosPago): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `estados_pago` SET 

@@ -8,13 +8,13 @@ interface PagosInterface
 {
     public function getId(): int;
 
-    public function getPedido(): int;
+    public function getPedido(): PedidosInterface;
 
-    public function getMetodoPago(): int;
+    public function getMetodoPago(): MetodosPagoInterface;
 
     public function getMonto(): float;
 
     public function getFecha(): DateTime; // O DateTime, dependiendo de cómo se maneje
 
-    public function getEstado(): int;
+    public function getEstado(): EstadosPagoInterface;
 }

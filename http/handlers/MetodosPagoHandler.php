@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\MetodosPagoInterface;
 use App\Core\Database;
 use PDO;
 use App\Models\MetodosPago;
@@ -15,7 +14,7 @@ class MetodosPagoHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(MetodosPagoInterface $metodo): int {
+    public function create(MetodosPago $metodo): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `metodos_pago` 
@@ -31,7 +30,7 @@ class MetodosPagoHandler {
         return $db->lastInsertId();
     }
 
-    public function update(MetodosPagoInterface $metodo): bool {
+    public function update(MetodosPago $metodo): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `metodos_pago` SET

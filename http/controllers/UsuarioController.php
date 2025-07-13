@@ -48,7 +48,7 @@ class UsuarioController
         $coockies->set('user_id', $usuario->getDni());
         $coockies->set('user_name', $usuario->getFullname());
         $coockies->set('user_email', $usuario->getEmail());
-        $coockies->set('user_rol', $credenciales->getId());
+        $coockies->set('user_rol', $credenciales->getTipo()->getId());
 
         header('Location: ' . $_ENV['APP_BASE_URL']);
     }

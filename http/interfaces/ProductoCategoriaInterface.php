@@ -4,7 +4,7 @@ namespace App\Http\Interfaces;
 
 interface ProductoCategoriaInterface
 {
-    public function getProductoId(): int;
+    public function getProductoId(): ProductosInterface;
 
-    public function getCategoriaId(): int;
+    public function getCategoriaId(): CategoriasInterface;
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\CuponesInterface;
 use App\Core\Database;
 use App\Models\Cupones;
 use DateTime;
@@ -26,7 +25,7 @@ class CuponesHandler {
         $this->db = Database::getInstance();
     }
 
-    public function create(CuponesInterface $cupon): int {
+    public function create(Cupones $cupon): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `cupones` 
@@ -46,7 +45,7 @@ class CuponesHandler {
         return $db->lastInsertId();
     }
 
-    public function update(CuponesInterface $cupon): bool {
+    public function update(Cupones $cupon): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `cupones` SET

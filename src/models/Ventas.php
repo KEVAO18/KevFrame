@@ -7,12 +7,12 @@ use DateTime;
 
 class Ventas implements VentasInterface{
     private int $id;
-    private int $producto;
+    private Productos $producto;
     private int $cantidad;
-    private string $factura;
+    private Factura $factura;
     private DateTime $fecha;
 
-    public function __construct(int $id, int $producto, int $cantidad, string $factura, DateTime $fecha) {
+    public function __construct(int $id, Productos $producto, int $cantidad, Factura $factura, DateTime $fecha) {
         $this->id = $id;
         $this->producto = $producto;
         $this->cantidad = $cantidad;   
@@ -24,7 +24,7 @@ class Ventas implements VentasInterface{
         return $this->id; 
     }
 
-    public function getProducto(): int{
+    public function getProducto(): Productos{
         return $this->producto; 
     }
 
@@ -32,7 +32,7 @@ class Ventas implements VentasInterface{
         return $this->cantidad; 
     }
 
-    public function getFactura(): string{
+    public function getFactura(): Factura{
         return $this->factura;
     }
 

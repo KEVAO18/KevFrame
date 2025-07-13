@@ -8,12 +8,12 @@ use DateTime;
 class Pedidos implements PedidosInterface
 {
     private int $id;
-    private int $usuario;
+    private Usuario $usuario;
     private DateTime $fecha;
     private string $estado;
     private float $total;
 
-    public function __construct(int $id, int $usuario, DateTime $fecha, string $estado, float $total) {
+    public function __construct(int $id, Usuario $usuario, DateTime $fecha, string $estado, float $total) {
         $this->id = $id;
         $this->usuario = $usuario;
         $this->fecha = $fecha;
@@ -25,7 +25,7 @@ class Pedidos implements PedidosInterface
         return $this->id;
     }
 
-    public function getUsuario(): int {
+    public function getUsuario(): Usuario {
         return $this->usuario;
     }
 

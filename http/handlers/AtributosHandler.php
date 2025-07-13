@@ -2,7 +2,6 @@
 
 namespace App\Http\Handlers;
 
-use App\Http\Interfaces\AtributosInterface;
 use App\Core\Database;
 use App\Models\Atributo;
 use PDO;
@@ -26,12 +25,12 @@ class AtributosHandler {
     }
 
     /**
-     * @param AtributosInterface $atributos
+     * @param Atributo $atributos
      * @return void
      * @access public
      * 
      */
-    public function create(AtributosInterface $atributos): int {
+    public function create(Atributo $atributos): int {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'INSERT INTO `atributos` 
@@ -48,12 +47,12 @@ class AtributosHandler {
 
     /**
      * 
-     * @param AtributosInterface $atributos
+     * @param Atributo $atributos
      * @return bool
      * @access public
      * 
      */
-    public function update(AtributosInterface $atributos): bool {
+    public function update(Atributo $atributos): bool {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `atributos` SET
