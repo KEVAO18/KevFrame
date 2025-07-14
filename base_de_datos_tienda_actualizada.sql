@@ -172,10 +172,12 @@ CREATE TABLE IF NOT EXISTS db_tienda.carrito (
 -- tabla para los detalles de los carritos
 CREATE TABLE IF NOT EXISTS db_tienda.carrito_detalle (
 
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     carrito INT NOT NULL,
     producto INT NOT NULL,
     cantidad INT NOT NULL,
+
+    CONSTRAINT carrito_detalle_producto_carrito_PK
+    PRIMARY KEY (carrito, producto),
 
     CONSTRAINT carrito_detalle_carrito_fk 
     FOREIGN KEY (carrito) 
@@ -237,7 +239,7 @@ CREATE TABLE IF NOT EXISTS db_tienda.devoluciones (
     CONSTRAINT inventario_historial_producto_fk
     FOREIGN KEY (producto) 
     REFERENCES productos(id)
-	ON DELETE CASCADE
+	ON DELETE CASCADE,
 
     CONSTRAINT devoluciones_factura_fk
     FOREIGN KEY (factura)
@@ -369,7 +371,6 @@ CREATE INDEX IF NOT EXISTS index_usuarios ON db_tienda.usuarios (fullname, email
 CREATE INDEX IF NOT EXISTS index_factura ON db_tienda.factura (usuario, fecha);
 CREATE INDEX IF NOT EXISTS index_ventas ON db_tienda.ventas (factura, producto, fecha);
 CREATE INDEX IF NOT EXISTS index_carrito ON db_tienda.carrito (usuario);
-CREATE INDEX IF NOT EXISTS index_carrito_detalle ON db_tienda.carrito_detalle (producto, carrito);
 CREATE INDEX IF NOT EXISTS index_pedidos ON db_tienda.pedidos (usuario);
 CREATE INDEX IF NOT EXISTS index_pedido_detalle ON db_tienda.pedido_detalle (pedido);
 CREATE INDEX IF NOT EXISTS index_cupones_codigo ON db_tienda.cupones (codigo);
@@ -378,6 +379,8 @@ CREATE INDEX IF NOT EXISTS idx_productos_unidades ON db_tienda.productos(unidade
 CREATE INDEX IF NOT EXISTS idx_log_accion ON db_tienda.log_usuarios(accion);
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_email ON db_tienda.usuarios(email);
+
+USE db_tienda;
 
 -- funciones -----------------------------------------------------------------------------------------------------
 -- funcion para obtener la disponibilidad de un producto
