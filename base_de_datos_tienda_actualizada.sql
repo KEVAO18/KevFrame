@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS db_tienda.ventas (
     cantidad int NOT NULL,
     factura varchar(10) NOT NULL,
     fecha DATETIME NOT NULL,
+    precio_unitario FLOAT NOT NULL,
 
     CONSTRAINT ventas_producto_fk 
     FOREIGN KEY (producto) 
@@ -195,6 +196,7 @@ CREATE TABLE IF NOT EXISTS db_tienda.pedidos (
 
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     usuario INT NOT NULL,
+    factura_id VARCHAR(10) NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('pendiente', 'procesando', 'enviado', 'completado', 'cancelado') NOT NULL DEFAULT 'pendiente',
     total FLOAT NOT NULL,
@@ -202,25 +204,11 @@ CREATE TABLE IF NOT EXISTS db_tienda.pedidos (
     CONSTRAINT pedidos_usuario_fk 
     FOREIGN KEY (usuario) 
     REFERENCES usuarios(dni)
-    ON DELETE CASCADE
-);
-
--- tabla para los detalles de los pedidos
-CREATE TABLE IF NOT EXISTS db_tienda.pedido_detalle (
-
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    pedido INT NOT NULL,
-    producto INT NOT NULL,
-    cantidad INT NOT NULL,
-
-    CONSTRAINT pedido_detalle_pedido_fk 
-    FOREIGN KEY (pedido) 
-    REFERENCES pedidos(id)
     ON DELETE CASCADE,
 
-    CONSTRAINT pedido_detalle_producto_fk 
-    FOREIGN KEY (producto) 
-    REFERENCES productos(id)
+    CONSTRAINT fk_pedido_factura 
+    FOREIGN KEY (factura_id)
+    REFERENCES factura(id)
     ON DELETE CASCADE
 );
 
@@ -353,7 +341,9 @@ CREATE TABLE IF NOT EXISTS db_tienda.log_usuarios (
     detalle TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (usuario) REFERENCES usuarios(dni)
+    CONSTRAINT log_usuarios_usuario_fk
+    FOREIGN KEY (usuario) 
+    REFERENCES usuarios(dni)
 );
 
 -- tabla para mantener trazabilidad si cambias el precio
@@ -364,7 +354,9 @@ CREATE TABLE IF NOT EXISTS db_tienda.historial_precios (
     fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_fin DATETIME,
 
-    FOREIGN KEY (producto_id) REFERENCES productos(id)
+    CONSTRAINT historial_precios_producto_fk
+    FOREIGN KEY (producto_id) 
+    REFERENCES productos(id)
 );
 
 CREATE INDEX IF NOT EXISTS index_usuarios ON db_tienda.usuarios (fullname, email);
@@ -372,7 +364,6 @@ CREATE INDEX IF NOT EXISTS index_factura ON db_tienda.factura (usuario, fecha);
 CREATE INDEX IF NOT EXISTS index_ventas ON db_tienda.ventas (factura, producto, fecha);
 CREATE INDEX IF NOT EXISTS index_carrito ON db_tienda.carrito (usuario);
 CREATE INDEX IF NOT EXISTS index_pedidos ON db_tienda.pedidos (usuario);
-CREATE INDEX IF NOT EXISTS index_pedido_detalle ON db_tienda.pedido_detalle (pedido);
 CREATE INDEX IF NOT EXISTS index_cupones_codigo ON db_tienda.cupones (codigo);
 CREATE INDEX IF NOT EXISTS idx_productos_nombre ON db_tienda.productos(nombre);
 CREATE INDEX IF NOT EXISTS idx_productos_unidades ON db_tienda.productos(unidades);
