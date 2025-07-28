@@ -57,15 +57,14 @@ class CarritoDetalleHandler {
         $db = $this->db->getConnection();
         $stmt = $db->prepare(
             'UPDATE `carrito_detalle` SET
-            `carrito` = ?, `producto` = ?, `cantidad` = ?
-            WHERE `id` = ?'
+            `cantidad` = ?
+            WHERE `carrito` = ? and `producto` = ?'
         );
 
         return $stmt->execute([
-            $carritoDetalle->getCarrito()->getId(),
-            $carritoDetalle->getProducto()->getId(),
             $carritoDetalle->getCantidad(),
-            $carritoDetalle->getId()
+            $carritoDetalle->getCarrito()->getId(),
+            $carritoDetalle->getProducto()->getId()
         ]);
     }
 
