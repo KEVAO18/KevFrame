@@ -7,7 +7,7 @@ $sm = new SessionManager();
 $sm->start();
 
 if ($sm->get('user_id') == null) {
-    View::import('plantillas/principal');
+    View::import('plantillas/main');
 }else{
     View::import('plantillas/logged');   
 }

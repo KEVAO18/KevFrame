@@ -7,7 +7,7 @@ ErrorDocument 404 /serve.php?p=error404
 ErrorDocument 403 /serve.php?p=error403
 
 RewriteEngine On
-RewriteBase /aromas/prueba/
+RewriteBase /aromas/prueba2/
 
 # Modify the existing rewrite rule to use query parameter
 RewriteCond %{REQUEST_FILENAME} !-f
