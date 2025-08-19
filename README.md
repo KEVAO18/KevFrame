@@ -1,4 +1,4 @@
-# Marco para generar una tienda online facil seguro y rapido
+# Marco facil, seguro y rapido
 
 ## Indice
 

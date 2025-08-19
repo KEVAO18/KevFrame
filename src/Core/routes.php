@@ -11,9 +11,8 @@ $router = new Router();
  * ruta principal
  */
 
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"] . '/', IndexController::class, 'index');
-
-$router->addRoute('GET', $_ENV["APP_DIRECTORY"] . '/home', IndexController::class, 'index');
+$router->get('/', IndexController::class, 'index');
+$router->get('/home', IndexController::class, 'index');
 
 /**
  * ejecucion de la ruta solicitada

@@ -23,7 +23,7 @@ View::section('content', function ($datos) {
             <h1 class="text-center display-2"><?=$datos['ErrorCode']?></h1>
             <h2 class="text-center display-3"><?=$datos['msg']?></h2>
             <div class="d-grid pt-4">
-                <a href="<?=$_ENV['APP_BASE_URL']?>" class="btn btn-outline-dark">Volver al inicio</a>
+                <a href="/" class="btn btn-outline-dark">Volver al inicio</a>
             </div>
         </div>
     </main>

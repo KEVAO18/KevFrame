@@ -16,7 +16,7 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-text-ligth border-bottom">
         <div class="container-fluid">
-            <a class="navbar-brand" href="<?= $_ENV['APP_BASE_URL'] ?>">
+            <a class="navbar-brand" href="/">
                 <?= $_ENV['APP_NAME'] ?>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navItems" aria-controls="navItems" aria-expanded="false" aria-label="Toggle navigation">

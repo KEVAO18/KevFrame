@@ -107,7 +107,64 @@ class Router{
      * @return array
      * 
      */
-    public function getRoutes(): array{
+    public function getRoutes(): array
+    {
         return $this->routes;
+    }
+
+    /**
+     * Métodos para agregar rutas de manera más concisa
+     * 
+     * @param string $method
+     * @param string $path
+     * @param string $controller
+     * @param string $action
+     * @return void
+     */
+    public function get(string $path, string $controller, string $action): void
+    {
+        $this->addRoute('GET', $path, $controller, $action);
+    }
+
+    /**
+     * Métodos para agregar rutas de manera más concisa
+     * 
+     * @param string $method
+     * @param string $path
+     * @param string $controller
+     * @param string $action
+     * @return void
+     */
+    public function post(string $path, string $controller, string $action): void
+    {
+        $this->addRoute('POST', $path, $controller, $action);
+    }
+
+    /**
+     * Métodos para agregar rutas de manera más concisa
+     *
+     * @param string $method
+     * @param string $path
+     * @param string $controller
+     * @param string $action
+     * @return void
+     */
+    public function put(string $path, string $controller, string $action): void
+    {
+        $this->addRoute('PUT', $path, $controller, $action);
+    }
+
+    /**
+     * Métodos para agregar rutas de manera más concisa
+     *
+     * @param string $method
+     * @param string $path
+     * @param string $controller
+     * @param string $action
+     * @return void
+     */
+    public function delete(string $path, string $controller, string $action): void
+    {
+        $this->addRoute('DELETE', $path, $controller, $action);
     }
 }
