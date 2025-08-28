@@ -2,11 +2,11 @@
 
 namespace App\Core;
 
-class SessionManager{
+final class SessionManager{
     private bool $sessionStarted = false;
     private const SESSION_INITIATED_KEY = '__session_initiated'; // Clave para detectar si la sesión fue iniciada correctamente
 
-    public function __construct(){
+    private function __construct(){
         
     }
 
