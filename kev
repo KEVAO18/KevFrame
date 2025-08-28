@@ -3,6 +3,20 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+function openBrowser(string $url): bool
+{
+    // Limpia y escapa la URL para evitar inyección de comandos.
+    $escapedUrl = escapeshellarg($url);
+    $command = '';
+
+    // Usa el comando de Windows directamente
+    $command = "start chrome {$escapedUrl}";
+
+    // Ejecuta el comando del sistema en segundo plano.
+    $output = shell_exec($command . ' > NUL 2>&1');
+    return $output !== null;
+}
+
 // Argumentos del CLI
 $arguments = $argv;
 array_shift($arguments); // elimina "php kev"
@@ -46,14 +60,20 @@ switch ($command) {
             }
         }
     
-        // Ruta actual del framework (donde ejecutas php cli.php serve)
-    
         // Archivo de arranque del framework
         $entryPoint = 'public/runner.php';
     
         // Levanta el servidor embebido de PHP en esa ruta
-        echo "Iniciando servidor en http://localhost:$port\n";
+        $localServerUrl = "http://localhost:$port";
+        echo "Iniciando servidor en {$localServerUrl}\n";
         echo "Presiona Ctrl+C para detener el servidor.\n";
+
+        // Abre el navegador después de levantar el servidor
+        if (!openBrowser($localServerUrl)) {
+            echo "Abriendo el navegador automáticamente. Si no se abre, navega a la URL manualmente.\n";
+        }
+
+        // Ejecuta el comando del servidor en el shell
         passthru("php -S localhost:$port $entryPoint");
         break;
     
