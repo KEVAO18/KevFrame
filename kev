@@ -1,139 +1,19 @@
-#!/usr/bin/env php
 <?php
+#!/usr/bin/env php
+
+// Este script ahora actúa como el 'runner' de la clase Cli.
+// Toda la lógica de los comandos se ha movido a la clase para una mejor organización.
 
 require __DIR__ . '/vendor/autoload.php';
 
-function openBrowser(string $url): bool
-{
-    // Limpia y escapa la URL para evitar inyección de comandos.
-    $escapedUrl = escapeshellarg($url);
-    $command = '';
+use App\Core\Cli;
 
-    // Usa el comando de Windows directamente
-    $command = "start chrome {$escapedUrl}";
-
-    // Ejecuta el comando del sistema en segundo plano.
-    $output = shell_exec($command . ' > NUL 2>&1');
-    return $output !== null;
-}
-
-// Argumentos del CLI
+// Capturar el comando y los argumentos de la línea de comandos
 $arguments = $argv;
-array_shift($arguments); // elimina "php kev"
+array_shift($arguments); // Elimina el nombre del script
 
-if (empty($arguments)) {
-    // Show help message when no arguments provided
-    echo "Kev Framework CLI\n";
-    echo "Desarrollado por KevaoDev\n";
-    echo "portfolio https://www.kevao.tech/\n";
-    exit;
-}
+// Instanciar la clase Cli y ejecutar el comando
+$cli = new Cli();
+$cli->run($arguments);
 
-$command = $arguments[0] ?? null;
-$name = $arguments[1] ?? null;
-
-switch ($command) {
-
-    case "version":
-        // Show help message when no arguments provided
-        echo "Kev Framework CLI\n";
-        echo "Available commands:\n";
-        echo "  version            Show the current version and commands\n";
-        echo "  serve              Start development server\n";
-        echo "  make:controller    Create a new controller\n";
-        echo "  make:model         Create a new model\n";
-        echo "  make:handler       Create a new handler\n";
-        echo "  make:interface     Create a new interface\n";
-        echo "  make:component     Create a new component\n";
-        echo "\nUsage: php kev [command] [name]\n";
-        break;
-
-
-    case "serve":
-        // Puerto por defecto
-        $port = 8000;
-    
-        // Si pasas argumento --port=9000, lo captura
-        foreach ($argv as $arg) {
-            if (preg_match('/^--port=(\d+)$/', $arg, $matches)) {
-                $port = $matches[1];
-            }
-        }
-    
-        // Archivo de arranque del framework
-        $entryPoint = 'public/runner.php';
-    
-        // Levanta el servidor embebido de PHP en esa ruta
-        $localServerUrl = "http://localhost:$port";
-        echo "Iniciando servidor en {$localServerUrl}\n";
-        echo "Presiona Ctrl+C para detener el servidor.\n";
-
-        // Abre el navegador después de levantar el servidor
-        if (!openBrowser($localServerUrl)) {
-            echo "Abriendo el navegador automáticamente. Si no se abre, navega a la URL manualmente.\n";
-        }
-
-        // Ejecuta el comando del servidor en el shell
-        passthru("php -S localhost:$port $entryPoint");
-        break;
-    
-    case "make:controller":
-        if (!$name) {
-            echo "Debes indicar un nombre para el controlador.\n";
-            exit(1);
-        }
-        $path = __DIR__ . "/http/controllers/{$name}.php";
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-        file_put_contents($path, "<?php\n\nclass {$name} {\n    // Controller logic here\n}\n");
-        echo "Controlador creado en http/controllers/{$name}.php\n";
-        break;
-
-    case "make:model":
-        if (!$name) {
-            echo "Debes indicar un nombre para el modelo.\n";
-            exit(1);
-        }
-        $path = __DIR__ . "/src/models/{$name}.php";
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-        file_put_contents($path, "<?php\n\nclass {$name} {\n    // Modelo\n}\n");
-        echo "Modelo creado en src/models/{$name}.php\n";
-        break;
-
-    case "make:handler":
-        if (!$name) {
-            echo "Debes indicar un nombre para el handler.\n";
-            exit(1);
-        }
-        $path = __DIR__ . "/http/handlers/{$name}.php";
-        file_put_contents($path, "<?php\n\nclass {$name} {\n    // Handler\n}\n");
-        echo "Handler creado en http/handlers/{$name}.php\n";
-        break;
-
-    case "make:interface":
-        if (!$name) {
-            echo "Debes indicar un nombre para la interface.\n";
-            exit(1);
-        }
-        $path = __DIR__ . "/http/interfaces/{$name}.php";
-        file_put_contents($path, "<?php\n\ninterface {$name} {\n    // Métodos\n}\n");
-        echo "Interface creada en http/interfaces/{$name}.php\n";
-        break;
-
-    case "make:component":
-        if (!$name) {
-            echo "Debes indicar un nombre para el componente.\n";
-            exit(1);
-        }
-        $path = __DIR__ . "/web/componentes/{$name}.php";
-        file_put_contents($path, "<?php\n\nclass {$name}Component {\n    // Lógica del componente\n}\n");
-        echo "Componente creado en web/componentes/{$name}.php\n";
-        break;
-
-    default:
-        echo "Comando no reconocido: $command\n";
-        break;
-}
+// Fin del script de ejecución

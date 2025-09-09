@@ -6,14 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_ENV['APP_NAME'] ?></title>
-    <link href="<?= $_ENV['APP_BASE_URL'] ?>vendor/twbs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>principal.css">
-    <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>color.css">
-    <link rel="stylesheet" href="<?= $_ENV['CSS_FOLDER'] ?>hw.css">
-    <link rel="icon" type="image/x-icon" href="<?= $_ENV['APP_ICON'] ?>">
+    <link rel="icon" type="image/x-icon" href="<?=$_ENV['APP_ICON']?>">
+
 </head>
 
 <body>
+
+    
+
     <nav class="navbar navbar-expand-lg bg-text-ligth border-bottom">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
@@ -60,7 +60,6 @@
             <span class="">&copy; 2025 <?= $_ENV['APP_NAME'] ?></span>
         </div>
     </footer>
-    <script src="<?= $_ENV['APP_BASE_URL'] ?>vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

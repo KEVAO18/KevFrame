@@ -134,7 +134,7 @@ class View
     protected static function getLayoutFile(string $layout): string
     {
         // Base path for layouts is 'web/plantillas'.
-        $basePath = realpath(__DIR__ . '/../../web/plantillas');
+        $basePath = realpath(__DIR__ . '/../../web/views');
 
         // Sanitization to prevent directory traversal attacks.
         if (!preg_match('/^[a-zA-Z0-9\-\/]+$/', $layout)) {
