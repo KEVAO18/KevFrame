@@ -11,7 +11,7 @@ class IndexController {
     public function index() {
 
 
-        $sm = new SessionManager();
+        $sm = SessionManager::getInstance();
         $sm->start();
 
         if ($sm->get('user_id') == null) {

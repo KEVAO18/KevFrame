@@ -3,12 +3,26 @@
 namespace App\Core;
 
 final class SessionManager{
+    private static $instance = null; // Instancia estática para el patrón Singleton
     private bool $sessionStarted = false;
     private const SESSION_INITIATED_KEY = '__session_initiated'; // Clave para detectar si la sesión fue iniciada correctamente
 
     private function __construct(){
         
     }
+
+    /**
+     * Obtiene la única instancia de la clase SessionManager (Singleton).
+     * @return SessionManager
+     */
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
 
     /**
      * Inicia la sesión y aplica las configuraciones de seguridad recomendadas.
