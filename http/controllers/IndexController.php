@@ -20,7 +20,7 @@ class IndexController {
             View::layout('logged');   
         }
 
-        View::render("componentes/main/home");
+        View::render("componentes/main/HomeComponent");
 
     }
 

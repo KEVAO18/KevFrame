@@ -7,42 +7,56 @@ Este documento describe la estructura y los componentes principales del proyecto
 El proyecto sigue una estructura organizada para facilitar el desarrollo y mantenimiento. A continuación, se detalla la disposición de los directorios principales:
 
 ```
-.example.env # Archivo de configuración de ejemplo
+.example.env
 .gitignore
+DOCUMENTACION.md
+LICENSE.md
 README.md
 composer.json
 composer.lock
-kev 
-serve.php
-
-http/ # Contiene los controladores y manejadores HTTP
-├── controllers/
-│   ├── ErrorController.php # Controlador para manejar errores
-│   └── IndexController.php # Controlador principal
-├── handlers/
-└── interfaces/
-public/ # Archivos accesibles públicamente (CSS, JS, imágenes, etc.)
-├── css/
-├── docs/
-├── img/
-├── js/
+http\
+├── controllers\
+│   ├── ErrorController.php
+│   └── IndexController.php
+├── handlers\
+└── interfaces\
+kev
+public\
+├── css\
+│   ├── color.css
+│   ├── content.css
+│   ├── fonts.css
+│   ├── hw.css
+│   ├── margin.css
+│   ├── padding.css
+│   ├── principal.css
+│   ├── reset.css
+│   └── text.css
+├── docs\
+├── img\
+├── js\
+│   └── main.js
 └── runner.php
-src/ # Código fuente de la aplicación
-├── Core/ # Clases y funcionalidades principales del framework/aplicación
+serve.php
+src\
+├── Core\
 │   ├── Cli.php
-│   ├── Database.php # Gestión de la base de datos
-│   ├── Request.php # Manejo de solicitudes HTTP
-│   ├── Router.php # Enrutamiento de URLs
-│   ├── SessionManager.php # Gestión de sesiones
-│   ├── View.php # Renderizado de vistas
-│   └── routes.php # Definición de rutas
-└── models/ # Modelos de datos
-web/ # Componentes web y plantillas
-├── componentes/
-│   ├── errors/
-│   └── main/
-└── plantillas/
-    └── main.php # Plantilla principal de la aplicación
+│   ├── Database.php
+│   ├── Request.php
+│   ├── Router.php
+│   ├── SessionManager.php
+│   ├── View.php
+│   └── routes.php
+└── models\
+web\
+├── componentes\
+│   ├── errors\
+│       ├── 404.php
+│       └── GeneralError.php
+│   └── main\
+        └── HomeComponent.php
+└── views\
+    └── main.php
 ```
 
 ### Componentes Principales
@@ -53,7 +67,7 @@ web/ # Componentes web y plantillas
 -   **`public/`**: Es el directorio raíz del servidor web. Contiene todos los activos estáticos como hojas de estilo CSS, scripts JavaScript, imágenes y otros archivos que deben ser accesibles directamente desde el navegador.
 -   **`src/Core/`**: Este directorio alberga las clases fundamentales que forman el núcleo de la aplicación. Incluye componentes para la gestión de la base de datos, enrutamiento, manejo de solicitudes y sesiones, entre otros.
 -   **`src/models/`**: Aquí se definen los modelos de datos, que interactúan con la base de datos y representan la estructura de los datos de la aplicación.
--   **`web/plantillas/`**: Contiene las plantillas de vista (HTML o PHP con incrustaciones de HTML) que se utilizan para renderizar la interfaz de usuario. `main.php` es la plantilla principal.
+-   **`web/Views/`**: Contiene las plantillas de vista (HTML o PHP con incrustaciones de HTML) que se utilizan para renderizar la interfaz de usuario. `main.php` es la plantilla principal de ejemplo.
 -   **`web/componentes/`**: Contiene los componentes de la interfaz de usuario.
 
 ## Instalación

@@ -28,3 +28,5 @@ Para ejecutar este proyecto, necesitarás:
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE.md](LICENSE.md) para más detalles.
+
+Para más información, consulta la [`documentación completa`](DOCUMENTACION.md).
