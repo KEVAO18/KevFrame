@@ -15,9 +15,7 @@
     ],
     "require": {
         "slim/psr7": "^1.0",
-        "ext-pdo": "*",
-        "vlucas/phpdotenv": "^5.6",
-        "twbs/bootstrap": "^5.3.3"
+        "vlucas/phpdotenv": "^5.6"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +28,7 @@
     },
     "extra": {
         "installer-paths": {
-            "public/assets/bootstrap": ["twbs/bootstrap"]
+            
         }
     }
 }

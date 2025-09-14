@@ -7,23 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_ENV['APP_NAME'] ?></title>
     <link rel="icon" type="image/x-icon" href="<?=$_ENV['APP_ICON']?>">
-
+    <link rel="stylesheet" href="css/color.css">
+    <link rel="stylesheet" href="css/content.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/hw.css">
+    <link rel="stylesheet" href="css/margin.css">
+    <link rel="stylesheet" href="css/padding.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/text.css">
+    <link rel="stylesheet" href="css/principal.css">
 </head>
 
 <body>
 
-    
-
-    <nav class="navbar navbar-expand-lg bg-text-ligth border-bottom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <?= $_ENV['APP_NAME'] ?>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navItems" aria-controls="navItems" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <a class="navbar-brand" href="/">
+                        <?= $_ENV['APP_NAME'] ?>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
     @yield('content')
 
