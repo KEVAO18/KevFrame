@@ -2,150 +2,103 @@
 
 namespace App\Core;
 
+use App\Templates\KevTemplateEngine;
+
 /**
- * Clase View para cargar y renderizar plantillas con un sistema de layouts y callbacks para secciones.
+ * Clase View corregida para manejar compilación con y sin caché.
  */
 class View
 {
-    protected static array $sections = [];
-    protected static string $layout = '';
-    protected static array $viewData = [];
-
-    /**
-     * Define el layout principal para la vista.
-     *
-     * @param string $layoutPath
-     */
-    public static function layout(string $layoutPath): void
-    {
-        self::$layout = $layoutPath;
-    }
-
-    /**
-     * Renderiza una vista y su layout, si existe.
-     *
-     * @param string $viewPath La ruta de la vista (ej: 'home/index').
-     * @param array $data Los datos que se pasarán a la vista.
-     */
     public static function render(string $viewPath, array $data = []): void
     {
-        // Almacena los datos de la vista para que el callback los pueda usar.
-        self::$viewData = $data;
-
-        // 1. Obtener la ruta completa del archivo de vista.
+        // 1. Obtener la ruta del archivo de la vista original.
         $viewFile = self::getViewFile($viewPath);
 
-        // 2. Extraer los datos en variables locales para la vista.
+        // 2. Compilar la vista. El resultado puede ser una ruta (cache ON) o un string (cache OFF).
+        $compilationResult = KevTemplateEngine::compile($viewFile);
+
+        // 3. Extraer los datos para que estén disponibles en las vistas.
         extract($data);
 
-        // 3. Capturar el contenido de la vista en un buffer.
+        // 4. Capturar el output de la vista ejecutada.
         ob_start();
-        include $viewFile;
-        $viewContent = ob_get_clean();
 
-        // 4. Si hay un layout definido, renderizarlo.
-        if (self::$layout) {
-            $layoutFile = self::getLayoutFile(self::$layout);
-            
-            // 5. Incluir el contenido de la vista en el buffer del layout.
-            // Para que 'yield' funcione, el contenido debe estar en una variable.
-            $__contentForLayout = $viewContent;
-
-            // 6. Capturar el contenido del layout.
-            ob_start();
-            include $layoutFile;
-            $finalContent = ob_get_clean();
-
-            // 7. Reemplazar los marcadores @yield por el contenido de las secciones.
-            foreach (self::$sections as $name => $sectionContent) {
-                $pattern = '/@yield\(["\']' . preg_quote($name, '/') . '["\']\)/';
-                $finalContent = preg_replace($pattern, $sectionContent, $finalContent);
-            }
-
-            // 8. Imprimir el contenido final.
-            echo $finalContent;
+        // >>> INICIO DE LA CORRECCIÓN <<<
+        // Comprobamos si el resultado es una ruta a un archivo que existe.
+        if (is_file($compilationResult) && file_exists($compilationResult)) {
+            // Si es un archivo (caché activado), lo incluimos.
+            include $compilationResult;
         } else {
-            // 9. Si no hay layout, imprimir el contenido de la vista directamente.
-            echo $viewContent;
+            // Si no, es el contenido compilado (caché desactivado), lo ejecutamos con eval.
+            eval('?>' . $compilationResult);
         }
 
-        // Restablecer los datos después de la renderización.
-        self::$viewData = [];
-        self::$sections = [];
-    }
-    
-    /**
-     * Inicia la captura de contenido para una sección usando un callback.
-     *
-     * @param string $name
-     * @param callable $contentCallback
-     */
-    public static function section(string $name, callable $contentCallback): void
-    {
-        ob_start();
-        $contentCallback(self::$viewData);
-        self::$sections[$name] = ob_get_clean();
+        $viewOutput = ob_get_clean();
+
+        // 5. Verificar si la vista definió un layout con @extends.
+        $layoutPath = KevTemplateEngine::getLayout();
+
+        if ($layoutPath) {
+            $layoutFile = self::getLayoutFile($layoutPath);
+            // Compilamos el layout.
+            $compiledLayoutResult = KevTemplateEngine::compile($layoutFile);
+
+            // Definimos la sección de contenido principal.
+            KevTemplateEngine::setSection('content', $viewOutput);
+
+            // Incluimos el layout compilado (manejando también ambos casos).
+            if (is_file($compiledLayoutResult) && file_exists($compiledLayoutResult)) {
+                include $compiledLayoutResult;
+            } else {
+                eval('?>' . $compiledLayoutResult);
+            }
+        } else {
+            // 7. Si no hay layout, mostramos el contenido de la vista.
+            echo $viewOutput;
+        }
+
+        KevTemplateEngine::clearSections();
+        KevTemplateEngine::setLayout('');
     }
 
-    /**
-     * Muestra el contenido de una sección o un valor por defecto.
-     *
-     * @param string $name
-     */
-    public static function yield(string $name): void
-    {
-        echo self::$sections[$name] ?? '';
-    }
-
-    /**
-     * Obtiene la ruta absoluta de un archivo de vista.
-     *
-     * @param string $view
-     * @return string
-     * @throws \Exception
-     */
     protected static function getViewFile(string $view): string
     {
-        // Base path is 'web'
-        $basePath = realpath(__DIR__ . '/../../web');
-        
-        // Sanitization to prevent directory traversal attacks.
+        // Directorio base para los componentes
+        $basePath = realpath(__DIR__ . '/../../web/componentes');
+
         if (!preg_match('/^[a-zA-Z0-9\-\/]+$/', $view)) {
             throw new \Exception("$view es un nombre de vista inválido.");
         }
-        
-        $file = realpath($basePath . '/' . $view . '.php');
 
-        // Double check to ensure the file exists and is within the base directory.
+        // Convertir el nombre de la vista a un nombre de archivo
+        $parts = explode('/', $view);
+        $lastPart = array_pop($parts);
+        $ucfirstPart = ucfirst($lastPart);
+
+        $path = implode(DIRECTORY_SEPARATOR, $parts);
+
+        // Formatear el nombre del archivo: Ucfirst + "Component.php"
+        $file = realpath($basePath . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $ucfirstPart . 'Component.php');
+
         if ($file === false || strpos($file, $basePath) !== 0) {
-            throw new \Exception("Vista '$view' no encontrada o acceso denegado.");
+            throw new \Exception("Vista '$view' no encontrada o acceso denegado en: " . $basePath . '/' . $view . '.php');
         }
 
         return $file;
     }
 
-    /**
-     * Obtiene la ruta absoluta de un archivo de layout.
-     *
-     * @param string $layout
-     * @return string
-     * @throws \Exception
-     */
     protected static function getLayoutFile(string $layout): string
     {
-        // Base path for layouts is 'web/plantillas'.
         $basePath = realpath(__DIR__ . '/../../web/views');
 
-        // Sanitization to prevent directory traversal attacks.
         if (!preg_match('/^[a-zA-Z0-9\-\/]+$/', $layout)) {
             throw new \Exception("$layout es un nombre de layout inválido.");
         }
 
-        $file = realpath($basePath . '/' . $layout . '.php');
+        $file = realpath($basePath . '/' . str_replace('/', DIRECTORY_SEPARATOR, $layout) . '.php');
 
-        // Double check to ensure the file exists and is within the base directory.
         if ($file === false || strpos($file, $basePath) !== 0) {
-            throw new \Exception("Layout '$layout' no encontrado o acceso denegado.");
+            throw new \Exception("Layout '$layout' no encontrado o acceso denegado en: " . $basePath . '/' . $layout . '.php');
         }
 
         return $file;

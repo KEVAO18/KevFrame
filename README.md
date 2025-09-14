@@ -7,13 +7,15 @@ Este es un marco de trabajo PHP ligero y eficiente diseñado para construir apli
 - [Software Requerido](#software-requerido)
 - [Contribución](#contribución)
 - [Licencia](#licencia)
+- [Documentación](#documentación)
 
 ## Software Requerido
 
 Para ejecutar este proyecto, necesitarás:
 
--   [PHP y MySQL](https://www.apachefriends.org/es/index.html) (se recomienda XAMPP o similar para un entorno de desarrollo local).
--   [Composer](https://getcomposer.org/) (gestor de dependencias de PHP).
+- [PHP](https://www.php.net/) version 8.2
+- [MySQL](https://www.apachefriends.org/) (usar Xampp para mayor comodidad)
+- [Composer](https://getcomposer.org/) (gestor de dependencias de PHP)
 
 ## Contribución
 

@@ -47,6 +47,13 @@ src\
 │   ├── SessionManager.php
 │   ├── View.php
 │   └── routes.php
+├── Templates\
+│   ├── KevEngine.php
+│   ├── KevLiteEngine.php
+│   ├── KevTemplateEngine.php
+│   ├── KevLiteEngine.php
+│   ├── KevEngine.php
+│   └── TemplateEngineInterface.php
 └── models\
 web\
 ├── componentes\
@@ -97,13 +104,13 @@ cp .example.env .env
 Edita el archivo `.env` para configurar la base de datos, el host y el puerto del servidor de desarrollo, y otras opciones:
 
 ```ini
-APP_NAME=""
-APP_DIRECTORY="/"
+APP_NAME="KevFrame"
+APP_DIRECTORY=""
 APP_ENV=dev
 APP_HOST=localhost
 APP_PORT=8000
-APP_BASE_URL="http://localhost:${APP_PORT}/${APP_DIRECTORY}/"
-APP_ICON="${APP_BASE_URL}public/img/logo.png"
+APP_BASE_URL="http://${APP_HOST}:${APP_PORT}/"
+APP_ICON="${APP_BASE_URL}img/favicon.ico"
 
 DB_HOST=localhost
 DB_NAME=db_tienda
@@ -111,11 +118,13 @@ DB_USER=root
 DB_PASS=
 DB_CHARSET=utf8mb4
 
-PUBLIC_FOLDER="${APP_BASE_URL}public/"
+COMPOSER_FOLDER="${APP_BASE_URL}../vendor/"
+PUBLIC_FOLDER="${APP_BASE_URL}"
 CSS_FOLDER="${PUBLIC_FOLDER}css/"
 JS_FOLDER="${PUBLIC_FOLDER}js/"
 IMG_FOLDER="${PUBLIC_FOLDER}img/"
 DOCS_FOLDER="${PUBLIC_FOLDER}docs/"
+
 
 ```
 

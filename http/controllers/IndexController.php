@@ -14,13 +14,12 @@ class IndexController {
         $sm = SessionManager::getInstance();
         $sm->start();
 
-        if ($sm->get('user_id') == null) {
-            View::layout('main');
-        }else{
-            View::layout('logged');   
-        }
-
-        View::render("componentes/main/HomeComponent");
+        $data = [
+            'nombre' => 'Kevin',
+            'tareas' => ['Estudiar', 'Programar', 'Comer']
+        ];
+        
+        View::render('main/home', $data);
 
     }
 

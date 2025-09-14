@@ -1,13 +1,11 @@
-<?php
-use App\Core\View;
+@extends('main')
 
-
-View::section('content', function ($datos) {
-
-    ?>
-    <h1>Holi</h1>
-    <?php
-
-});
-
-?>
+@section('content')
+    <h2>Bienvenido, {{ $nombre }}!</h2>
+    <p>Lista de tareas:</p>
+    <ul>
+        @foreach($tareas as $tarea)
+            <li>{{ $tarea }}</li>
+        @endforeach
+    </ul>
+@endsection
