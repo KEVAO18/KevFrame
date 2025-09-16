@@ -127,19 +127,19 @@ class KevEngine implements TemplateEngineInterface
      */
     protected function processSwitch(string $content): string
     {
-        // @choose($variable)
+        // @switch($variable)
         $content = preg_replace('/@switch\s*\(\s*(.+?)\s*\)/', '<?php switch($1): ?>', $content);
 
-        // @option($value)
+        // @case($value)
         $content = preg_replace('/@case\s*\(\s*(.+?)\s*\)/', '<?php case $1: ?>', $content);
 
-        // @stop
+        // @break
         $content = preg_replace('/@break/', '<?php break; ?>', $content);
 
         // @default
         $content = preg_replace('/@default/', '<?php default: ?>', $content);
 
-        // @endchoose
+        // @endswitch
         $content = preg_replace('/@endswitch/', '<?php endswitch; ?>', $content);
 
         return $content;
