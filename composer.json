@@ -1,18 +1,6 @@
 {
     "name": "kevao-frame/aplicacion",
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "twbs/bootstrap",
-                "version": "5.3.3",
-                "dist": {
-                    "url": "https://github.com/twbs/bootstrap/archive/v5.3.3.zip",
-                    "type": "zip"
-                }
-            }
-        }
-    ],
+    "repositories": [],
     "require": {
         "slim/psr7": "^1.0",
         "vlucas/phpdotenv": "^5.6"
