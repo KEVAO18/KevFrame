@@ -2,16 +2,17 @@
 
 namespace App\Core;
 
+use App\Core\Cli\Generator;
+
 class Cli
 {
-    private const VERSION = "0.1.3";
+    private const VERSION = "0.4.1";
 
     /**
      * El método principal para despachar los comandos.
      * @param array $arguments Los argumentos pasados desde la línea de comandos.
      */
-    public function run(array $arguments): void
-    {
+    public function run(array $arguments): void{
         
         $command = array_shift($arguments);
 
@@ -40,8 +41,7 @@ class Cli
     /**
      * Muestra la versión y la ayuda de los comandos.
      */
-    public function version(): void
-    {
+    public function version(): void{
         echo "Kev Framework CLI version " . self::VERSION . "\n";
         $this->help();
     }
@@ -49,8 +49,7 @@ class Cli
     /**
      * Muestra la ayuda de los comandos disponibles.
      */
-    public function help(): void
-    {
+    public function help(): void{
         echo "Kev Framework CLI\n";
         echo "Desarrollado por KevaoDev\n";
         echo "portfolio https://www.kevao.tech/\n";
@@ -110,153 +109,25 @@ class Cli
      * @param string|null $name El nombre del archivo.
      * @param array $args Argumentos del comando.
      */
-    public function make(string $type, string $name, ?array $args): void
-    {
-        $argumentos = $this->getArgs($args); // obtener los argumentos
-
+    public function make(string $type, string $name, ?array $args): void{
         if (!$name || !$type) {
             echo "Debes indicar un tipo y nombre para el archivo (e.g., make:controller User).\n";
             exit(1);
         }
 
-        $name = ucfirst($name); // convierte el nombre a mayúsculas
+        $name = ucfirst($name);
+
+        if ($type === 'model') {
+            $this->makeModel($name);
+            return;
+        }
 
         $directories = [
             'controller' => __DIR__ . "/../../http/controllers/",
-            'model' => __DIR__ . "/../models/",
-            'handler' => __DIR__ . "/../../http/handlers/",
-            'interface' => __DIR__ . "/../../http/interfaces/",
-            'component' => __DIR__ . "/../../web/componentes/",
-            'view' => __DIR__. "/../../web/views/",
-
-        ];
-
-        $templates = [
-            'controller' => <<<EOT
-            <?php
-
-            namespace App\Http\Controllers;
-            
-            class {$name}Controller {
-                
-                public function index(){
-                    echo "Controller {$name} it's working";
-                }
-                
-            }
-            ?>
-            EOT,
-            'model' => function($name){
-
-                // Adivinar el nombre de la tabla (ej. User -> users)
-                $tableName = strtolower($name) . 's';
-        
-                $fields = [];
-                $primaryKey = 'id';
-
-                try {
-                    // Conectarse a la base de datos
-                    $db = \App\Core\Database::getInstance();
-                    $stmt = $db->query("DESCRIBE {$tableName}");
-                    $schema = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-                    foreach ($schema as $column) {
-                        $fields[$column['Field']] = $column['Type'];
-                        if ($column['Key'] === 'PRI') {
-                            $primaryKey = $column['Field'];
-                        }
-                    }
-                } catch (\PDOException $e) {
-                    echo "Advertencia: No se pudo conectar a la base de datos o la tabla '{$tableName}' no existe.\n";
-                    echo "Se creará un modelo vacío.\n";
-                    // No hacer nada, se creará un modelo sin campos
-                }
-
-                // Formatear los campos para la plantilla
-                $fieldsString = '';
-                foreach ($fields as $field => $type) {
-                    $fieldsString .= "        '{$field}' => '{$type}',\n";
-                }
-
-                // 4. Definir la plantilla del modelo con la información obtenida
-                $template = <<<EOT
-                <?php
-
-                namespace App\Models;
-
-                class {$name}Model extends Model
-                {
-                    /**
-                     * El nombre de la tabla en la base de datos.
-                     */
-                    protected string \$table = '{$tableName}';
-
-                    /**
-                     * La clave primaria de la tabla.
-                     */
-                    protected string \$primaryKey = '{$primaryKey}';
-
-                    /**
-                     * El esquema de la tabla (descubierto automáticamente).
-                     */
-                    protected array \$fields = [
-                {$fieldsString}    ];
-
-                    /**
-                     * Define las relaciones del modelo aquí.
-                     * Ejemplo:
-                     * protected array \$relations = [
-                     * 'posts' => ['hasMany', PostModel::class, 'user_id']
-                     * ];
-                     */
-                    protected array \$relations = [];
-                }
-                ?>
-                EOT;
-
-                 // 5. Crear el archivo
-                $path = __DIR__ . "/../models/" . $name . "Model.php";
-                if (!file_exists(dirname($path))) {
-                    mkdir(dirname($path), 0777, true);
-                }
-
-                file_put_contents($path, $template);
-                echo "Modelo creado en {$path}\n";
-            },
-            'handler' => <<<EOT
-            <?php
-
-            namespace App\Http\Handlers;
-        
-            class {$name}Handler {
-        
-                // Lógica del handler aquí
-        
-            }
-            ?>
-            EOT,
-            'interface' => <<<EOT
-            <?php
-
-            namespace App\Http\Interfaces;
-
-            interface {$name}Interface {
-
-                // Métodos de la interfaz aquí
-
-            }
-            ?>
-            EOT,
-            'component' => <<<EOT
-            @extends('main')
-
-            @section('content')
-                <h1>Component {$name} it's working </h1>
-            @endsection
-            EOT,
-            'view' => <<<EOT
-                <h1>View {$name} it's working </h1>
-            EOT,
+            'handler'    => __DIR__ . "/../../http/handlers/",
+            'interface'  => __DIR__ . "/../../http/interfaces/",
+            'component'  => __DIR__ . "/../../web/componentes/",
+            'view'       => __DIR__ . "/../../web/views/",
         ];
 
         if (!isset($directories[$type])) {
@@ -264,22 +135,73 @@ class Cli
             exit(1);
         }
 
+        // 2. Usamos el Generator para obtener el contenido
+        $content = Generator::get($type, ['name' => $name]);
+        
         $path = $directories[$type] . $name . ucfirst($type) . ".php";
         
+        if ($type === 'view') { // Las vistas no llevan extensión .php en el nombre
+            $path = $directories[$type] . $name . ".php";
+        }
+
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
 
-        file_put_contents($path, $templates[$type]);
+        file_put_contents($path, $content);
         echo ucfirst($type) . " creado en {$path}\n";
+    }
+
+        /**
+     * Genera un nuevo archivo de modelo.
+     */
+    private function makeModel(string $name): void{
+        $tableName = strtolower($name) . 's';
+        $fields = [];
+        $primaryKey = 'id';
+
+        try {
+            $db = \App\Core\Database::getInstance();
+            $stmt = $db->query("DESCRIBE {$tableName}");
+            $schema = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($schema as $column) {
+                $fields[$column['Field']] = $column['Type'];
+                if ($column['Key'] === 'PRI') {
+                    $primaryKey = $column['Field'];
+                }
+            }
+        } catch (\PDOException $e) {
+            echo "Advertencia: No se pudo conectar o la tabla '{$tableName}' no existe. Se creará un modelo vacío.\n";
+        }
+
+        $fieldsString = '';
+        foreach ($fields as $field => $type) {
+            $fieldsString .= "        '{$field}' => '{$type}',\n";
+        }
+        
+        // 3. Usamos el Generator con todas las variables necesarias
+        $content = Generator::get('model', [
+            'name'       => $name,
+            'tableName'  => $tableName,
+            'primaryKey' => $primaryKey,
+            'fields'     => rtrim($fieldsString) // Quitamos el último salto de línea
+        ]);
+        
+        $path = __DIR__ . "/../models/" . $name . "Model.php";
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, $content);
+        echo "Modelo creado en {$path}\n";
     }
 
     /**
      * Intenta abrir una URL en el navegador por defecto del sistema.
      * @param string $url La URL a abrir.
      */
-    private function openBrowser(string $url): void
-    {
+    private function openBrowser(string $url): void{
         $escapedUrl = escapeshellarg($url);
         $command = '';
 

@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+class {{name}}Model extends Model
+{
+    /**
+     * El nombre de la tabla en la base de datos.
+     */
+    protected string $table = '{{tableName}}';
+
+    /**
+     * La clave primaria de la tabla.
+     */
+    protected string $primaryKey = '{{primaryKey}}';
+
+    /**
+     * El esquema de la tabla (descubierto automáticamente).
+     */
+    protected array $fields = [
+        {{fields}}
+    ];
+
+    /**
+     * Define las relaciones del modelo aquí.
+     */
+    protected array $relations = [];
+}
+
+?>

@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Http\Handlers;
+
+class {{name}}Handler {
+
+    // Lógica del handler aquí
+
+}
+?>

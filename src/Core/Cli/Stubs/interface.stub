@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Http\Interfaces;
+
+interface {{name}}Interface {
+
+    // Métodos de la interfaz aquí
+
+}
+?>
