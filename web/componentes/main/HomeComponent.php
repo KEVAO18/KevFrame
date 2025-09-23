@@ -1,11 +1,10 @@
 @extends('main')
 
 @section('content')
-    <h2>Bienvenido, {{ $nombre }}!</h2>
-    <p>Lista de tareas:</p>
-    <ul>
-        @foreach($tareas as $tarea)
-            <li>{{ $tarea }}</li>
-        @endforeach
-    </ul>
+    <main>
+        <div class="container py-5">
+            <h1 class="text-center display-2">Bienvenido</h1>
+            <p class="text-center display-3">Ahora puedes acceder a todas las funcionalidades de la aplicación</p>
+        </div>
+    </main>
 @endsection

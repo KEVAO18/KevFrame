@@ -79,7 +79,7 @@ class ErrorController
             'ErrorCode' => '404',
             'msg' => 'Página no encontrada'
         ];
-        View::render("componentes/errors/404", $error);
+        View::render('errors/404', $error);
     }
     
     /**

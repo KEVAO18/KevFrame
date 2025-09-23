@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Core\Request;
 use App\Http\Controllers\ErrorController;
+use App\Security\CSRF;
 
 class Router{
     private $routes = [];
@@ -64,6 +65,10 @@ class Router{
      */
     public function dispatch(): void
     {
+
+        // Verificar el token CSRF
+        CSRF::verifyToken();
+
         // Obtener la ruta solicitada
         $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         

@@ -100,7 +100,7 @@ class KevTemplateEngine
 
         // @csrf
         $engine->registerDirective('csrf', function () {
-            return '<?php echo "<input type=\"hidden\" name=\"_token\" value=\"" . csrf_token() . "\">"; ?>';
+            return '<?php echo "<input type=\"hidden\" name=\"_token\" value=\"" . \App\Security\CSRF::generateToken() . "\">"; ?>';
         });
 
         // @money($amount)
