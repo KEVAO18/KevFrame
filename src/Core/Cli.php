@@ -139,23 +139,90 @@ class Cli
             
             class {$name}Controller {
                 
-                // Lógica del controlador aquí
+                public function index(){
+                    echo "Controller {$name} it's working";
+                }
                 
             }
             ?>
             EOT,
-            'model' => <<<EOT
-            <?php
+            'model' => function($name){
 
-            namespace App\Models;
+                // Adivinar el nombre de la tabla (ej. User -> users)
+                $tableName = strtolower($name) . 's';
+        
+                $fields = [];
+                $primaryKey = 'id';
 
-            class {$name}Model {
-            
-                // Lógica del modelo aquí
+                try {
+                    // Conectarse a la base de datos
+                    $db = \App\Core\Database::getInstance();
+                    $stmt = $db->query("DESCRIBE {$tableName}");
+                    $schema = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            }
-            ?>
-            EOT,
+                    foreach ($schema as $column) {
+                        $fields[$column['Field']] = $column['Type'];
+                        if ($column['Key'] === 'PRI') {
+                            $primaryKey = $column['Field'];
+                        }
+                    }
+                } catch (\PDOException $e) {
+                    echo "Advertencia: No se pudo conectar a la base de datos o la tabla '{$tableName}' no existe.\n";
+                    echo "Se creará un modelo vacío.\n";
+                    // No hacer nada, se creará un modelo sin campos
+                }
+
+                // Formatear los campos para la plantilla
+                $fieldsString = '';
+                foreach ($fields as $field => $type) {
+                    $fieldsString .= "        '{$field}' => '{$type}',\n";
+                }
+
+                // 4. Definir la plantilla del modelo con la información obtenida
+                $template = <<<EOT
+                <?php
+
+                namespace App\Models;
+
+                class {$name}Model extends Model
+                {
+                    /**
+                     * El nombre de la tabla en la base de datos.
+                     */
+                    protected string \$table = '{$tableName}';
+
+                    /**
+                     * La clave primaria de la tabla.
+                     */
+                    protected string \$primaryKey = '{$primaryKey}';
+
+                    /**
+                     * El esquema de la tabla (descubierto automáticamente).
+                     */
+                    protected array \$fields = [
+                {$fieldsString}    ];
+
+                    /**
+                     * Define las relaciones del modelo aquí.
+                     * Ejemplo:
+                     * protected array \$relations = [
+                     * 'posts' => ['hasMany', PostModel::class, 'user_id']
+                     * ];
+                     */
+                    protected array \$relations = [];
+                }
+                ?>
+                EOT;
+
+                 // 5. Crear el archivo
+                $path = __DIR__ . "/../models/" . $name . "Model.php";
+                if (!file_exists(dirname($path))) {
+                    mkdir(dirname($path), 0777, true);
+                }
+
+                file_put_contents($path, $template);
+                echo "Modelo creado en {$path}\n";
+            },
             'handler' => <<<EOT
             <?php
 
@@ -181,20 +248,11 @@ class Cli
             ?>
             EOT,
             'component' => <<<EOT
-            <?php
-            use App\Core\View;
+            @extends('main')
 
-            View::section('content', function () {
-
-                ?>
-
+            @section('content')
                 <h1>Component {$name} it's working </h1>
-
-                <?php
-
-            });
-
-            ?>
+            @endsection
             EOT,
             'view' => <<<EOT
                 <h1>View {$name} it's working </h1>

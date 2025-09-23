@@ -31,6 +31,32 @@ final class Database {
         }
     }
 
+    /**
+     * Ejecuta una consulta SQL de forma segura utilizando sentencias preparadas.
+     *
+     * @param string $sql La consulta SQL con placeholders (ej. ?, ?, :name).
+     * @param array $params Un array de parámetros para vincular a la consulta.
+     * @return \PDOStatement|false El objeto PDOStatement o false si hay un error.
+     */
+    public function query(string $sql, array $params = [])
+    {
+        try {
+            // Prepara la consulta
+            $stmt = $this->connection->prepare($sql);
+
+            // Vincula los parámetros
+            $stmt->execute($params);
+
+            // Devuelve el statement para que se puedan obtener los resultados
+            return $stmt;
+        } catch (PDOException $e) {
+            // En un entorno de producción, aquí deberías registrar el error
+            // en lugar de mostrarlo directamente.
+            // Por ahora, lo lanzamos para facilitar la depuración.
+            throw $e;
+        }
+    }
+
     public static function getInstance() {
         if (!self::$instance) {
             self::$instance = new self();
