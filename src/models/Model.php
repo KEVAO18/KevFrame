@@ -83,5 +83,35 @@ abstract class Model
         return $stmt->rowCount() > 0;
     }
 
+    /**
+     * Actualiza un registro existente en la base de datos.
+     *
+     * @param mixed $id El ID del registro a actualizar.
+     * @param array $data Un array asociativo de [columna => valor].
+     * @return bool True si la actualización fue exitosa, false en caso contrario.
+     */
+    public function update($id, array $data): bool
+    {
+        // 1. Construye la parte SET de la consulta
+        $setClauses = [];
+        foreach (array_keys($data) as $column) {
+            $setClauses[] = "{$column} = ?";
+        }
+        $setSql = implode(', ', $setClauses);
+
+        // 2. Obtiene los valores y añade el ID al final para el WHERE
+        $values = array_values($data);
+        $values[] = $id;
+
+        // 3. Construye la consulta SQL final
+        $sql = "UPDATE {$this->table} SET {$setSql} WHERE {$this->primaryKey} = ?";
+
+        // 4. Ejecuta la consulta de forma segura
+        $stmt = $this->db->query($sql, $values);
+
+        // 5. Devuelve true si se actualizó al menos una fila
+        return $stmt->rowCount() > 0;
+    }
+
     
 }
