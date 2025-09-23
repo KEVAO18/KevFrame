@@ -8,14 +8,15 @@
     "autoload": {
         "psr-4": {
             "App\\Core\\": "src/Core/",
-            "App\\Core\\Cli\\": "src/Core/Cli/",
             "App\\Models\\": "src/models/",
+            "App\\Security\\": "src/security/",
+            "App\\Core\\Cli\\": "src/Core/Cli/",
             "App\\Templates\\": "src/Templates/",
-            "App\\Http\\": "http/",
+            
             "App\\Database\\": "database/",
-            "App\\Security\\": "security/",
             "App\\Suport\\": "support/",
-
+            
+            "App\\Http\\": "http/",
             "App\\Http\\Controllers\\": "http/controllers/",
             "App\\Http\\Handlers\\": "http/handlers/",
             "App\\Http\\Interfaces\\": "http/interfaces/"

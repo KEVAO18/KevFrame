@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('content')
-    @csrf
+    
     <main>
         <div class="container py-5">
             <h1 class="text-center display-2">Bienvenido</h1>
