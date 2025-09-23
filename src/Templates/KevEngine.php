@@ -42,7 +42,7 @@ class KevEngine implements TemplateEngineInterface
                 $sectionName = $matches[1];
                 $sectionContent = $matches[2];
                 KevTemplateEngine::setSection($sectionName, $sectionContent);
-                return $sectionContent ;
+                return $sectionContent;
             },
             $content
         );
@@ -146,19 +146,24 @@ class KevEngine implements TemplateEngineInterface
     }
 
     /**
-     * Procesa variables {{ $variable }} y {{{ $variable }}}
+     * 
+     * Procesa variables {{ $variable }} y la directiva @raw($variable)
      */
     protected function processVariables(string $content): string
     {
-        // Variables escapadas {{ $variable }}
+        // Variables escapadas {{ $variable }} (Seguro por defecto)
         $content = preg_replace(
             '/\{\{\s*(.+?)\s*\}\}/',
             '<?php echo htmlspecialchars($1 ?? "", ENT_QUOTES, "UTF-8"); ?>',
             $content
         );
 
-        // Variables sin escapar {{{ $variable }}}
-        $content = preg_replace('/\{\{\{\s*(.+?)\s*\}\}\}/', '<?php echo $1 ?? ""; ?>', $content);
+        // NUEVA DIRECTIVA: @raw($variable) para datos sin escapar
+        $content = preg_replace(
+            '/@raw\s*\(\s*(.+?)\s*\)/',
+            '<?php echo $1 ?? ""; ?>',
+            $content
+        );
 
         return $content;
     }
