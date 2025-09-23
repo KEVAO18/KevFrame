@@ -5,55 +5,41 @@ namespace App\Core;
 use App\Templates\KevTemplateEngine;
 
 /**
- * Clase View corregida para manejar compilación con y sin caché.
+ * Clase View mejorada para prevenir Path Traversal.
  */
 class View
 {
     public static function render(string $viewPath, array $data = []): void
     {
-        // 1. Obtener la ruta del archivo de la vista original.
-        $viewFile = self::getViewFile($viewPath);
+        $viewFile = self::resolveSecurePath($viewPath, 'componentes');
 
-        // 2. Compilar la vista. El resultado puede ser una ruta (cache ON) o un string (cache OFF).
-        $compilationResult = KevTemplateEngine::compile($viewFile);
-
-        // 3. Extraer los datos para que estén disponibles en las vistas.
         extract($data);
 
-        // 4. Capturar el output de la vista ejecutada.
         ob_start();
-
-        // >>> INICIO DE LA CORRECCIÓN <<<
-        // Comprobamos si el resultado es una ruta a un archivo que existe.
+        $compilationResult = KevTemplateEngine::compile($viewFile);
+        
         if (is_file($compilationResult) && file_exists($compilationResult)) {
-            // Si es un archivo (caché activado), lo incluimos.
             include $compilationResult;
         } else {
-            // Si no, es el contenido compilado (caché desactivado), lo ejecutamos con eval.
             eval('?>' . $compilationResult);
         }
 
         $viewOutput = ob_get_clean();
 
-        // 5. Verificar si la vista definió un layout con @extends.
         $layoutPath = KevTemplateEngine::getLayout();
 
         if ($layoutPath) {
-            $layoutFile = self::getLayoutFile($layoutPath);
-            // Compilamos el layout.
+            $layoutFile = self::resolveSecurePath($layoutPath, 'views');
+            
             $compiledLayoutResult = KevTemplateEngine::compile($layoutFile);
-
-            // Definimos la sección de contenido principal.
             KevTemplateEngine::setSection('content', $viewOutput);
 
-            // Incluimos el layout compilado (manejando también ambos casos).
             if (is_file($compiledLayoutResult) && file_exists($compiledLayoutResult)) {
                 include $compiledLayoutResult;
             } else {
                 eval('?>' . $compiledLayoutResult);
             }
         } else {
-            // 7. Si no hay layout, mostramos el contenido de la vista.
             echo $viewOutput;
         }
 
@@ -61,46 +47,42 @@ class View
         KevTemplateEngine::setLayout('');
     }
 
-    protected static function getViewFile(string $view): string
+    /**
+     * Resuelve y valida una ruta de vista de forma segura para prevenir Path Traversal.
+     *
+     * @param string $path La ruta relativa de la vista (ej. 'main/home').
+     * @param string $type El tipo de vista ('componentes' o 'views').
+     * @return string La ruta absoluta y segura al archivo.
+     * @throws \Exception Si la ruta es inválida o insegura.
+     */
+    private static function resolveSecurePath(string $path, string $type): string
     {
-        // Directorio base para los componentes
-        $basePath = realpath(__DIR__ . '/../../web/componentes');
-
-        if (!preg_match('/^[a-zA-Z0-9\-\/]+$/', $view)) {
-            throw new \Exception("$view es un nombre de vista inválido.");
+        // 1. Define el directorio base permitido.
+        $baseDir = realpath(__DIR__ . "/../../web/{$type}");
+        if (!$baseDir) {
+            throw new \Exception("El directorio base '{$type}' no existe.");
         }
 
-        // Convertir el nombre de la vista a un nombre de archivo
-        $parts = explode('/', $view);
-        $lastPart = array_pop($parts);
-        $ucfirstPart = ucfirst($lastPart);
+        // 2. Sanea la ruta de entrada para eliminar caracteres peligrosos.
+        // Previene ataques como '..', './', etc.
+        $sanitizedPath = str_replace(['..', './'], '', $path);
+        
+        // 3. Construye la ruta completa y determina la extensión del archivo.
+        $extension = ($type === 'componentes') ? 'Component.php' : '.php';
+        $parts = explode('/', $sanitizedPath);
+        $lastPart = ucfirst(array_pop($parts));
+        $filePath = $baseDir . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $lastPart . $extension;
 
-        $path = implode(DIRECTORY_SEPARATOR, $parts);
+        // 4. Obtiene la ruta canónica (absoluta y sin '..').
+        $realFilePath = realpath($filePath);
 
-        // Formatear el nombre del archivo: Ucfirst + "Component.php"
-        $file = realpath($basePath . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $ucfirstPart . 'Component.php');
-
-        if ($file === false || strpos($file, $basePath) !== 0) {
-            throw new \Exception("Vista '$view' no encontrada o acceso denegado en: " . $basePath . '/' . $view . '.php');
+        // 5. ¡La comprobación de seguridad crucial!
+        // Asegura que la ruta real del archivo comience con la ruta del directorio base.
+        // Esto "enjaula" el acceso y previene que se salga del directorio permitido.
+        if ($realFilePath === false || strpos($realFilePath, $baseDir) !== 0) {
+            throw new \Exception("Acceso denegado o vista no encontrada: '{$path}'");
         }
 
-        return $file;
-    }
-
-    protected static function getLayoutFile(string $layout): string
-    {
-        $basePath = realpath(__DIR__ . '/../../web/views');
-
-        if (!preg_match('/^[a-zA-Z0-9\-\/]+$/', $layout)) {
-            throw new \Exception("$layout es un nombre de layout inválido.");
-        }
-
-        $file = realpath($basePath . '/' . str_replace('/', DIRECTORY_SEPARATOR, $layout) . '.php');
-
-        if ($file === false || strpos($file, $basePath) !== 0) {
-            throw new \Exception("Layout '$layout' no encontrado o acceso denegado en: " . $basePath . '/' . $layout . '.php');
-        }
-
-        return $file;
+        return $realFilePath;
     }
 }
