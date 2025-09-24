@@ -1,72 +1,61 @@
-# 🔥 KevFrame - Modern PHP Framework
+# 🔥 KevFrame - Un Framework PHP Moderno, Seguro y Elegante
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md)
-[![PHP](https://img.shields.io/badge/PHP-8.0%2B-777BB4.svg)]()
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Versión](https://img.shields.io/badge/version-1.1.0-blue.svg)]() [![Licencia](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md) [![PHP](https://img.shields.io/badge/PHP-8.0%2B-777BB4.svg)]()
 
-> **KevFrame** es un framework PHP moderno, ligero y potente diseñado para el desarrollo web rápido y eficiente. Combina la simplicidad de uso con características avanzadas para crear aplicaciones web robustas.
+> **KevFrame** es un framework PHP ligero y potente, diseñado para el desarrollo rápido y seguro de aplicaciones web. Su arquitectura MVC, combinada con un ORM intuitivo y un motor de plantillas seguro, te permite construir proyectos robustos con un código limpio y mantenible.
 
 ## 📋 Tabla de Contenidos
 
-- [✨ Características](#-características)
+- [✨ Características Principales](#-características-principales)
 - [🚀 Inicio Rápido](#-inicio-rápido)
 - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
-- [⚡ Instalación](#-instalación)
-- [🔧 Configuración](#-configuración)
-- [🏗️ Arquitectura](#️-arquitectura)
-- [📚 API Reference](#-api-reference)
-- [🔧 Troubleshooting](#-troubleshooting)
-- [🤝 Contribuir](#-contribuir)
-- [📄 Licencia](#-licencia)
+- [⚡ El Corazón de KevFrame: El ORM](#-el-corazón-de-kevframe-el-orm)
+- [🛡️ La Seguridad es Primero](#️-la-seguridad-es-primero)
+- [🛠️ CLI Inteligente](#️-cli-inteligente)
+- [🎨 Motor de Plantillas](#-motor-de-plantillas)
+- [🤝 Cómo Contribuir](#-cómo-contribuir)
 
-## ✨ Características
+---
 
-🚀 **Alto Rendimiento**
-- Arquitectura MVC optimizada
-- Routing eficiente y flexible
-- Gestión inteligente de memoria
+## ✨ Características Principales
 
-🎨 **Sistema de Plantillas Avanzado**
-- **KevEngine**: Motor de plantillas completo
-- **KevLiteEngine**: Versión ligera para proyectos pequeños
-- **KevTemplateEngine**: Motor personalizable
-- Sintaxis intuitiva y expresiva
+✅ **ORM Integrado y Seguro**
+- Abstracción completa de la base de datos. ¡Escribe PHP, no SQL!
+- Métodos CRUD dinámicos (`all`, `find`, `create`, `update`, `delete`).
+- **Protección automática contra Inyección SQL** gracias al uso exclusivo de consultas preparadas.
 
-🛠️ **CLI Integrado**
-- Servidor de desarrollo con hot-reload
-- Comandos para scaffolding
-- Herramientas de debugging
+🔒 **Seguridad por Defecto**
+- **Protección CSRF** automática en todas las peticiones `POST`, `PUT` y `DELETE`.
+- **Motor de plantillas seguro** que escapa la salida por defecto para prevenir XSS.
+- **Renderizador de vistas "enjaulado"** para prevenir ataques de *Path Traversal*.
 
-📦 **Arquitectura Modular**
-- Sistema de componentes reutilizables
-- Interfaces bien definidas
-- Inyección de dependencias
+🛠️ **CLI Inteligente con Introspección**
+- Servidor de desarrollo integrado.
+- **Generador de modelos automático**: El CLI se conecta a tu base de datos, analiza la estructura de tus tablas y crea los modelos por ti.
+- Generadores de código para controladores, componentes y más, usando plantillas personalizables.
 
-🔒 **Seguridad Integrada**
-- Gestión de sesiones segura
-- Protección CSRF
-- Validación de datos automática
+🎨 **Motor de Plantillas Expresivo**
+- Sintaxis limpia y fácil de aprender (`@if`, `@foreach`, `{{ $variable }}`).
+- Directiva `@raw()` para un manejo explícito y seguro de datos sin escapar.
+- Sistema de layouts y secciones (`@extends`, `@section`).
 
-🌐 **Base de Datos**
-- ORM ligero incluido
-- Soporte para múltiples bases de datos
-- Migrations y seeders
+---
 
 ## 🚀 Inicio Rápido
 
 ```bash
-# Clonar el proyecto
-git clone https://github.com/KEVAO18/KevFrame.git
+# 1. Clona el proyecto
+git clone [https://github.com/KEVAO18/KevFrame.git](https://github.com/KEVAO18/KevFrame.git)
 cd KevFrame
 
-# Instalar dependencias
+# 2. Instala las dependencias
 composer install
 
-# Configurar entorno
+# 3. Configura tu entorno
 cp .example.env .env
+# (Ajusta la configuración de tu base de datos en .env)
 
-# Iniciar servidor de desarrollo
+# 4. Inicia el servidor de desarrollo
 php kev serve
 ```
 
@@ -78,57 +67,59 @@ KevFrame sigue una arquitectura **MVC moderna** con separación clara de respons
 
 ```
 KevFrame/
-├── 📄 .example.env              # Configuración de ejemplo
-├── 📄 .gitignore                 # Archivos ignorados por Git
-├── 📄 composer.json             # Dependencias de Composer
-├── 📄 kev                       # CLI del framework
-├── 📄 serve.php                 # Servidor PHP nativo
-│
-├── 🌐 http/                     # Capa de aplicación web
-│   ├── 🎮 controllers/           # Lógica de negocio
-│   │   ├── ErrorController.php
-│   │   └── IndexController.php
-│   ├── ⚡ handlers/              # Manejadores de eventos
-│   └── 🔌 interfaces/            # Contratos e interfaces
-│
-├── 📦 src/                      # Núcleo del framework
-│   ├── ⚙️ Core/                 # Componentes principales
-│   │   ├── Cli.php               # Interface de línea de comandos
-│   │   ├── Database.php          # Gestión de base de datos
-│   │   ├── Request.php           # Manejo de peticiones HTTP
-│   │   ├── Router.php            # Sistema de rutas
-│   │   ├── SessionManager.php    # Gestión de sesiones
-│   │   ├── View.php              # Motor de vistas
-│   │   └── routes.php            # Definición de rutas
+├── 📂 http/
+│   ├── 📂 controllers/
+│   │   ├── 📄 ErrorController.php
+│   │   └── 📄 IndexController.php
 │   │
-│   ├── 🎨 Templates/             # Motores de plantillas
-│   │   ├── KevEngine.php         # Motor principal
-│   │   ├── KevLiteEngine.php     # Motor ligero
-│   │   ├── KevTemplateEngine.php # Motor personalizable
-│   │   └── TemplateEngineInterface.php
+│   ├── 📂 handlers/
+│   └── 📂 interfaces/
+│
+├── 📂 public/
+│   ├── 📂 css/
+│   ├── 📂 docs/
+│   ├── 📂 img/
+│   ├── 📂 js/
+│   └── 📄 Runner.php
+│
+├── 📂 src/
+│   ├── 📂 Core/
+│   │   ├── 📂 Cli/
+│   │   │   ├── 📄 Generator.php
+│   │   │   └── 📂 Stubs/
+│   │   │
+│   │   ├── 📄 Cli.php
+│   │   ├── 📄 Database.php
+│   │   ├── 📄 Request.php
+│   │   ├── 📄 Router.php
+│   │   ├── 📄 routes.php
+│   │   ├── 📄 SessionManager.php
+│   │   └── 📄 View.php
 │   │
-│   └── 🗺️ models/                # Modelos de datos
+│   ├── 📂 Models/
+│   │    └── 📄 Model.php
+│   │
+│   ├── 📂 Security/
+│   │    └── 📄 csrf.php
+│   │
+│   └── 📂 templates/
+│       ├── 📄 KevEngine.php
+│       ├── 📄 KevLiteEngine.php
+│       ├── 📄 KevTemplateEngine.php
+│       └── 📄 TemplateEngineInterface.php
 │
-├── 🕸️ web/                      # Interfaz de usuario
-│   ├── 🧩 componentes/           # Componentes reutilizables
-│   │   ├── errors/               # Páginas de error
-│   │   │   ├── 404.php
-│   │   │   └── GeneralError.php
-│   │   └── main/
-│   │       └── HomeComponent.php
-│   └── 🖼️ views/                  # Plantillas de vista
-│       └── main.php
+├── 📂 views/
+│   ├── 📂 componentes/
+│   └── 📂 views/
 │
-└── 🎨 public/                   # Recursos estáticos
-    ├── css/                      # Hojas de estilo
-    │   ├── principal.css         # Estilos principales
-    │   ├── reset.css             # Reset CSS
-    │   └── ...                   # Más archivos CSS
-    ├── js/                       # JavaScript
-    │   └── main.js
-    ├── img/                      # Imágenes
-    ├── docs/                     # Documentación estática
-    └── runner.php                # Punto de entrada
+├── 📄 .example.env
+├── 📄 composer.json
+├── 📄 composer.lock
+├── 📄 DOCUMENTACION.md
+├── 📄 kev
+├── 📄 License.md
+├── 📄 README.md
+└── 📄 serve.php
 ```
 
 ### 🔍 Descripción de Componentes
