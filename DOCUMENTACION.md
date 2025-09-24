@@ -122,46 +122,6 @@ KevFrame/
 └── 📄 serve.php
 ```
 
-### 🔍 Descripción de Componentes
-
-#### 🎮 **Controllers** (`http/controllers/`)
-> **Lógica de negocio centralizada**
-- Maneja las solicitudes HTTP entrantes
-- Procesa datos y coordina con modelos
-- Retorna respuestas estructuradas
-
-#### ⚡ **Handlers** (`http/handlers/`)
-> **Procesamiento de eventos especializados**
-- Manejo de eventos del sistema
-- Middleware personalizado
-- Interceptores de solicitudes
-
-#### ⚙️ **Core** (`src/Core/`)
-> **Núcleo del framework**
-- **Router**: Sistema de enrutamiento avanzado
-- **Database**: Abstracón de base de datos
-- **SessionManager**: Gestión segura de sesiones
-- **View**: Motor de renderizado de vistas
-- **Request**: Manejo de peticiones HTTP
-
-#### 🎨 **Templates** (`src/Templates/`)
-> **Motores de plantillas múltiples**
-- **KevEngine**: Motor completo con caché y optimizaciones
-- **KevLiteEngine**: Versión minimalista para proyectos ligeros
-- **KevTemplateEngine**: Motor personalizable y extensible
-
-#### 🗺️ **Models** (`src/models/`)
-> **Capa de datos**
-- Representación de entidades de negocio
-- Interacción con la base de datos
-- Validación y transformación de datos
-
-#### 🧩 **Componentes** (`web/componentes/`)
-> **UI reutilizable**
-- Componentes modulares de interfaz
-- Páginas de error personalizadas
-- Elementos reutilizables
-
 ## 🛤️ Definiendo Rutas
 
 ```php
