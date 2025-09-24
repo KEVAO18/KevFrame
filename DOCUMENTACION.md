@@ -108,7 +108,7 @@ KevFrame/
 │       ├── 📄 KevTemplateEngine.php
 │       └── 📄 TemplateEngineInterface.php
 │
-├── 📂 views/
+├── 📂 web/
 │   ├── 📂 componentes/
 │   └── 📂 views/
 │
