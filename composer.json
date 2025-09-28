@@ -1,5 +1,17 @@
 {
     "name": "kevao-frame/aplicacion",
+    "description": "Un framework de PHP ligero, seguro y elegante para el desarrollo rápido de aplicaciones web.",
+    "type": "library",
+    "keywords": ["framework", "php", "mvc", "orm"],
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "KEVAO18",
+            "email": "kevao.dev@gmail.com",
+            "homepage": "https://allmylinks.com/kevaodv"
+        }
+    ],
     "repositories": [],
     "require": {
         "slim/psr7": "^1.0",

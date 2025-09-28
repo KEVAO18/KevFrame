@@ -6,7 +6,7 @@ use App\Core\Cli\Generator;
 
 class Cli
 {
-    private const VERSION = "0.4.1";
+    private const VERSION = "0.5.0";
 
     /**
      * El método principal para despachar los comandos.
