@@ -1,20 +1,25 @@
 <?php
+
 namespace App\Core;
 
 use PDO;
 use PDOException;
 use Dotenv\Dotenv;
+use Exception;
 
-final class Database {
+final class Database
+{
     private static $instance = null;
     private $connection;
 
-    private function __construct() {
+    private function __construct()
+    {
         $this->connect();
     }
 
-    private function connect() {
-        $dotenv = Dotenv::createImmutable(__DIR__.'/../../');
+    private function connect()
+    {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
         $host = $_ENV['DB_HOST'];
@@ -50,21 +55,32 @@ final class Database {
             // Devuelve el statement para que se puedan obtener los resultados
             return $stmt;
         } catch (PDOException $e) {
-            // En un entorno de producción, aquí deberías registrar el error
-            // en lugar de mostrarlo directamente.
-            // Por ahora, lo lanzamos para facilitar la depuración.
-            throw $e;
+            if ($_ENV['APP_ENV'] === 'production') {
+                $errorMessage = "[" . date("Y-m-d H:i:s") . "] " . $e->getMessage() . "\n";
+                error_log($errorMessage, 3, __DIR__ . '/../../logs/db_errors.log');
+
+                http_response_code(500);
+                \App\Core\View::render('errors/GeneralError', [
+                    'ErrorCode' => '500',
+                    'msg' => 'Error Interno del Servidor'
+                ]);
+                exit();
+            } else {
+                throw $e;
+            }
         }
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!self::$instance) {
             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 }

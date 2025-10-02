@@ -122,6 +122,124 @@ KevFrame/
 └── 📄 serve.php
 ```
 
+# Ejemplos importantes
+
+## creacion de un modelo
+
+Basandose en que la base de datos usa los nombres de las entidades en plural tales como:
+
+- Usuarios
+- Productos
+- Categorias
+- Credenciales
+
+se crearan los modelos con la siguiente extructura:
+
+```bash
+php kev make:model "el nombre de la base de datos en singular"
+```
+
+De este modo el mini ORM reconocerá el modelo como derivado de la entidad. Ejemplo
+
+Se tiene la tabla:
+
+```sql
+    create table totals(
+
+        -- campos: id, tipo, fecha, concepto, monto
+        id int(11) auto_increment not null,
+        tipo tinyint(1) not null,
+        fecha timestamp not null 
+        DEFAULT current_timestamp() 
+        ON UPDATE current_timestamp(),
+        concepto varchar(100) not null,
+        monto double not null,
+
+        -- primarias, foraneas e indices
+        CONSTRAINT pk_totales PRIMARY KEY (id),
+
+        INDEX (fecha)
+    );
+```
+
+al ejecutar el comando 
+
+```bash
+    php kev make:model total
+```
+
+construye el modelo total con la siguiente extructura
+
+```php
+<?php
+
+namespace App\Models;
+
+class TotalModel extends Model
+{
+    /**
+     * El nombre de la tabla en la base de datos.
+     */
+    protected string $table = 'totals';
+
+    /**
+     * La clave primaria de la tabla.
+     */
+    protected string $primaryKey = 'id';
+
+    /**
+     * El esquema de la tabla (descubierto automáticamente).
+     */
+    protected array $fields = [
+        'id' => 'int(11)',
+        'tipo' => 'tinyint(1)',
+        'fecha' => 'timestamp',
+        'concepto' => 'varchar(100)',
+        'monto' => 'double',
+    ];
+
+    /**
+     * Define las relaciones del modelo aquí.
+     */
+    protected array $relations = [];
+}
+
+```
+
+Pero si usas un nombre cuya entidad no existe aun en la base de datos tendras que crear la estructura tu mismo teniendo la estructura de el siguiente modo
+
+```php
+<?php
+
+namespace App\Models;
+
+class TotalModel extends Model
+{
+    /**
+     * El nombre de la tabla en la base de datos.
+     */
+    protected string $table = 'totals';
+
+    /**
+     * La clave primaria de la tabla.
+     */
+    protected string $primaryKey = 'id';
+
+    /**
+     * El esquema de la tabla (descubierto automáticamente).
+     */
+    protected array $fields = [
+        
+    ];
+
+    /**
+     * Define las relaciones del modelo aquí.
+     */
+    protected array $relations = [];
+}
+
+```
+
 ## 🛤️ Definiendo Rutas
 
 ```php
