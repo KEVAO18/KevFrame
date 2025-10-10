@@ -6,7 +6,11 @@ use App\Core\Cli\Generator;
 
 class Cli
 {
-    private const VERSION = "0.5.0";
+    private const VERSION = "0.6.0";
+
+    public function getVersion(){
+        return self::VERSION;
+    }
 
     /**
      * El método principal para despachar los comandos.
