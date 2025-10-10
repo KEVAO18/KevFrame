@@ -127,11 +127,11 @@ class Cli
         }
 
         $directories = [
-            'controller' => __DIR__ . "/../../http/controllers/",
-            'handler'    => __DIR__ . "/../../http/handlers/",
-            'interface'  => __DIR__ . "/../../http/interfaces/",
-            'component'  => __DIR__ . "/../../web/componentes/",
-            'view'       => __DIR__ . "/../../web/views/",
+            'controller' => dirname(__DIR__) . "/Http/Controllers/", // Sube a src/ y baja a Http/Controllers
+            'handler'    => dirname(__DIR__) . "/Http/Handlers/",
+            'interface'  => dirname(__DIR__) . "/Http/Interfaces/",
+            'component'  => dirname(__DIR__, 2) . "/web/componentes/", // Sube a la raíz y baja a web/
+            'view'       => dirname(__DIR__, 2) . "/web/views/",
         ];
 
         if (!isset($directories[$type])) {

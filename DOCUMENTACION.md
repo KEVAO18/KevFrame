@@ -67,14 +67,6 @@ KevFrame sigue una arquitectura **MVC moderna** con separación clara de respons
 
 ```
 KevFrame/
-├── 📂 http/
-│   ├── 📂 controllers/
-│   │   ├── 📄 ErrorController.php
-│   │   └── 📄 IndexController.php
-│   │
-│   ├── 📂 handlers/
-│   └── 📂 interfaces/
-│
 ├── 📂 public/
 │   ├── 📂 css/
 │   ├── 📂 docs/
@@ -95,6 +87,15 @@ KevFrame/
 │   │   ├── 📄 routes.php
 │   │   ├── 📄 SessionManager.php
 │   │   └── 📄 View.php
+│   │
+│   ├── 📂 http/
+│   │   ├── 📂 controllers/
+│   │   │   ├── 📄 ErrorController.php
+│   │   │   └── 📄 IndexController.php
+│   │   │
+│   │   ├── 📂 handlers/
+│   │   └── 📂 interfaces/
+│   │
 │   │
 │   ├── 📂 Models/
 │   │    └── 📄 Model.php
