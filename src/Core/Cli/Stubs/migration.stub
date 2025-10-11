@@ -1,0 +1,38 @@
+<?php
+
+use App\Database\Schema;
+use App\Database\Blueprint;
+
+/**
+ * Migración para la tabla {{table}}.
+ * Generada el: {{timestamp}}
+ */
+return new class 
+{
+    /**
+     * Ejecuta la migración para construir el esquema.
+     * Aquí es donde defines la estructura de tu tabla.
+     */
+    public function up(): void
+    {
+        Schema::create('{{table}}', function (Blueprint $table) {
+            $table->id(); // Crea una columna 'id' autoincremental y clave primaria.
+            
+            // Agrega aquí las columnas de tu tabla.
+            // Por ejemplo:
+            // $table->string('nombre')->unique();
+            // $table->text('descripcion')->nullable();
+            
+            $table->timestamps(); // Crea las columnas 'created_at' y 'updated_at'.
+        });
+    }
+
+    /**
+     * Revierte la migración.
+     * Generalmente, esto implica eliminar la tabla.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('{{table}}');
+    }
+};

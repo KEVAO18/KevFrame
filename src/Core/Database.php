@@ -7,18 +7,38 @@ use PDOException;
 use Dotenv\Dotenv;
 use Exception;
 
-final class Database
-{
+final class Database {
+    
+    /**
+     * Devuelve la única instancia de la clase Database (patrón Singleton).
+     *
+     * @return self
+     */
     private static $instance = null;
+    
+    /**
+     * La conexión PDO a la base de datos.
+     *
+     * @var PDO
+     */
     private $connection;
 
+    /**
+     * Constructor privado para implementar el patrón Singleton.
+     *
+     * @return void
+     */
     private function __construct()
     {
         $this->connect();
     }
 
-    private function connect()
-    {
+    /**
+     * Establece la conexión con la base de datos.
+     *
+     * @return void
+     */
+    private function connect() {
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
         $dotenv->load();
 
@@ -26,7 +46,7 @@ final class Database
         $dbname = $_ENV['DB_NAME'];
         $user = $_ENV['DB_USER'];
         $pass = $_ENV['DB_PASS'];
-        $charset = $_ENV['DB_CHARSET']; // Cambia el conjunto de caracteres según tu necesida
+        $charset = $_ENV['DB_CHARSET'];
 
         try {
             $this->connection = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
@@ -37,14 +57,40 @@ final class Database
     }
 
     /**
+     * Proporciona una conexión PDO "cruda" solo al servidor MySQL, sin seleccionar una base de datos.
+     * Esencial para tareas administrativas como 'db:create'.
+     *
+     * @return PDO
+     */
+    public static function getRawConnection(): PDO {
+        $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
+        $dotenv->load();
+
+        $host = $_ENV['DB_HOST'];
+        $user = $_ENV['DB_USER'];
+        $pass = $_ENV['DB_PASS'];
+        $charset = $_ENV['DB_CHARSET'];
+        
+        // El DSN no incluye 'dbname', que es la clave para que esto funcione.
+        $dsn = "mysql:host={$host};charset={$charset}";
+
+        try {
+            $pdo = new PDO($dsn, $user, $pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $pdo;
+        } catch (PDOException $e) {
+            throw new \Exception("No se pudo conectar al servidor de base de datos en '{$host}': " . $e->getMessage());
+        }
+    }
+
+    /**
      * Ejecuta una consulta SQL de forma segura utilizando sentencias preparadas.
      *
      * @param string $sql La consulta SQL con placeholders (ej. ?, ?, :name).
      * @param array $params Un array de parámetros para vincular a la consulta.
      * @return \PDOStatement|false El objeto PDOStatement o false si hay un error.
      */
-    public function query(string $sql, array $params = [])
-    {
+    public function query(string $sql, array $params = []) : \PDOStatement|false {
         try {
             // Prepara la consulta
             $stmt = $this->connection->prepare($sql);
@@ -71,16 +117,24 @@ final class Database
         }
     }
 
-    public static function getInstance()
-    {
+    /**
+     * Devuelve la única instancia de la clase Database (patrón Singleton).
+     *
+     * @return self
+     */
+    public static function getInstance(): self {
         if (!self::$instance) {
             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getConnection()
-    {
+    /**
+     * Devuelve la conexión PDO actual.
+     *
+     * @return PDO
+     */
+    public function getConnection(): PDO {
         return $this->connection;
     }
 }

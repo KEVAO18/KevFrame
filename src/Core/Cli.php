@@ -6,7 +6,7 @@ use App\Core\Cli\Generator;
 
 class Cli
 {
-    private const VERSION = "0.6.0";
+    private const VERSION = "0.8.0";
 
     public function getVersion(){
         return self::VERSION;
@@ -54,20 +54,30 @@ class Cli
      * Muestra la ayuda de los comandos disponibles.
      */
     public function help(): void{
+
         echo "Kev Framework CLI\n";
-        echo "Desarrollado por KevaoDev\n";
-        echo "portfolio https://www.kevao.tech/\n";
+        echo "Developed by KevaoDev\n";
+        echo "my portfolio https://www.kevao.tech/\n";
         echo "\nAvailable commands:\n";
-        echo "  serve               Start development server\n";
-        echo "  make:controller     Create a new controller\n";
-        echo "  make:model          Create a new model\n";
-        echo "  make:handler        Create a new handler\n";
-        echo "  make:interface      Create a new interface\n";
-        echo "  make:component      Create a new component\n";
-        echo "  make:view           Create a new view\n";
-        echo "  version             Show the version of the application\n";
-        echo "  help                Show this help message\n";
-        echo "\nUsage: php kev [command] [name]\n";
+        echo "  serve                 Start development server\n";
+        echo "  db:create             Creates the database defined in the .env if it does not exist.\n";
+        echo "  db:seed               Seeds the database using the seeders.\n";
+        echo "  make:migration        Creates a new migration file.\n";
+        echo "  make:factory          Creates a new factory file.\n";
+        echo "  make:controller       Create a new controller\n";
+        echo "  make:model            Create a new model\n";
+        echo "  make:handler          Create a new handler\n";
+        echo "  make:interface        Create a new interface\n";
+        echo "  make:component        Create a new component\n";
+        echo "  make:view             Create a new view\n";
+        echo "  version               Show the version of the application\n";
+        echo "  help                  Show this help message\n";
+        echo "\nUsage: php kev [command]:[type] [argument or name] [--option=value] \n";
+        echo "  command: The command to execute (e.g., make, db).\n";
+        echo "  type: The type of resource to create (e.g., controller, model).\n";
+        echo "  argument or name: The name of the resource to create.\n";
+        echo "  --option=value: Optional arguments for the command.\n";
+
     }
 
     /**
@@ -121,32 +131,43 @@ class Cli
 
         $name = ucfirst($name);
 
-        if ($type === 'model') {
-            $this->makeModel($name);
-            return;
+        if(method_exists($this, $type)) $this->{$type}($name, $args);
+        else {
+            echo "Tipo de archivo no válido: $type\n";
+            exit(1);
         }
 
+    }
+
+    /**
+     * Crea un nuevo archivo basado en el tipo y nombre.
+     * @param string $type El tipo de archivo.
+     * @param string $name El nombre del archivo.
+     */
+    private function makeFileFromStub(string $type, string $name, string $fileName = "default"){
+
         $directories = [
-            'controller' => dirname(__DIR__) . "/Http/Controllers/", // Sube a src/ y baja a Http/Controllers
+            'controller' => dirname(__DIR__) . "/Http/Controllers/",
             'handler'    => dirname(__DIR__) . "/Http/Handlers/",
             'interface'  => dirname(__DIR__) . "/Http/Interfaces/",
-            'component'  => dirname(__DIR__, 2) . "/web/componentes/", // Sube a la raíz y baja a web/
+            'component'  => dirname(__DIR__, 2) . "/web/componentes/",
             'view'       => dirname(__DIR__, 2) . "/web/views/",
+            'factory'    => dirname(__DIR__, 2) . "/Database/Factories/",
+            'seeder'     => dirname(__DIR__, 2) . "/Database/Seeders/",
         ];
 
         if (!isset($directories[$type])) {
-            echo "Tipo de archivo no válido: $type\n";
             exit(1);
         }
 
         // 2. Usamos el Generator para obtener el contenido
         $content = Generator::get($type, ['name' => $name]);
-        
-        $path = $directories[$type] . $name . ucfirst($type) . ".php";
-        
-        if ($type === 'view') { // Las vistas no llevan extensión .php en el nombre
-            $path = $directories[$type] . $name . ".php";
+
+        if($fileName == "default"){
+            $fileName = $name . ucfirst($type) . ".php";
         }
+        
+        $path = $directories[$type] . $fileName;
 
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
@@ -154,32 +175,116 @@ class Cli
 
         file_put_contents($path, $content);
         echo ucfirst($type) . " creado en {$path}\n";
+
     }
 
-        /**
+    /**
+     * Genera un nuevo archivo de vista.
+     */
+    private function View(string $name, ?array $args): void{
+        $fileName = $name . ".php";
+        $this->makeFileFromStub('view', $name, $fileName);
+    }
+
+    /**
+     * Genera un nuevo archivo de semillero.
+     */
+    private function Seeder(string $name, ?array $args): void{
+        $this->makeFileFromStub('seeder', $name);
+    }
+
+    /**
+     * Genera un nuevo archivo de fábrica.
+     */
+    private function Factory(string $name, ?array $args): void{
+        $this->makeFileFromStub('factory', $name);
+    }
+
+    /**
+     * Genera un nuevo archivo de migración.
+     */
+    private function Migration(string $name, ?array $args): void{
+
+        $argumentos = $this->getArgs($args);
+
+        $timestamp = date('Y_m_d_His');
+
+        $fileName = $timestamp . "_" . $name . ".php";
+
+        $content = Generator::get('migration', [
+            'table' => $argumentos['table'], 
+            'timestamp' => $timestamp
+        ]);
+        
+        $path = dirname(__DIR__, 2) . "/Database/Migrations/" . $fileName;
+
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, $content);
+        echo "Migration creado en {$path}\n";
+    }
+
+    /**
+     * Genera un nuevo archivo de componente.
+     */
+    private function Component(string $name, ?array $args): void{
+        $this->makeFileFromStub('component', $name);
+    }
+
+    /**
+     * Genera un nuevo archivo de interfaz.
+     */
+    private function Interface(string $name, ?array $args): void{
+        $this->makeFileFromStub('interface', $name);
+    }
+
+    /**
+     * Genera un nuevo archivo de manejador.
+     */
+    private function Handler(string $name, ?array $args): void{
+        $this->makeFileFromStub('handler', $name);
+    }
+
+    /**
+     * Genera un nuevo archivo de controlador.
+     */
+    private function Controller(string $name, ?array $args): void{
+        $this->makeFileFromStub('controller', $name);
+    }
+
+    /**
      * Genera un nuevo archivo de modelo.
      */
-    private function makeModel(string $name): void{
+    private function Model(string $name, ?array $args): void{
+
         $tableName = strtolower($name) . 's';
         $fields = [];
         $primaryKey = 'id';
 
         try {
+
             $db = \App\Core\Database::getInstance();
             $stmt = $db->query("DESCRIBE {$tableName}");
             $schema = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             foreach ($schema as $column) {
+
                 $fields[$column['Field']] = $column['Type'];
+
                 if ($column['Key'] === 'PRI') {
                     $primaryKey = $column['Field'];
                 }
+
             }
+
         } catch (\PDOException $e) {
             echo "Advertencia: No se pudo conectar o la tabla '{$tableName}' no existe. Se creará un modelo vacío.\n";
         }
 
         $fieldsString = '';
+
         foreach ($fields as $field => $type) {
             $fieldsString .= "        '{$field}' => '{$type}',\n";
         }
@@ -193,12 +298,27 @@ class Cli
         ]);
         
         $path = __DIR__ . "/../models/" . $name . "Model.php";
+
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
 
         file_put_contents($path, $content);
         echo "Modelo creado en {$path}\n";
+
+    }
+
+    /**
+     * Crea la tabla 'migrations' si no existe.
+     */
+    private function ensureMigrationsTableExists(): void {
+        Database::getInstance()->query(
+            "CREATE TABLE IF NOT EXISTS migrations (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                migration VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB"
+        );
     }
 
     /**
@@ -221,4 +341,5 @@ class Cli
         passthru($command);
         echo "Abriendo el navegador automáticamente. Si no se abre, navega a la URL manualmente.\n";
     }
+
 }

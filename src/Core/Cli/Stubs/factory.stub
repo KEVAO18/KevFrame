@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Database\Factories;
+
+use App\Models\{{name}}Model;
+
+class {{name}}Factory extends Factory
+{
+    protected string $model = {{name}}Model::class;
+
+    /**
+     * Define la estructura de datos por defecto para el modelo.
+     */
+    public function definition(): array
+    {
+        return [
+            
+        ];
+    }
+}

@@ -26,6 +26,10 @@
             "App\\Templates\\": "src/Templates/",
             
             "App\\Database\\": "database/",
+            "App\\Database\\Factories\\": "database/factories/",
+            "App\\Database\\Migrations\\": "database/migrations/",
+            "App\\Database\\Seeders\\": "database/seeders/",
+            
             "App\\Suport\\": "support/",
             
             "App\\Http\\": "src/http/",

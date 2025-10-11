@@ -67,6 +67,11 @@ KevFrame sigue una arquitectura **MVC moderna** con separación clara de respons
 
 ```
 KevFrame/
+├── 📁 database/
+│   ├── 📁 factories/
+│   ├── 📁 migrations/
+│   └── 📁 seeders/
+│
 ├── 📂 public/
 │   ├── 📂 css/
 │   ├── 📂 docs/
@@ -137,7 +142,7 @@ Basandose en que la base de datos usa los nombres de las entidades en plural tal
 se crearan los modelos con la siguiente extructura:
 
 ```bash
-php kev make:model "el nombre de la base de datos en singular"
+php kev make:model "el nombre de la entidad en singular"
 ```
 
 De este modo el mini ORM reconocerá el modelo como derivado de la entidad. Ejemplo
