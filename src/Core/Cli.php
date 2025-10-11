@@ -138,6 +138,7 @@ class Cli {
         echo "  db:migrate            Runs the database migrations.\n";
         echo "  make:migration        Creates a new migration file.\n";
         echo "  make:factory          Creates a new factory file.\n";
+        echo "  make:seeder           Creates a new seeder file.\n";
         echo "  make:controller       Create a new controller\n";
         echo "  make:model            Create a new model\n";
         echo "  make:handler          Create a new handler\n";

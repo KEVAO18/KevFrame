@@ -33,6 +33,7 @@ abstract class Factory
      */
     public function create(): void
     {
+
         for ($i = 0; $i < $this->count; $i++) {
             $attributes = $this->definition();
             $modelInstance = new $this->model($attributes);

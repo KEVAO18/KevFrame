@@ -19,6 +19,12 @@ class Blueprint
 
     public function id(string $columnName = 'id'): void
     {
+        $this->columns[] = "`{$columnName}` INT";
+        $this->primaryKey[] = $columnName;
+    }
+
+    public function idAutoIncrement(string $columnName = 'id'): void
+    {
         $this->columns[] = "`{$columnName}` INT AUTO_INCREMENT";
         $this->primaryKey[] = $columnName;
     }
@@ -78,7 +84,8 @@ class Blueprint
     {
         $lastColumn = end($this->columns);
         $columnName = explode(' ', $lastColumn)[0];
-        $this->indexes[] = "UNIQUE KEY `{$this->tableName}_{$columnName}_unique` ({$columnName})";
+        $cleanColumnName = str_replace('`', '', $columnName);
+        $this->indexes[] = "UNIQUE KEY `{$this->tableName}_{$cleanColumnName}_unique` ({$cleanColumnName})";
         return $this;
     }
 

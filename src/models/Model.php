@@ -18,6 +18,10 @@ abstract class Model
 
 
     // --- Propiedades para el Query Builder ---
+    protected bool $exists = false; // Indica si el modelo existe en la base de datos
+
+
+    // --- Propiedades para el Query Builder ---
     protected array $queryParts = [
         'select' => '*',
         'where' => [],
@@ -62,7 +66,7 @@ abstract class Model
      */
     public function save(): bool
     {
-        if (isset($this->attributes[$this->primaryKey])) {
+        if ($this->exists) {
             return $this->performUpdate();
         } else {
             return $this->performCreate();
@@ -121,6 +125,7 @@ abstract class Model
             if (!isset($this->attributes[$this->primaryKey])) {
                 $this->attributes[$this->primaryKey] = $this->db->getConnection()->lastInsertId();
             }
+            $this->exists = true;
             return true;
         }
         return false;
