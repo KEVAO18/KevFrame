@@ -2,82 +2,23 @@
 
 namespace App\Core;
 
-use App\Core\Cli\Generator;
+use App\Core\Cli\DbCommand;
+use App\Core\Cli\MakeCommand;
 
-class Cli
-{
+/**
+ * El motor de la interfaz de línea de comandos (CLI) de KevFrame.
+ * Orquesta todos los comandos de desarrollo, desde la creación de archivos
+ * hasta la gestión completa del ciclo de vida de la base de datos.
+ */
+class Cli {
+
+    // ---------------------------------------------------------------
+    //                         No commands
+    // ---------------------------------------------------------------
     private const VERSION = "0.8.0";
 
     public function getVersion(){
         return self::VERSION;
-    }
-
-    /**
-     * El método principal para despachar los comandos.
-     * @param array $arguments Los argumentos pasados desde la línea de comandos.
-     */
-    public function run(array $arguments): void{
-        
-        $command = array_shift($arguments);
-
-        if ($command === null) {
-            $this->help();
-            return;
-        }
-        
-        // Se utiliza la convención de que los comandos son métodos
-        // make:controller -> makeController
-        // serve -> serve
-        $methodName = explode(":", $command);
-
-        if (method_exists($this, $methodName[0])) {
-            if(count($methodName) > 1){
-                $this->{$methodName[0]}($methodName[1], array_shift($arguments), $arguments);
-            }else{
-                $this->{$methodName[0]}($arguments);
-            }
-        } else {
-            echo "Comando no reconocido: $command\n";
-            $this->help();
-        }
-    }
-
-    /**
-     * Muestra la versión y la ayuda de los comandos.
-     */
-    public function version(): void{
-        echo "Kev Framework CLI version " . self::VERSION . "\n";
-        $this->help();
-    }
-
-    /**
-     * Muestra la ayuda de los comandos disponibles.
-     */
-    public function help(): void{
-
-        echo "Kev Framework CLI\n";
-        echo "Developed by KevaoDev\n";
-        echo "my portfolio https://www.kevao.tech/\n";
-        echo "\nAvailable commands:\n";
-        echo "  serve                 Start development server\n";
-        echo "  db:create             Creates the database defined in the .env if it does not exist.\n";
-        echo "  db:seed               Seeds the database using the seeders.\n";
-        echo "  make:migration        Creates a new migration file.\n";
-        echo "  make:factory          Creates a new factory file.\n";
-        echo "  make:controller       Create a new controller\n";
-        echo "  make:model            Create a new model\n";
-        echo "  make:handler          Create a new handler\n";
-        echo "  make:interface        Create a new interface\n";
-        echo "  make:component        Create a new component\n";
-        echo "  make:view             Create a new view\n";
-        echo "  version               Show the version of the application\n";
-        echo "  help                  Show this help message\n";
-        echo "\nUsage: php kev [command]:[type] [argument or name] [--option=value] \n";
-        echo "  command: The command to execute (e.g., make, db).\n";
-        echo "  type: The type of resource to create (e.g., controller, model).\n";
-        echo "  argument or name: The name of the resource to create.\n";
-        echo "  --option=value: Optional arguments for the command.\n";
-
     }
 
     /**
@@ -95,6 +36,122 @@ class Cli
 
         return $argumentos;
         
+    }
+
+    /**
+     * El método principal para despachar los comandos.
+     * @param array $arguments Los argumentos pasados desde la línea de comandos.
+     */
+    public function run(array $arguments): void{
+        
+        // Se obtiene el comando y se separa de los argumentos
+        $command = array_shift($arguments);
+
+        // Si no se pasa ningún comando, muestra la ayuda
+        if ($command === null) {
+            $this->help();
+            return;
+        }
+        
+        // se separa el comando en dos partes por ejemplo 
+        // make:controller -> [make, controller] o db:migrate -> [db, migrate]
+        $methodName = explode(":", $command);
+
+        $commandTypeList = [
+            "serve",
+            "help",
+            "version",
+            "make",
+            "db",
+        ];
+
+        // Verifica si el método existe y si el comando es válido
+        if (method_exists($this, $methodName[0]) && in_array($methodName[0], $commandTypeList)) {
+
+            try {
+
+                if(count($methodName) > 1){
+                    
+                    // Si el comando tiene argumentos, los pasa al método
+                    $this->{$methodName[0]}($methodName[1], array_shift($arguments), $arguments);
+                    exit(0);
+
+                }
+
+                // Si el comando no tiene argumentos, llama al método sin pasar argumentos
+                $this->{$methodName[0]}($arguments);
+                exit(0);
+
+            } catch (\Throwable $th) {
+
+                // Si hay un error, muestra un mensaje y la ayuda
+                echo "Comando no reconocido: $command\n";
+                $this->help();
+                exit(1);
+            }
+
+        }
+
+        // Si el comando no es válido, muestra un mensaje y la ayuda
+        echo "Comando no reconocido: $command\n";
+        $this->help();
+        exit(1);
+
+    }
+
+
+    // ---------------------------------------------------------------
+    //                         Main commands
+    // ---------------------------------------------------------------
+
+
+    /**
+     * Muestra la versión y la ayuda de los comandos.
+     */
+    public function version(): void{
+        echo "╔═════════════════╗\n";
+        echo "║     █     █     ║\n";
+        echo "║     █     █     ║\n";
+        echo "║     █    █      ║\n";
+        echo "║     █▄▄▀▀       ║\n";
+        echo "║     █  ▀▄       ║\n";
+        echo "║     █    ▀▄     ║\n";
+        echo "║     █     █     ║\n";
+        echo "║     █     █     ║\n";
+        echo "╚═════════════════╝\n";
+        echo "Version " . self::VERSION . "\n";
+        $this->help();
+    }
+
+    /**
+     * Muestra la ayuda de los comandos disponibles.
+     */
+    public function help(): void{
+
+        echo "Kev Framework CLI\n";
+        echo "Developed by KevaoDev\n";
+        echo "my portfolio https://www.kevao.tech/\n";
+        echo "\nAvailable commands:\n";
+        echo "  serve                 Start development server\n";
+        echo "  db:create             Creates the database defined in the .env if it does not exist.\n";
+        echo "  db:seed               Seeds the database using the seeders.\n";
+        echo "  db:migrate            Runs the database migrations.\n";
+        echo "  make:migration        Creates a new migration file.\n";
+        echo "  make:factory          Creates a new factory file.\n";
+        echo "  make:controller       Create a new controller\n";
+        echo "  make:model            Create a new model\n";
+        echo "  make:handler          Create a new handler\n";
+        echo "  make:interface        Create a new interface\n";
+        echo "  make:component        Create a new component\n";
+        echo "  make:view             Create a new view\n";
+        echo "  version               Show the version of the application\n";
+        echo "  help                  Show this help message\n";
+        echo "\nUsage: php kev [command]:[type] [argument or name] [--option=value] \n";
+        echo "  command: The command to execute (e.g., make, db).\n";
+        echo "  type: The type of resource to create (e.g., controller, model).\n";
+        echo "  argument or name: The name of the resource to create.\n";
+        echo "  --option=value: Optional arguments for the command.\n";
+
     }
 
     /**
@@ -119,209 +176,6 @@ class Cli
     }
 
     /**
-     * Crea un nuevo archivo basado en el tipo y nombre.
-     * @param string|null $name El nombre del archivo.
-     * @param array $args Argumentos del comando.
-     */
-    public function make(string $type, string $name, ?array $args): void{
-        if (!$name || !$type) {
-            echo "Debes indicar un tipo y nombre para el archivo (e.g., make:controller User).\n";
-            exit(1);
-        }
-
-        $name = ucfirst($name);
-
-        if(method_exists($this, $type)) $this->{$type}($name, $args);
-        else {
-            echo "Tipo de archivo no válido: $type\n";
-            exit(1);
-        }
-
-    }
-
-    /**
-     * Crea un nuevo archivo basado en el tipo y nombre.
-     * @param string $type El tipo de archivo.
-     * @param string $name El nombre del archivo.
-     */
-    private function makeFileFromStub(string $type, string $name, string $fileName = "default"){
-
-        $directories = [
-            'controller' => dirname(__DIR__) . "/Http/Controllers/",
-            'handler'    => dirname(__DIR__) . "/Http/Handlers/",
-            'interface'  => dirname(__DIR__) . "/Http/Interfaces/",
-            'component'  => dirname(__DIR__, 2) . "/web/componentes/",
-            'view'       => dirname(__DIR__, 2) . "/web/views/",
-            'factory'    => dirname(__DIR__, 2) . "/Database/Factories/",
-            'seeder'     => dirname(__DIR__, 2) . "/Database/Seeders/",
-        ];
-
-        if (!isset($directories[$type])) {
-            exit(1);
-        }
-
-        // 2. Usamos el Generator para obtener el contenido
-        $content = Generator::get($type, ['name' => $name]);
-
-        if($fileName == "default"){
-            $fileName = $name . ucfirst($type) . ".php";
-        }
-        
-        $path = $directories[$type] . $fileName;
-
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-
-        file_put_contents($path, $content);
-        echo ucfirst($type) . " creado en {$path}\n";
-
-    }
-
-    /**
-     * Genera un nuevo archivo de vista.
-     */
-    private function View(string $name, ?array $args): void{
-        $fileName = $name . ".php";
-        $this->makeFileFromStub('view', $name, $fileName);
-    }
-
-    /**
-     * Genera un nuevo archivo de semillero.
-     */
-    private function Seeder(string $name, ?array $args): void{
-        $this->makeFileFromStub('seeder', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de fábrica.
-     */
-    private function Factory(string $name, ?array $args): void{
-        $this->makeFileFromStub('factory', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de migración.
-     */
-    private function Migration(string $name, ?array $args): void{
-
-        $argumentos = $this->getArgs($args);
-
-        $timestamp = date('Y_m_d_His');
-
-        $fileName = $timestamp . "_" . $name . ".php";
-
-        $content = Generator::get('migration', [
-            'table' => $argumentos['table'], 
-            'timestamp' => $timestamp
-        ]);
-        
-        $path = dirname(__DIR__, 2) . "/Database/Migrations/" . $fileName;
-
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-
-        file_put_contents($path, $content);
-        echo "Migration creado en {$path}\n";
-    }
-
-    /**
-     * Genera un nuevo archivo de componente.
-     */
-    private function Component(string $name, ?array $args): void{
-        $this->makeFileFromStub('component', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de interfaz.
-     */
-    private function Interface(string $name, ?array $args): void{
-        $this->makeFileFromStub('interface', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de manejador.
-     */
-    private function Handler(string $name, ?array $args): void{
-        $this->makeFileFromStub('handler', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de controlador.
-     */
-    private function Controller(string $name, ?array $args): void{
-        $this->makeFileFromStub('controller', $name);
-    }
-
-    /**
-     * Genera un nuevo archivo de modelo.
-     */
-    private function Model(string $name, ?array $args): void{
-
-        $tableName = strtolower($name) . 's';
-        $fields = [];
-        $primaryKey = 'id';
-
-        try {
-
-            $db = \App\Core\Database::getInstance();
-            $stmt = $db->query("DESCRIBE {$tableName}");
-            $schema = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-            foreach ($schema as $column) {
-
-                $fields[$column['Field']] = $column['Type'];
-
-                if ($column['Key'] === 'PRI') {
-                    $primaryKey = $column['Field'];
-                }
-
-            }
-
-        } catch (\PDOException $e) {
-            echo "Advertencia: No se pudo conectar o la tabla '{$tableName}' no existe. Se creará un modelo vacío.\n";
-        }
-
-        $fieldsString = '';
-
-        foreach ($fields as $field => $type) {
-            $fieldsString .= "        '{$field}' => '{$type}',\n";
-        }
-        
-        // 3. Usamos el Generator con todas las variables necesarias
-        $content = Generator::get('model', [
-            'name'       => $name,
-            'tableName'  => $tableName,
-            'primaryKey' => $primaryKey,
-            'fields'     => rtrim($fieldsString) // Quitamos el último salto de línea
-        ]);
-        
-        $path = __DIR__ . "/../models/" . $name . "Model.php";
-
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-
-        file_put_contents($path, $content);
-        echo "Modelo creado en {$path}\n";
-
-    }
-
-    /**
-     * Crea la tabla 'migrations' si no existe.
-     */
-    private function ensureMigrationsTableExists(): void {
-        Database::getInstance()->query(
-            "CREATE TABLE IF NOT EXISTS migrations (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                migration VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB"
-        );
-    }
-
-    /**
      * Intenta abrir una URL en el navegador por defecto del sistema.
      * @param string $url La URL a abrir.
      */
@@ -340,6 +194,39 @@ class Cli
         // Ejecuta el comando en segundo plano sin mostrar la salida
         passthru($command);
         echo "Abriendo el navegador automáticamente. Si no se abre, navega a la URL manualmente.\n";
+    }
+
+    /**
+     * Crea un nuevo archivo basado en el tipo y nombre.
+     * @param string|null $name El nombre del archivo.
+     * @param array $args Argumentos del comando.
+     */
+    public function make(string $type, string $name, ?array $args): void{
+
+        
+        if (!$name || !$type) {
+            echo "Debes indicar un tipo y nombre para el archivo (e.g., make:controller User).\n";
+            exit(1);
+        }
+        
+        $name = ucfirst($name);
+        
+        (new MakeCommand($type, $name, $args));
+
+    }
+
+    /**
+     * Ejecuta comandos relacionados con la base de datos.
+     * @param string $command El comando a ejecutar.
+     */
+    private function db(string $command) {
+        if (!$command) {
+            echo "Debes indicar un comando para la base de datos (e.g., db:migrate).\n";
+            exit(1);
+        }
+
+        (new DbCommand($command));
+
     }
 
 }

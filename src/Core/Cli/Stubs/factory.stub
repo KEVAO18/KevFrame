@@ -3,6 +3,7 @@
 namespace App\Database\Factories;
 
 use App\Models\{{name}}Model;
+use App\Database\Factories\Factory; // Añadir esto
 
 class {{name}}Factory extends Factory
 {
@@ -11,8 +12,7 @@ class {{name}}Factory extends Factory
     /**
      * Define la estructura de datos por defecto para el modelo.
      */
-    public function definition(): array
-    {
+    public function definition(): array {
         return [
             
         ];
