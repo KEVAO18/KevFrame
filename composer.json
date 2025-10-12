@@ -30,6 +30,7 @@
             "App\\Database\\Factories\\": "database/factories/",
             "App\\Database\\Migrations\\": "database/migrations/",
             "App\\Database\\Seeders\\": "database/seeders/",
+            "App\\Database\\Relations\\": "database/relations/",
             
             "App\\Suport\\": "support/",
             
