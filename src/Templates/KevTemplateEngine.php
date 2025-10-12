@@ -112,5 +112,11 @@ class KevTemplateEngine
         $engine->registerDirective('date', function ($params) {
             return "<?php echo date('Y-m-d', $params); ?>";
         });
+
+        $engine->registerDirective('vite', function ($params) {
+            // $params contendrá los argumentos de la directiva, ej: "'resources/css/app.css', 'resources/js/app.js'"
+            // Simplemente lo pasamos a nuestra función helper vite()
+            return "<?php echo vite({$params}); ?>";
+        });
     }
 }

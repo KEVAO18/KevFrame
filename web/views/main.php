@@ -7,40 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_ENV['APP_NAME'] ?></title>
     <link rel="icon" type="image/x-icon" href="<?=$_ENV['APP_ICON']?>">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/content.css">
-    <link rel="stylesheet" href="css/fonts.css">
-    <link rel="stylesheet" href="css/hw.css">
-    <link rel="stylesheet" href="css/margin.css">
-    <link rel="stylesheet" href="css/padding.css">
-    <link rel="stylesheet" href="css/text.css">
-    <link rel="stylesheet" href="css/principal.css">
+    @vite('resources/css/app.css', 'resources/js/app.js')
 </head>
 
 <body>
 
-    <header>
-        <nav class="px-3-r">
-            <ul>
-                <li>
-                    <a class="navbar-brand" href="/">
-                        <?= $_ENV['APP_NAME'] ?>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <?= $_ENV['APP_NAME'] ?>
+            </a>
+        </div>
+    </nav>
 
     @yield('content')
 
     <footer class="container border-top mt-4" id="footer">
         <div class="row text-footer py-3 text-center">
             <div class="col-md-6 col-sm-12">
-                <a class="text-decoration-none color-seco" href="">Sobre Nosotros</a>
+                <a class="text-decoration-none" target="_blank" href="https://www.kevao.tech/">Sobre Mi</a>
             </div>
             <div class="col-md-6 col-sm-12">
-                <a class="text-decoration-none color-seco" href="">Documentacion</a>
+                <a class="text-decoration-none" target="_blank" href="https://github.com/KEVAO18/KevFrame/wiki">Documentacion</a>
             </div>
         </div>
     
