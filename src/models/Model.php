@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Core\Database;
+use App\Database\Relations\BelongsTo;
+use App\Database\Relations\HasMany;
+use App\Database\Relations\HasOne;
 use PDO;
 
 /**
@@ -31,6 +34,10 @@ abstract class Model
     ];
 
 
+    /**
+     * Constructor del modelo.
+     * @param array $attributes Array de atributos para inicializar el modelo.
+     */
     public function __construct(array $attributes = [])
     {
         $this->db = Database::getInstance();
@@ -50,11 +57,36 @@ abstract class Model
     // ===================================================================
 
 
+    /**
+     * Acceso a propiedades dinámicas.
+     * Si el atributo existe, lo devuelve. Si es una relación, la carga y la devuelve.
+     */
     public function __get($key)
     {
-        return $this->attributes[$key] ?? null;
+        // Si el atributo ya existe, lo retornamos
+        if (array_key_exists($key, $this->attributes)) {
+            return $this->attributes[$key];
+        }
+
+        // Si no, verificamos si es una relación (un método con el mismo nombre)
+        if (method_exists($this, $key)) {
+            // Llamamos al método de la relación para obtener los datos
+            $relation = $this->{$key}();
+            $relatedModel = $relation->getResults();
+
+            // Guardamos el resultado para no tener que volver a cargarlo
+            $this->attributes[$key] = $relatedModel;
+
+            return $relatedModel;
+        }
+
+        return null;
     }
 
+    /**
+     * Asignación dinámica de propiedades.
+     * Si la propiedad es una relación, la guarda en el array de atributos.
+     */
     public function __set($key, $value)
     {
         $this->attributes[$key] = $value;
@@ -109,7 +141,7 @@ abstract class Model
     {
         $columns = array_keys($this->attributes);
         $values = array_values($this->attributes);
-        
+
         $sql = sprintf(
             'INSERT INTO %s (%s) VALUES (%s)',
             $this->table,
@@ -152,7 +184,7 @@ abstract class Model
             implode(', ', $setClauses),
             $this->primaryKey
         );
-        
+
         $stmt = $this->db->query($sql, $values);
         return $stmt->rowCount() > 0;
     }
@@ -199,7 +231,7 @@ abstract class Model
         }
         if ($this->queryParts['orderBy']) $sql .= " " . $this->queryParts['orderBy'];
         if ($this->queryParts['limit']) $sql .= " " . $this->queryParts['limit'];
-        
+
         $stmt = $this->db->query($sql, $this->queryParts['params']);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $this->resetQuery();
@@ -220,4 +252,79 @@ abstract class Model
         $this->queryParts = ['select' => '*', 'where' => [], 'orderBy' => '', 'limit' => '', 'params' => []];
     }
 
+    // ===================================================================
+    //                        RELATIONS
+    // ===================================================================
+
+    /**
+     * Define una relación "pertenece a" (inversa de uno a muchos).
+     *
+     * @param string $relatedModel La clase del modelo relacionado.
+     * @param string $foreignKey La clave foránea en la tabla actual.
+     * @param string $ownerKey La clave primaria en la tabla relacionada.
+     * @return BelongsTo
+     */
+    protected function belongsTo(string $relatedModel, string $foreignKey, string $ownerKey = 'id')
+    {
+        // Creamos una instancia de la clase de la relación
+        $relation = new BelongsTo($relatedModel, $foreignKey, $ownerKey);
+        $relation->setParent($this); // Le pasamos el modelo actual a la relación
+        return $relation;
+    }
+
+    /**
+     * Define una relación "tiene muchos" (uno a muchos).
+     *
+     * @param string $relatedModel La clase del modelo relacionado.
+     * @param string $foreignKey La clave foránea en la tabla del modelo relacionado.
+     * @param string $localKey La clave primaria en la tabla actual.
+     * @return HasMany
+     */
+    protected function hasMany(string $relatedModel, string $foreignKey, string $localKey = 'id')
+    {
+        // Creamos una instancia de la clase de la relación
+        $relation = new HasMany($relatedModel, $foreignKey, $localKey);
+        $relation->setParent($this); // Le pasamos el modelo actual a la relación
+        return $relation;
+    }
+
+    /**
+     * Define una relación uno a uno.
+     *
+     * @param  string  $relatedModel La clase del modelo relacionado.
+     * @param  string  $foreignKey La clave foránea en la tabla del modelo relacionado.
+     * @param  string  $localKey La clave primaria en la tabla actual.
+     * @return HasOne
+     */
+    protected function hasOne(string $relatedModel, string $foreignKey, string $localKey = 'id')
+    {
+        $relation = new HasOne($relatedModel, $foreignKey, $localKey);
+        $relation->setParent($this);
+        return $relation;
+    }
+
+    /**
+     * Define una relación muchos a muchos.
+     *
+     * @param  string  $relatedModel El modelo final al que queremos llegar.
+     * @param  string  $pivotTable La tabla intermedia que une los dos modelos.
+     * @param  string  $foreignPivotKey La clave foránea en la tabla pivote que apunta al modelo actual.
+     * @param  string  $relatedPivotKey La clave foránea en la tabla pivote que apunta al modelo relacionado.
+     * @return \App\Database\Relations\BelongsToMany
+     */
+    protected function belongsToMany(
+        string $relatedModel,
+        string $pivotTable,
+        string $foreignPivotKey,
+        string $relatedPivotKey
+    ) {
+        $relation = new \App\Database\Relations\BelongsToMany(
+            $relatedModel,
+            $pivotTable,
+            $foreignPivotKey,
+            $relatedPivotKey
+        );
+        $relation->setParent($this);
+        return $relation;
+    }
 }
