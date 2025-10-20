@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_ENV['APP_NAME'] ?></title>
     <link rel="icon" type="image/x-icon" href="<?=$_ENV['APP_ICON']?>">
-    @vite('resources/css/app.css', 'resources/js/app.js')
+    @vite('resources/css/app.css')
 </head>
 
 <body>
@@ -36,6 +36,8 @@
             <span class="">&copy; {{ date('Y') }} <?= $_ENV['APP_NAME'] ?></span>
         </div>
     </footer>
+
+    @vite('resources/js/app.js')
 </body>
 
 </html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/database" isTestSource="false" packagePrefix="App\Database\" />
+      <sourceFolder url="file://$MODULE_DIR$/database/factories" isTestSource="false" packagePrefix="App\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/database/migrations" isTestSource="false" packagePrefix="App\Database\Migrations\" />
+      <sourceFolder url="file://$MODULE_DIR$/database/relations" isTestSource="false" packagePrefix="App\Database\Relations\" />
+      <sourceFolder url="file://$MODULE_DIR$/database/seeders" isTestSource="false" packagePrefix="App\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Core" isTestSource="false" packagePrefix="App\Core\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Core/Cli" isTestSource="false" packagePrefix="App\Core\Cli\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Models" isTestSource="false" packagePrefix="App\Models\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Security" isTestSource="false" packagePrefix="App\Security\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Templates" isTestSource="false" packagePrefix="App\Templates\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/http" isTestSource="false" packagePrefix="App\Http\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/http/controllers" isTestSource="false" packagePrefix="App\Http\Controllers\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/http/handlers" isTestSource="false" packagePrefix="App\Http\Handlers\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/http/interfaces" isTestSource="false" packagePrefix="App\Http\Interfaces\" />
+      <sourceFolder url="file://$MODULE_DIR$/support" isTestSource="false" packagePrefix="App\Suport\" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fakerphp/faker" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fig/http-message-util" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/graham-campbell/result-type" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpoption/phpoption" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/slim/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas/phpdotenv" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
