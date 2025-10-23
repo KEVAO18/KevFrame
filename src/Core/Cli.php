@@ -15,7 +15,7 @@ class Cli {
     // ---------------------------------------------------------------
     //                         No commands
     // ---------------------------------------------------------------
-    private const VERSION = "0.8.0";
+    private const VERSION = "1.0.0";
 
     public function getVersion(){
         return self::VERSION;
