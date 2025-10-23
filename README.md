@@ -2,6 +2,11 @@
 
 Este es un marco de trabajo PHP ligero y eficiente diseñado para construir aplicaciones web de forma rápida y segura. Se enfoca en la simplicidad y la modularidad, permitiendo a los desarrolladores crear proyectos escalables con una curva de aprendizaje mínima.
 
+para iniciar un proyecto puedes usar la siguiente linea:
+```bash
+composer create-project kevao-frame/kevframe
+```
+
 <a href="https://deepwiki.com/KEVAO18/KevFrame"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 
 ## Índice
