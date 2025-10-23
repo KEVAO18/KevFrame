@@ -17,7 +17,13 @@ class IndexController {
 
         // Elimina los datos de ejemplo y pasa la versión del framework
         $data = [
-            'version' => (new Cli())->getVersion() // Accede a la constante de la versión
+            'version' => (new Cli())->getVersion(), // Accede a la constante de la versión
+            'Commands' => [
+                'serve' => 'Inicia el servidor de desarrollo',
+                'make:component' => 'Crea un nuevo componente',
+                'make:view' => 'Crea una nueva plantilla',
+                'help' => 'Muestra la ayuda'
+            ],
         ];
         
         View::render('main/home', $data);
