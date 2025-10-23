@@ -1,7 +1,7 @@
 {
-    "name": "kevao-frame/aplicacion",
+    "name": "kevao-frame/kevframe",
     "description": "Un framework de PHP ligero, seguro y elegante para el desarrollo rápido de aplicaciones web.",
-    "type": "library",
+    "type": "project",
     "keywords": ["framework", "php", "mvc", "orm"],
     "license": "MIT",
     "minimum-stability": "stable",
@@ -26,18 +26,18 @@
             "App\\Core\\Cli\\": "src/Core/Cli/",
             "App\\Templates\\": "src/Templates/",
             
+            "App\\Http\\": "src/http/",
+            "App\\Http\\Controllers\\": "src/http/controllers/",
+            "App\\Http\\Handlers\\": "src/http/handlers/",
+            "App\\Http\\Interfaces\\": "src/http/interfaces/",
+            
             "App\\Database\\": "database/",
             "App\\Database\\Factories\\": "database/factories/",
             "App\\Database\\Migrations\\": "database/migrations/",
             "App\\Database\\Seeders\\": "database/seeders/",
             "App\\Database\\Relations\\": "database/relations/",
             
-            "App\\Suport\\": "support/",
-            
-            "App\\Http\\": "src/http/",
-            "App\\Http\\Controllers\\": "src/http/controllers/",
-            "App\\Http\\Handlers\\": "src/http/handlers/",
-            "App\\Http\\Interfaces\\": "src/http/interfaces/"
+            "App\\Suport\\": "support/"
         }
     },
     "extra": {
