@@ -14,8 +14,11 @@
     ],
     "repositories": [],
     "require": {
+        "php": ">=8.0",
         "slim/psr7": "^1.0",
-        "vlucas/phpdotenv": "^5.6",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": { 
         "fakerphp/faker": "^1.24"
     },
     "autoload": {
