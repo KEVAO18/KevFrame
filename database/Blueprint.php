@@ -53,10 +53,35 @@ class Blueprint
         return $this;
     }
 
-    public function timestamps(): void
+    public function decimal(string $name, int $precision = 8, int $scale = 2): self
+    {
+        $this->columns[] = "`{$name}` DECIMAL({$precision}, {$scale}) NOT NULL";
+        return $this;
+    }
+
+    public function boolean(string $name): self
+    {
+        $this->columns[] = "`{$name}` BOOLEAN NOT NULL";
+        return $this;
+    }
+
+    public function timestamp(string $name): self
+    {
+        $this->columns[] = "`{$name}` TIMESTAMP NOT NULL";
+        return $this;
+    }
+
+    public function date(string $name): self
+    {
+        $this->columns[] = "`{$name}` DATE NOT NULL";
+        return $this;
+    }
+
+    public function timestamps(): self
     {
         $this->columns[] = '`created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP';
         $this->columns[] = '`updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP';
+        return $this;
     }
 
     public function foreignId(string $columnName): self
@@ -64,8 +89,16 @@ class Blueprint
         $this->unsignedInteger($columnName);
         $relatedTable = str_replace('_id', '', $columnName) . 's';
         $this->foreignKeys[] = "CONSTRAINT `{$this->tableName}_{$columnName}_foreign` " .
-                                "FOREIGN KEY (`{$columnName}`) REFERENCES `{$relatedTable}`(`id`) " .
-                                "ON DELETE CASCADE";
+            "FOREIGN KEY (`{$columnName}`) REFERENCES `{$relatedTable}`(`id`) " .
+            "ON DELETE CASCADE";
+        return $this;
+    }
+
+    public function foreignKey(string $columnName, string $referencesTable, string $referencesColumn = 'id'): self
+    {
+        $this->foreignKeys[] = "CONSTRAINT `{$this->tableName}_{$columnName}_foreign` " .
+            "FOREIGN KEY (`{$columnName}`) REFERENCES `{$referencesTable}`(`{$referencesColumn}`) " .
+            "ON DELETE CASCADE";
         return $this;
     }
 
@@ -90,6 +123,24 @@ class Blueprint
     }
 
     /**
+     * Establece un valor por defecto para la última columna añadida.
+     */
+    public function default($value): self
+    {
+        $lastColumnIndex = count($this->columns) - 1;
+        if (isset($this->columns[$lastColumnIndex])) {
+            $this->columns[$lastColumnIndex] .= " DEFAULT({$value})";
+        }
+        return $this;
+    }
+
+    public function primary(string $columnName): self
+    {
+        $this->primaryKey[] = $columnName;
+        return $this;
+    }
+
+    /**
      * Construye la sentencia SQL final para crear la tabla.
      */
     public function toSql(): string
@@ -99,13 +150,13 @@ class Blueprint
         if (!empty($this->primaryKey)) {
             $parts[] = "PRIMARY KEY (`" . implode('`, `', $this->primaryKey) . "`)";
         }
-        
+
         $parts = array_merge($parts, $this->indexes, $this->foreignKeys);
 
         $sql = "CREATE TABLE `{$this->tableName}` (\n  ";
         $sql .= implode(",\n  ", $parts);
         $sql .= "\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
-        
+
         return $sql;
     }
 }
