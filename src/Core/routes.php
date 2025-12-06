@@ -14,6 +14,9 @@ $router = new Router();
 $router->get('/', IndexController::class, 'index');
 $router->get('/home', IndexController::class, 'index');
 
+
+$router->get('/pruebas', IndexController::class, 'pruebas');
+
 /**
  * ejecucion de la ruta solicitada
  */

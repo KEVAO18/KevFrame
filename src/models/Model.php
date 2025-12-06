@@ -109,7 +109,7 @@ abstract class Model
      * Encuentra un registro por su clave primaria y devuelve una instancia del modelo.
      * @return static|null Una instancia del modelo o null si no se encuentra.
      */
-    public static function find($id)
+    public static function find($id): ?static
     {
         $model = new static();
         $sql = "SELECT * FROM {$model->table} WHERE {$model->primaryKey} = ?";
@@ -194,6 +194,16 @@ abstract class Model
     // ===================================================================
 
     /**
+     * Añade una cláusula SELECT a la consulta.
+     * @return $this
+     */
+    public function select(string $columns = "*"): self
+    {
+        $this->queryParts['select'] = $columns;
+        return $this;
+    }
+
+    /**
      * Añade una condición WHERE a la consulta.
      * @return $this
      */
@@ -204,15 +214,64 @@ abstract class Model
         return $this;
     }
 
+    /**
+     * Añade un ORDER BY a la consulta.
+     * @return $this
+     */
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
         $this->queryParts['orderBy'] = "ORDER BY {$column} " . strtoupper($direction);
         return $this;
     }
 
+    /**
+     * Añade un LIMIT a la consulta.
+     * @return $this
+     */
     public function limit(int $count): self
     {
         $this->queryParts['limit'] = "LIMIT {$count}";
+        return $this;
+    }
+
+    /**
+     * Añade un offset a la consulta.
+     * @return $this
+     */
+    public function offset(int $count): self
+    {
+        $this->queryParts['offset'] = "OFFSET {$count}";
+        return $this;
+    }
+
+    /**
+     * Añade un GROUP BY a la consulta.
+     * @return $this
+     */
+    public function groupBy(string $column): self
+    {
+        $this->queryParts['groupBy'] = "GROUP BY {$column}";
+        return $this;
+    }
+
+    /**
+     * Añade una condición HAVING a la consulta.
+     * @return $this
+     */
+    public function having(string $column, string $operator, $value): self
+    {
+        $this->queryParts['having'][] = "{$column} {$operator} ?";
+        $this->queryParts['params'][] = $value;
+        return $this;
+    }
+
+    /**
+     * Añade una cláusula JOIN a la consulta.
+     * @return $this
+     */
+    public function join(string $table, string $condition): self
+    {
+        $this->queryParts['join'][] = "JOIN {$table} ON {$condition}";
         return $this;
     }
 
@@ -225,6 +284,10 @@ abstract class Model
     public function get(bool $asModel = false): array
     {
         $sql = "SELECT {$this->queryParts['select']} FROM {$this->table}";
+
+        if (!empty($this->queryParts['join'])) {
+            $sql .= " " . implode(' ', $this->queryParts['join']);
+        }
 
         if (!empty($this->queryParts['where'])) {
             $sql .= " WHERE " . implode(' AND ', $this->queryParts['where']);

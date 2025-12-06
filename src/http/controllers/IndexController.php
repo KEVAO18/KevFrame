@@ -6,10 +6,13 @@ use App\Core\Cli;
 use App\Core\Request;
 use App\Core\SessionManager;
 use App\Core\View;
+use App\Models\UsuarioModel;
 
-class IndexController {
+class IndexController
+{
 
-    public function index() {
+    public function index()
+    {
 
 
         $sm = SessionManager::getInstance();
@@ -25,11 +28,21 @@ class IndexController {
                 'help' => 'Muestra la ayuda'
             ],
         ];
-        
-        View::render('main/home', $data);
 
+        View::render('main/home', $data);
     }
 
-}
+    public function pruebas()
+    {
 
-?>
+        $usuarios = new UsuarioModel;
+        $all = $usuarios
+            ->select('nombre')
+            ->where('nombre', 'LIKE', 'A%')
+            ->orderBy('nombre', 'ASC')
+            ->limit(2)
+            ->get();
+
+        View::render('main/pruebas', compact('all'));
+    }
+}

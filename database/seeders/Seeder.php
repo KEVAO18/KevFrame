@@ -19,9 +19,7 @@ class Seeder
         // Llama a otros seeders en el orden que necesites.
         // La relación es importante: crea usuarios antes de crear posts que les pertenezcan.
         $this->call([
-            // UserSeeder::class,
-            // PostSeeder::class,
-            // CommentSeeder::class,
+            UsuarioSeeder::class,
         ]);
 
         echo "\nPoblado de la base de datos completado exitosamente.\n";
