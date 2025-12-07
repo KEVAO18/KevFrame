@@ -179,7 +179,7 @@ KevFrame/
 Primero debes crear la tabla en la base de datos creando una migracion
 
 ```bash
-php kev make:migration "Creacion_tabla_Usuarios" --tabla=usuarios
+php kev make:migration Creacion_tabla_Usuarios --tabla=usuarios
 ```
 
 resultando en la siguiente estructura en la ruta database/migrations
@@ -231,7 +231,7 @@ return new class
 Luego debes crear el modelo
 
 ```bash
-php kev make:model "Usuarios"
+php kev make:model Usuarios
 ```
 
 de esta manera crearas un modelo con la estructura de tu tabla usuarios en la ruta src/Models
