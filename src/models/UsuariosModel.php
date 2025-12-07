@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class UsuarioModel extends Model
+class UsuariosModel extends Model
 {
     /**
      * El nombre de la tabla en la base de datos.
@@ -33,3 +33,5 @@ class UsuarioModel extends Model
      */
     protected array $relations = [];
 }
+
+?>

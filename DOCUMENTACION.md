@@ -44,18 +44,13 @@
 ## 🚀 Inicio Rápido
 
 ```bash
-# 1. Clona el proyecto
-git clone [https://github.com/KEVAO18/KevFrame.git](https://github.com/KEVAO18/KevFrame.git)
-cd KevFrame
+# 1. Crea el proyecto
+composer create-project kevao-frame/kevframe
 
 # 2. Instala las dependencias
 composer install
 
-# 3. Configura tu entorno
-cp .example.env .env
-# (Ajusta la configuración de tu base de datos en .env)
-
-# 4. Inicia el servidor de desarrollo
+# 3. Inicia el servidor de desarrollo
 php kev serve
 ```
 
@@ -69,24 +64,53 @@ KevFrame sigue una arquitectura **MVC moderna** con separación clara de respons
 KevFrame/
 ├── 📁 database/
 │   ├── 📁 factories/
+│   │   └── 📄 Factory.php
+│   │
+│   ├── 📁 seeders/
+│   │   └── 📄 Seeder.php
+│   │
+│   ├── 📁 relations/
+│   │   ├── 📄 Relation.php
+│   │   ├── 📄 BelongsTo.php
+│   │   ├── 📄 HasMany.php
+│   │   ├── 📄 HasOne.php
+│   │   └── 📄 ManyToMany.php
+│   │
 │   ├── 📁 migrations/
-│   └── 📁 seeders/
+│   ├── 📄 Blueprint.php
+│   └── 📄 Schema.php
+│
+├── 📂 node_modules/
 │
 ├── 📂 public/
-│   ├── 📂 css/
 │   ├── 📂 docs/
 │   ├── 📂 img/
-│   ├── 📂 js/
-│   └── 📄 Runner.php
+│   └── 📄 runner.php
+│
+├── 📂 resources/
+│   ├── 📂 css/
+│   └── 📂 js/
 │
 ├── 📂 src/
 │   ├── 📂 Core/
 │   │   ├── 📂 Cli/
 │   │   │   ├── 📄 Generator.php
+│   │   │   ├── 📄 MakeComponent.php
+│   │   │   ├── 📄 DbCommand.php
 │   │   │   └── 📂 Stubs/
+│   │   │       ├── 📄 Component.php
+│   │   │       ├── 📄 controller.php
+│   │   │       ├── 📄 factory.php
+│   │   │       ├── 📄 handler.php
+│   │   │       ├── 📄 interface.php
+│   │   │       ├── 📄 migration.php
+│   │   │       ├── 📄 model.php
+│   │   │       ├── 📄 seeder.php
+│   │   │       └── 📄 view.php
 │   │   │
 │   │   ├── 📄 Cli.php
 │   │   ├── 📄 Database.php
+│   │   ├── 📄 Helper.php
 │   │   ├── 📄 Request.php
 │   │   ├── 📄 Router.php
 │   │   ├── 📄 routes.php
@@ -114,94 +138,127 @@ KevFrame/
 │       ├── 📄 KevTemplateEngine.php
 │       └── 📄 TemplateEngineInterface.php
 │
+├── 📂 vendor/
+│
 ├── 📂 web/
 │   ├── 📂 componentes/
-│   └── 📂 views/
+│   │   ├── 📂 errors/
+│   │   │   ├── 📄 404Component.php
+│   │   │   └── 📄 GeneralErrorComponent.php
+│   │   │
+│   │   └── 📂 main/
+│   │       ├── 📄 HomeComponent.php
+│   │       └── 📄 PruebasComponent.php
+│   │
+│   └── 📂 views/   
+│       └── 📄 main.php
 │
-├── 📄 .example.env
+├── 📄 .env
 ├── 📄 composer.json
 ├── 📄 composer.lock
 ├── 📄 DOCUMENTACION.md
 ├── 📄 kev
 ├── 📄 License.md
+├── 📄 package-lock.json
+├── 📄 package.json
 ├── 📄 README.md
-└── 📄 serve.php
+├── 📄 serve.php
+└── 📄 vite.config.js
 ```
 
 # Ejemplos importantes
 
 ## creacion de un modelo
 
-Basandose en que la base de datos usa los nombres de las entidades en plural tales como:
-
-- Usuarios
-- Productos
-- Categorias
-- Credenciales
-
-se crearan los modelos con la siguiente extructura:
+Primero debes crear la tabla en la base de datos creando una migracion
 
 ```bash
-php kev make:model "el nombre de la entidad en singular"
+php kev make:migration "Creacion_tabla_Usuarios" --tabla=usuarios
 ```
 
-De este modo el mini ORM reconocerá el modelo como derivado de la entidad. Ejemplo
+resultando en la siguiente estructura en la ruta database/migrations
 
-Se tiene la tabla:
+```php
 
-```sql
-    create table totals(
+<?php
 
-        -- campos: id, tipo, fecha, concepto, monto
-        id int(11) auto_increment not null,
-        tipo tinyint(1) not null,
-        fecha timestamp not null 
-        DEFAULT current_timestamp() 
-        ON UPDATE current_timestamp(),
-        concepto varchar(100) not null,
-        monto double not null,
+use App\Database\Schema;
+use App\Database\Blueprint;
 
-        -- primarias, foraneas e indices
-        CONSTRAINT pk_totales PRIMARY KEY (id),
+/**
+ * Migración para la tabla usuarios.
+ * Generada el: 2025_12_06_101558
+ */
+return new class
+{
+    /**
+     * Ejecuta la migración para construir el esquema.
+     * Aquí es donde defines la estructura de tu tabla.
+     */
+    public function up(): void
+    {
+        Schema::create('usuarios', function (Blueprint $table) {
+            $table->id('dni');
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->string('email')->unique();
+            $table->string('pass');
+            $table->integer('rol');
 
-        INDEX (fecha)
-    );
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Revierte la migración.
+     * Generalmente, esto implica eliminar la tabla.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('usuarios');
+    }
+};
+
+
 ```
 
-al ejecutar el comando 
+Luego debes crear el modelo
 
 ```bash
-    php kev make:model total
+php kev make:model "Usuarios"
 ```
 
-construye el modelo total con la siguiente extructura
+de esta manera crearas un modelo con la estructura de tu tabla usuarios en la ruta src/Models
 
 ```php
 <?php
 
 namespace App\Models;
 
-class TotalModel extends Model
+class UsuariosModel extends Model
 {
     /**
      * El nombre de la tabla en la base de datos.
      */
-    protected string $table = 'totals';
+    protected string $table = 'usuarios';
 
     /**
      * La clave primaria de la tabla.
      */
-    protected string $primaryKey = 'id';
+    protected string $primaryKey = 'dni';
 
     /**
      * El esquema de la tabla (descubierto automáticamente).
      */
     protected array $fields = [
-        'id' => 'int(11)',
-        'tipo' => 'tinyint(1)',
-        'fecha' => 'timestamp',
-        'concepto' => 'varchar(100)',
-        'monto' => 'double',
+        'dni' => 'int(11)',
+        'nombre' => 'varchar(255)',
+        'apellido' => 'varchar(255)',
+        'email' => 'varchar(255)',
+        'pass' => 'varchar(255)',
+        'rol' => 'int(11)',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
     ];
 
     /**
@@ -210,40 +267,7 @@ class TotalModel extends Model
     protected array $relations = [];
 }
 
-```
-
-Pero si usas un nombre cuya entidad no existe aun en la base de datos tendras que crear la estructura tu mismo teniendo la estructura de el siguiente modo
-
-```php
-<?php
-
-namespace App\Models;
-
-class TotalModel extends Model
-{
-    /**
-     * El nombre de la tabla en la base de datos.
-     */
-    protected string $table = 'totals';
-
-    /**
-     * La clave primaria de la tabla.
-     */
-    protected string $primaryKey = 'id';
-
-    /**
-     * El esquema de la tabla (descubierto automáticamente).
-     */
-    protected array $fields = [
-        
-    ];
-
-    /**
-     * Define las relaciones del modelo aquí.
-     */
-    protected array $relations = [];
-}
-
+?>
 ```
 
 ## 🛤️ Definiendo Rutas
@@ -253,16 +277,16 @@ class TotalModel extends Model
 // src/Core/routes.php
 
 // Ruta GET
-$router->get('/', 'IndexController::class', 'home');
+$router->get('/', IndexController::class, 'index');
 
 // Ruta POST
-$router->post('/users', 'UserController::class', 'store');
+$router->post('/users', IndexController::class, 'store');
 
 // Ruta PUT
-$router->put('/users/{id}', 'UserController::class', 'update');
+$router->put('/users/{id}', IndexController::class, 'update');
 
 // Ruta DELETE
-$router->delete('/users/{id}', 'UserController::class', 'destroy');
+$router->delete('/users/{id}', IndexController::class, 'delete');
 ```
 
 ## ⚡ Instalación
@@ -275,76 +299,42 @@ $router->delete('/users/{id}', 'UserController::class', 'destroy');
 | **Composer** | 2.0+ | 2.5+ |
 | **MySQL** | 5.7+ | 8.0+ |
 
-### 🚀 Instalación Rápida
-
-#### 1. **Clonar el repositorio**
-```bash
-git clone https://github.com/KEVAO18/KevFrame.git
-cd KevFrame
-```
-
-#### 2. **Verificar requisitos**
-```bash
-# Verificar versión de PHP
-php --version
-
-# Verificar Composer
-composer --version
-```
-
-#### 3. **Instalar dependencias**
-```bash
-composer install
-
-# Para desarrollo (incluye herramientas de testing)
-composer install --dev
-
-# Para producción (optimizada)
-composer install --no-dev --optimize-autoloader
-```
-
-#### 4. **Configuración del entorno**
-```bash
-# Copiar archivo de configuración
-cp .example.env .env
-
-# En Windows
-copy .example.env .env
-```
-
 ## 🔧 Configuración
 
 ### 🎨 Configuración Básica (.env)
 
 ```ini
-# ===========================================
-#         CONFIGURACIÓN DE APLICACIÓN
-# ===========================================
-APP_NAME="KevFrame"
-APP_ENV=development
-APP_HOST=localhost
-APP_PORT=8000
-APP_BASE_URL="http://${APP_HOST}:${APP_PORT}/"
-APP_ICON="${APP_BASE_URL}img/favicon.ico"
+APP_NAME="KevFrame"                              # nombre de la aplicación
+APP_ENV=development                              # entorno de despliegue (development o production)
+APP_HOST=localhost                               # host de la aplicación
+APP_PORT=8000                                    # puerto de la aplicación
+APP_BASE_URL="http://${APP_HOST}:${APP_PORT}/"   # URL base de la aplicación
+APP_ICON="${APP_BASE_URL}public/img/logo.png"    # ícono de la aplicación
+APP_DB_DRIVER=mysql                              # driver de la base de datos (mysql, sqlsrv, sqlite)
 
-# ===========================================
-#       CONFIGURACIÓN DE BASE DE DATOS
-# ===========================================
-DB_HOST=localhost
-DB_NAME=db_tienda
-DB_USER=root
-DB_PASS=
-DB_CHARSET=utf8mb4
+# Configuración de la base de datos MySQL
+DB_HOST=localhost                                # host de la base de datos
+DB_NAME=kevframe                                 # nombre de la base de datos
+DB_USER=root                                     # usuario de la base de datos
+DB_PASS=                                         # contraseña de la base de datos
+DB_CHARSET=utf8mb4                               # conjunto de caracteres de la base de datos
 
-# ===========================================
-#        RUTAS DE ARCHIVOS ESTÁTICOS
-# ===========================================
-COMPOSER_FOLDER="${APP_BASE_URL}../vendor/"
-PUBLIC_FOLDER="${APP_BASE_URL}"
-CSS_FOLDER="${PUBLIC_FOLDER}css/"
-JS_FOLDER="${PUBLIC_FOLDER}js/"
-IMG_FOLDER="${PUBLIC_FOLDER}img/"
-DOCS_FOLDER="${PUBLIC_FOLDER}docs/"
+# Configuración de la base de datos SQLServer
+# DB_SQLSERVER_HOST=127.0.0.1\SQLEXPRESS           # host de la base de datos SQLServer
+# DB_SQLSERVER_NAME=kevframe                       # nombre de la base de datos SQLServer
+# DB_SQLSERVER_USER=sa                             # usuario de la base de datos SQLServer
+# DB_SQLSERVER_PASS=MiPasswordFuerte123            # contraseña de la base de datos SQLServer
+
+# Configuración de la base de datos SQLite
+# DB_SQLITE_PATH=./storage/database.sqlite   # Define la ruta de tu archivo de base de datos
+
+COMPOSER_FOLDER="${APP_BASE_URL}vendor/"         # carpeta de instalación de Composer
+PUBLIC_FOLDER="${APP_BASE_URL}public/"           # carpeta pública de la aplicación
+CSS_FOLDER="${PUBLIC_FOLDER}css/"                # carpeta de estilos CSS
+JS_FOLDER="${PUBLIC_FOLDER}js/"                  # carpeta de scripts JS
+IMG_FOLDER="${PUBLIC_FOLDER}img/"                # carpeta de imágenes
+DOCS_FOLDER="${PUBLIC_FOLDER}docs/"              # carpeta de documentación
+
 
 ```
 
@@ -363,39 +353,6 @@ php kev serve --host=127.0.0.1 --port=8000
 
 ```
 
-### 🔧 Comandos CLI Disponibles
-
-```bash
-    # Start development server
-    php kev serve               
-    
-    # Create a new controller
-    php kev make:controller     
-    
-    # Create a new model
-    php kev make:model          
-    
-    # Create a new handler
-    php kev make:handler        
-    
-    # Create a new interface
-    php kev make:interface      
-    
-    # Create a new component
-    php kev make:component      
-    
-    # Create a new view
-    php kev make:view           
-    
-    # Show the version of the application
-    php kev version             
-    
-    # Show this help message
-    php kev help                
-```
-
-## 🏗️ Arquitectura
-
 ### 📞 FAQ
 
 **P: ¿Cómo puedo cambiar el motor de plantillas?**
@@ -404,11 +361,8 @@ R: En `config/view.php`, cambia el valor de `'engine' => 'KevEngine'` a `'KevLit
 **P: ¿Se puede usar con Docker?**
 R: Sí, puedes crear un Dockerfile basado en PHP 8.2-apache e incluir las dependencias necesarias.
 
-**P: ¿Cómo optimizar para producción?**
-R: Ejecuta `php kev optimize`, configura `APP_ENV=production` y habilita el caché de templates.
-
 **P: ¿Soporta APIs RESTful?**
-R: Sí, incluye soporte completo para APIs REST con validación JSON y responses estructuradas.
+R: Sí, aunque aun no esta totalmente implementado.
 
 ## 🤝 Contribuir
 
