@@ -50,8 +50,14 @@ composer create-project kevao-frame/kevframe
 # 2. Instala las dependencias
 composer install
 
+# 2.1 Inicializa node
+npm install
+
 # 3. Inicia el servidor de desarrollo
 php kev serve
+
+# 4. Inicia el modo dev de node
+npm run dev
 ```
 
 🎉 **¡Listo!** Tu aplicación estará disponible en `http://localhost:8000`
