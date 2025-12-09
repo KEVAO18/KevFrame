@@ -292,8 +292,16 @@ abstract class Model
         if (!empty($this->queryParts['where'])) {
             $sql .= " WHERE " . implode(' AND ', $this->queryParts['where']);
         }
-        if ($this->queryParts['orderBy']) $sql .= " " . $this->queryParts['orderBy'];
-        if ($this->queryParts['limit']) $sql .= " " . $this->queryParts['limit'];
+
+        if (!empty($this->queryParts['groupBy'])) $sql .= " " . $this->queryParts['groupBy'];
+
+        if (!empty($this->queryParts['having'])) $sql .= " " . implode(' AND ', $this->queryParts['having']);
+
+        if (!empty($this->queryParts['orderBy'])) $sql .= " " . $this->queryParts['orderBy'];
+
+        if (!empty($this->queryParts['limit'])) $sql .= " " . $this->queryParts['limit'];
+
+        if (!empty($this->queryParts['offset'])) $sql .= " " . $this->queryParts['offset'];
 
         $stmt = $this->db->query($sql, $this->queryParts['params']);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
