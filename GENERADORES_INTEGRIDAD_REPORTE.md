@@ -1,5 +1,5 @@
 # Reporte de Integridad de Generadores - KevFrame
-**Fecha:** 31 de Diciembre, 2024  
+**Fecha:** 31 de Diciembre, 2025  
 **Autor:** Análisis de Seguridad Automatizado  
 **Versión Framework:** 1.0.0
 
@@ -167,7 +167,7 @@ public static function dropIfExists(string $tableName): void
 
 ### 5. **Permisos de Directorio Inseguros** 🟠
 **Archivo:** `src/Core/Cli/MakeCommand.php`  
-**Líneas:** 72, 124  
+**Líneas:** 72, 124, 208  
 **Severidad:** ALTA  
 
 **Descripción:**  
@@ -210,22 +210,23 @@ file_put_contents($path, $content);
 
 ---
 
-### 7. **XSS en Plantillas de Vista** 🟠
+### 7. **Falta de Guías de Seguridad en Plantillas** 🟠
 **Archivo:** `src/Core/Cli/Stubs/view.stub` y `Component.stub`  
 **Severidad:** ALTA  
 
 **Descripción:**  
-Las plantillas generadas no escapan la salida por defecto:
+Las plantillas generadas no incluyen comentarios o ejemplos sobre buenas prácticas de seguridad, particularmente sobre escapado de salida. Aunque el placeholder `{{name}}` es reemplazado durante la generación del código (no en runtime), las plantillas deberían educar a los desarrolladores sobre seguridad.
 
 ```php
 <h1>View {{name}} it's working </h1>
 ```
 
 **Recomendación:**  
-Agregar comentarios de seguridad en las plantillas generadas:
+Agregar comentarios de seguridad en las plantillas generadas para educar a los desarrolladores:
 ```php
-<!-- SEGURIDAD: Siempre escape las variables con htmlspecialchars() -->
-<h1>View <?= htmlspecialchars($name ?? 'Default') ?> it's working </h1>
+<!-- SEGURIDAD: Siempre escape las variables dinámicas con htmlspecialchars($variable, ENT_QUOTES, 'UTF-8') -->
+<!-- Ejemplo: <?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?> -->
+<h1>View {{name}} it's working </h1>
 ```
 
 ---
@@ -623,21 +624,24 @@ $sql = sprintf(
 
 ---
 
-### 22. **Stub de Factory con Sintaxis Incorrecta** ⚠️
+### 22. **Mejora Potencial en Stub de Factory** ⚠️
 **Archivo:** `src/Core/Cli/Stubs/factory.stub`  
-**Línea:** 10  
+**Líneas:** 5, 10  
 
 **Descripción:**  
+El stub de factory importa la clase del modelo en la línea 5:
+```php
+use App\Models\{{name}}Model;
+```
+
+Y luego la usa en la línea 10:
 ```php
 protected string $model = {{name}}Model::class;
 ```
 
-Debería ser:
-```php
-protected string $model = \App\Models\{{name}}Model::class;
-```
+**Observación:** Aunque esto es técnicamente correcto, podría ser más consistente usar el nombre completo con namespace o asegurarse de que el import siempre esté presente.
 
-**Impacto:** El código generado puede no funcionar correctamente.
+**Impacto:** Bajo - El código funciona correctamente, pero podría mejorarse la claridad.
 
 ---
 
@@ -855,7 +859,7 @@ public static function get(string $stubName, array $replacements): string
 | **database/Schema.php** | 1 Crítica | 0 | ⚠️ Requiere Atención Urgente |
 | **database/Blueprint.php** | 2 Medias | 0 | ⚠️ Revisar |
 | **src/Core/Cli.php** | 2 Altas, 1 Media | 1 | ⚠️ Revisar |
-| **Archivos Stub** | 1 Alta | 2 | ⚠️ Revisar |
+| **Archivos Stub** | 1 Alta (Guías de Seguridad) | 2 | ⚠️ Revisar |
 
 ---
 
@@ -870,7 +874,7 @@ public static function get(string $stubName, array $replacements): string
 
 - **Mejoras Recomendadas:** 12 💡
 
-- **Líneas de Código Revisadas:** ~1,850
+- **Líneas de Código Revisadas:** ~1,200 (archivos core del generador)
 
 ---
 
@@ -885,7 +889,7 @@ public static function get(string $stubName, array $replacements): string
 ### Alta Prioridad (Corregir en 1-2 Semanas)
 5. Permisos de directorio inseguros (#5)
 6. Sobrescritura de archivos sin confirmación (#6)
-7. XSS en plantillas (#7)
+7. Falta de guías de seguridad en plantillas (#7)
 8. Validación de argumentos (#8)
 9. Exposición de información sensible (#9)
 
@@ -931,6 +935,6 @@ Se recomienda:
 
 ---
 
-**Documento generado automáticamente el:** 31/12/2024  
+**Documento generado automáticamente el:** 31/12/2025  
 **Próxima revisión recomendada:** Después de implementar las correcciones críticas
 
